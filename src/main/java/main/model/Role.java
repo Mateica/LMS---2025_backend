@@ -26,10 +26,11 @@ public class Role {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Role(Long id, String name) {
+	public Role(Long id, String name, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.active = active;
 	}
 
 	public Long getId() {

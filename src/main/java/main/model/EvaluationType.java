@@ -1,3 +1,12 @@
+package main.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+
 @Entity
 public class EvaluationType {
 	@Id
@@ -14,7 +23,7 @@ public class EvaluationType {
 	public EvaluationType() {
 	}
 
-	public EvaluationType(Long id, String name) {
+	public EvaluationType(Long id, String name, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -44,3 +53,5 @@ public class EvaluationType {
 	public void setActive(Boolean active) {
         this.active = active;
     }
+	
+}
