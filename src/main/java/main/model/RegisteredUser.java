@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class RegisteredUser {
@@ -29,7 +30,7 @@ public class RegisteredUser {
 	private String email;
 	
 	@Column(nullable = false)
-	@OneToMany(mappedBy = "registered_user")
+	@OneToMany(mappedBy = "registeredUser")
 	private List<ForumUser> forumUser = new ArrayList<ForumUser>();
 	
 	@Column(nullable = false)
