@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Announcement {
@@ -25,7 +25,6 @@ public class Announcement {
 	private String content;
 	
 	@ManyToOne
-	@Column(nullable = true)
 	private ForumUser author;
 	
 	@OneToMany(mappedBy = "announcement")
@@ -44,15 +43,19 @@ public class Announcement {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Announcement(Long id, LocalDateTime datePublished, String content, ForumUser author, Topic topic) {
+	public Announcement(Long id, LocalDateTime datePublished, String content, ForumUser author, List<File> attachments,
+			Topic topic, Boolean active) {
 		super();
 		this.id = id;
 		this.datePublished = datePublished;
 		this.content = content;
 		this.author = author;
-		this.attachments = new ArrayList<File>();
+		this.attachments = attachments;
 		this.topic = topic;
+		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;

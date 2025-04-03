@@ -38,13 +38,20 @@ public class RegisteredUser {
 	
 	public RegisteredUser() {}
 	
-	public RegisteredUser(String username, String password, String email) {
+	
+
+	public RegisteredUser(Long id, String username, String password, String email, List<ForumUser> forumUser,
+			Boolean active) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.forumUser = new ArrayList<ForumUser>();
+		this.forumUser = forumUser;
+		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;

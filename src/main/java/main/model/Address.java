@@ -31,11 +31,13 @@ public class Address {
 		super();
 	}
 
-	public Address(String street, int houseNumber, Place place) {
+	public Address(Long id, String street, int houseNumber, Place place, Boolean active) {
 		super();
+		this.id = id;
 		this.street = street;
 		this.houseNumber = houseNumber;
 		this.place = place;
+		this.active = active;
 	}
 
 	public Long getId() {
