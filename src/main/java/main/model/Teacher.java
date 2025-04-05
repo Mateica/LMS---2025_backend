@@ -31,10 +31,10 @@ public class Teacher {
 	private String umcn;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Title title;
 	
-	@OneToMany(mappedBy = "teacher")
+//	@OneToMany(mappedBy = "teacher")
+	@Column(nullable = false)
 	private ScientificField scientificField; // Jedan nastavnik moze imati samo jedno zvanjeu jednoj oblasti, ali moze biti biran u vise oblasti
 	
 	@Column(nullable = false)

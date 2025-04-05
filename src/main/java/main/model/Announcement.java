@@ -32,7 +32,6 @@ public class Announcement {
 	private List<File> attachments = new ArrayList<File>();
 	
 	@ManyToOne
-	@Column(nullable = false)
 	private Topic topic;
 	
 	@Column(nullable = false)

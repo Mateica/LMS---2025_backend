@@ -16,7 +16,6 @@ public class SubjectAttendance {
 	@Column(nullable = false)
 	private int finalGrade;
 	
-	@Column(nullable = false)
 	@OneToOne
 	private SubjectRealization subjectRealization;
 	

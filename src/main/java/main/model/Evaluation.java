@@ -25,15 +25,12 @@ public class Evaluation {
 	private int numberOfPoints;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private EvaluationType evaluationType;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private EvaluationInstrument evaluationInstrument;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Examination examination;
 	
 	@Column(nullable = false)

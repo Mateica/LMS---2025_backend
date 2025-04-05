@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -19,7 +20,7 @@ public class ForumUser {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	@ManyToOne
 	private RegisteredUser registeredUser;
 	
@@ -28,11 +29,10 @@ public class ForumUser {
 	private List<Topic> topics = new ArrayList<Topic>();
 	
 	@ManyToOne
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	private Forum forum;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Role role;
 	
 	@Column(nullable = true)

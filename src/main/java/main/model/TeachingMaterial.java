@@ -29,7 +29,6 @@ public class TeachingMaterial {
 	@Column(nullable = false)
 	private LocalDateTime yearOfPublication;
 	
-	@Column(nullable = false)
 	@OneToOne
 	private File file;
 	

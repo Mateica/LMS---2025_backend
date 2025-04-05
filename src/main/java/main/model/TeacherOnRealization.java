@@ -17,19 +17,15 @@ public class TeacherOnRealization {
 	private int numberOfClasses;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Teacher teacher;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private SubjectRealization subjectRealization;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Notification notification;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private TeachingType teachingType;
 	
 	@Column(nullable = false)

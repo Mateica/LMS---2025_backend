@@ -19,7 +19,6 @@ public class EducationGoal {
 	private String description;
 	
 	@OneToOne
-	@Column(nullable = true)
 	private Outcome outcome;
 	
 	@Column(nullable = false)

@@ -19,8 +19,7 @@ public class Place {
 	private String name;
 	
 	@ManyToOne
-	@Column(nullable = false)
-	private Country county;
+	private Country country;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -29,11 +28,11 @@ public class Place {
 		super();
 	}
 
-	public Place(Long id, String name, Country county, Boolean active) {
+	public Place(Long id, String name, Country country, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.county = county;
+		this.country = country;
 		this.active = active;
 	}
 
@@ -55,12 +54,12 @@ public class Place {
 		this.name = name;
 	}
 
-	public Country getCounty() {
-		return county;
+	public Country getCountry() {
+		return country;
 	}
 
-	public void setCounty(Country county) {
-		this.county = county;
+	public void setCounty(Country country) {
+		this.country = country;
 	}
 
 	public Boolean getActive() {

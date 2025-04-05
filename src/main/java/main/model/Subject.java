@@ -44,15 +44,13 @@ public class Subject {
 	private int numberOfSemesters;
 	
 	@ManyToOne
-	@Column(nullable = false)
 	private YearOfStudy yearOfStudy;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Outcome outcome;
 	
 	@OneToOne // Mozda 1 : *?
-	@Column(nullable = true)
+//	@Column(nullable = true)
 	private Subject prerequisite;
 	
 	@Column(nullable = false)

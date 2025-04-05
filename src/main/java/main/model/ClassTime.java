@@ -22,15 +22,12 @@ public class ClassTime {
 	private LocalDateTime endTime;
 	
 	@OneToOne
-	@Column(nullable = false)
-	private Outcome aftermath;
+	private Outcome outcome;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private TeachingType teachingType;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private SubjectRealization subjectRealization;
 	
 	@Column(nullable = false)
@@ -38,17 +35,20 @@ public class ClassTime {
 	
 	public ClassTime() {}
 
-	public ClassTime(Long id, LocalDateTime startTime, LocalDateTime endTime, Outcome aftermath,
+	
+	public ClassTime(Long id, LocalDateTime startTime, LocalDateTime endTime, Outcome outcome,
 			TeachingType teachingType, SubjectRealization subjectRealization, Boolean active) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.aftermath = aftermath;
+		this.outcome = outcome;
 		this.teachingType = teachingType;
 		this.subjectRealization = subjectRealization;
 		this.active = active;
 	}
+
+
 
 
 
@@ -76,13 +76,16 @@ public class ClassTime {
 		this.endTime = endTime;
 	}
 
-	public Outcome getAftermath() {
-		return aftermath;
+	
+	public Outcome getOutcome() {
+		return outcome;
 	}
 
-	public void setAftermath(Outcome aftermath) {
-		this.aftermath = aftermath;
+
+	public void setOutcome(Outcome outcome) {
+		this.outcome = outcome;
 	}
+
 
 	public TeachingType getTeachingType() {
 		return teachingType;

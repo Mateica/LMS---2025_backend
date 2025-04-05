@@ -21,11 +21,9 @@ public class Title {
 	@Column(nullable = false)
 	private Date dateAbolished;
 	
-	@Column(nullable = false)
 	@OneToOne
 	private ScientificField scientificField;
 	
-	@Column(nullable = false)
 	@OneToOne
 	private TitleType titleType;
 	

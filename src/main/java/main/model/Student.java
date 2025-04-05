@@ -34,16 +34,14 @@ public class Student {
 	@Column(nullable = false)
 	private String indexNumber;
 	
-	@Column(nullable = false)
 	@OneToOne
 	private Address address;
 	
-	@Column(nullable = false)
+	
 	@OneToOne
 	private StudentOnYear studentOnYear;
 	
 	@Column(nullable = false)
-	@OneToMany(mappedBy = "student")
 	private SubjectAttendance subjectAttendance;
 	
 	@Column(nullable = false)

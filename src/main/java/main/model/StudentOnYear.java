@@ -19,11 +19,9 @@ public class StudentOnYear {
 	private LocalDateTime dateOfApplication;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Student student;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private YearOfStudy yearOfStudy;
 	
 	@Column(nullable = false)

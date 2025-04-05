@@ -28,11 +28,9 @@ public class University {
 	private LocalDate dateEstablished;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Address address;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Teacher rector;
 	
 	@Lob
@@ -44,7 +42,6 @@ public class University {
 	private String description;
 	
 	@OneToMany(mappedBy = "university")
-	@Column(nullable = false)
 	private List<Faculty> faculties = new ArrayList<Faculty>();
 	
 	@Column(nullable = false)

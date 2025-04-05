@@ -19,15 +19,12 @@ public class Outcome {
 	private String description;
 	
 	@OneToOne
-	@Column(nullable = true)
 	private EducationGoal educationGoal;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private TeachingMaterial teachingMaterial;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Subject subject;
 	
 	@Column(nullable = false)

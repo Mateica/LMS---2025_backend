@@ -14,15 +14,12 @@ public class SubjectRealization {
 	private Long id;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Evaluation evaluation;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private TeacherOnRealization teacherOnRealization;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Subject subject;
 	
 	@Column(nullable = false)

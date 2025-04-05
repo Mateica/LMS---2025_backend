@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -22,7 +23,7 @@ public class Topic {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(nullable = true)
+	@JoinColumn(nullable = true)
 	@ManyToOne
 	private ForumUser author;
 	
@@ -31,7 +32,7 @@ public class Topic {
 	private List<Announcement> announcements = new ArrayList<Announcement>();
 	
 	@ManyToOne
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	private Forum forum;
 	
 	@Column(nullable = false)

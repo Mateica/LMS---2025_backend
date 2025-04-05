@@ -23,11 +23,9 @@ public class StudyProgramme {
 	private Faculty faculty;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private YearOfStudy yearOfStudy;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private Teacher teacher;
 	
 	@Column(nullable = false)

@@ -19,7 +19,6 @@ public class ScientificField {
 	private String name;
 	
 	@ManyToOne
-	@Column(nullable = false)
 	private Teacher teacher; // Jedan nastavnik moze imati samo jedno zvanje u jednoj oblasti, ali moze biti biran u vise oblasti
 	
 	@Column(nullable = false)
