@@ -30,6 +30,9 @@ public class File {
 	@Column(nullable = true)
 	private Message message;
 	
+	@ManyToOne
+	private Notification notification;
+	
 	@Column(nullable = false)
 	private Boolean active;
 	
@@ -37,15 +40,19 @@ public class File {
 		super();
 	}
 
-	public File(Long id, String url, String description, Announcement announcement, Message message, Boolean active) {
+	
+	public File(Long id, String url, String description, Announcement announcement, Message message,
+			Notification notification, Boolean active) {
 		super();
 		this.id = id;
 		this.url = url;
 		this.description = description;
 		this.announcement = announcement;
 		this.message = message;
+		this.notification = notification;
 		this.active = active;
 	}
+
 
 	public Long getId() {
 		return id;
