@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.RoleDTO;
 import main.model.Role;
 import main.service.RoleService;
 
-@Controller
+@RestController
 @RequestMapping(path = "/api/roles")
 public class RoleController implements ControllerInterface<RoleDTO> {
 	@Autowired

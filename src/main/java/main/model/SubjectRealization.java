@@ -16,7 +16,7 @@ public class SubjectRealization {
 	@OneToOne
 	private Evaluation evaluation;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "subjectRealization")
 	private TeacherOnRealization teacherOnRealization;
 	
 	@OneToOne

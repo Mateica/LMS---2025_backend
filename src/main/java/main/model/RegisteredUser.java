@@ -26,7 +26,7 @@ public class RegisteredUser {
 	private String password;
 	
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@Column(nullable = false)
