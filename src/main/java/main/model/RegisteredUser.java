@@ -17,15 +17,12 @@ public class RegisteredUser {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String username;
 	
-	@Lob
 	@Column(nullable = false)
 	private String password;
 	
-	@Lob
 	@Column(nullable = false, unique = true)
 	private String email;
 	

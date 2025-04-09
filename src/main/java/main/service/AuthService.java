@@ -22,11 +22,14 @@ public class AuthService {
 			user.setUsername(userDTO.getUsername());
 			user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			user.setEmail(userDTO.getEmail());
+			user.setActive(true);
 			
 			return this.repo.save(user);
 		
 		}
 		catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("TEST");
 			return null;
 		}	
 	}
