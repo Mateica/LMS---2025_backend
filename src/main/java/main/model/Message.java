@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -27,6 +28,10 @@ public class Message {
 	@OneToOne
 	private RegisteredUser receiver;
 	
+	@Lob
+	@Column(nullable = false)
+	private String content; 
+	
 	@OneToMany(mappedBy = "message")
 	private List<File> attachments = new ArrayList<File>();
 	
@@ -38,18 +43,17 @@ public class Message {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Message(Long id, LocalDateTime timePublished, RegisteredUser sender, RegisteredUser receiver,
+	public Message(Long id, LocalDateTime timePublished, RegisteredUser sender, RegisteredUser receiver, String content,
 			List<File> attachments, Boolean active) {
 		super();
 		this.id = id;
 		this.timePublished = timePublished;
 		this.sender = sender;
 		this.receiver = receiver;
+		this.content = content;
 		this.attachments = attachments;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -98,6 +102,15 @@ public class Message {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
 	
 	
 }

@@ -22,7 +22,6 @@ public class TitleType {
 
 	public TitleType() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public TitleType(Long id, String name, Boolean active) {
