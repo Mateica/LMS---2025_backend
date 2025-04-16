@@ -2,6 +2,7 @@ package main.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,9 +23,9 @@ public class TeachingMaterial {
 	@Column(nullable = false)
 	private String name;
 	
-//	@OneToMany(mappedBy = "teaching_material")
+	@OneToMany(mappedBy = "teachingMaterial")
 	@Column(nullable = false)
-	private ArrayList<String> authors; // Da li umesto stringova mogu stajati nastavnici?
+	private List<Teacher> authors = new ArrayList<Teacher>();
 	
 	@Column(nullable = false)
 	private LocalDateTime yearOfPublication;
@@ -40,7 +41,7 @@ public class TeachingMaterial {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TeachingMaterial(Long id, String name, ArrayList<String> authors, LocalDateTime yearOfPublication, File file,
+	public TeachingMaterial(Long id, String name, List<Teacher> authors, LocalDateTime yearOfPublication, File file,
 			Boolean active) {
 		super();
 		this.id = id;
@@ -69,11 +70,11 @@ public class TeachingMaterial {
 		this.name = name;
 	}
 
-	public ArrayList<String> getAuthors() {
+	public List<Teacher> getAuthors() {
 		return authors;
 	}
 
-	public void setAuthors(ArrayList<String> authors) {
+	public void setAuthors(List<Teacher> authors) {
 		this.authors = authors;
 	}
 

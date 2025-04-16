@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -33,9 +34,12 @@ public class Teacher {
 	@OneToOne
 	private Title title;
 	
-//	@OneToMany(mappedBy = "teacher")
+	@OneToMany(mappedBy = "teacher")
 	@Column(nullable = false)
 	private ScientificField scientificField; // Jedan nastavnik moze imati samo jedno zvanjeu jednoj oblasti, ali moze biti biran u vise oblasti
+	
+	@ManyToOne
+	private TeachingMaterial teachingMaterial;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -45,7 +49,7 @@ public class Teacher {
 	}
 
 	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, Title title,
-			ScientificField scientificField, Boolean active) {
+			ScientificField scientificField, TeachingMaterial teachingMaterial, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -54,8 +58,11 @@ public class Teacher {
 		this.umcn = umcn;
 		this.title = title;
 		this.scientificField = scientificField;
+		this.teachingMaterial = teachingMaterial;
 		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -120,6 +127,15 @@ public class Teacher {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	public TeachingMaterial getTeachingMaterial() {
+		return teachingMaterial;
+	}
+
+	public void setTeachingMaterial(TeachingMaterial teachingMaterial) {
+		this.teachingMaterial = teachingMaterial;
+	}
+	
 	
 	
 }
