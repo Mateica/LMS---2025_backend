@@ -1,7 +1,9 @@
 package main.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 
 @Entity
@@ -32,8 +33,8 @@ public class ForumUser {
 	@JoinColumn(nullable = false)
 	private Forum forum;
 	
-	@OneToOne
-	private Role role;
+	@OneToMany(mappedBy = "forumUser")
+	private Set<ForumRole> forumRoles = new HashSet<ForumRole>();
 	
 	@Column(nullable = true)
 	@OneToMany(mappedBy = "author")
@@ -46,18 +47,20 @@ public class ForumUser {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public ForumUser(Long id, RegisteredUser registeredUser, List<Topic> topics, Forum forum, Role role,
+	
+	public ForumUser(Long id, RegisteredUser registeredUser, List<Topic> topics, Forum forum, Set<ForumRole> forumRoles,
 			List<Announcement> announcements, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
 		this.topics = topics;
 		this.forum = forum;
-		this.role = role;
+		this.forumRoles = forumRoles;
 		this.announcements = announcements;
 		this.active = active;
 	}
+
+
 
 
 
@@ -85,13 +88,6 @@ public class ForumUser {
 		this.forum = forum;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
 
 	public List<Announcement> getAnnouncements() {
 		return announcements;
@@ -115,6 +111,14 @@ public class ForumUser {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Set<ForumRole> getForumRoles() {
+		return forumRoles;
+	}
+
+	public void setForumRoles(Set<ForumRole> forumRoles) {
+		this.forumRoles = forumRoles;
 	}
 	
 	

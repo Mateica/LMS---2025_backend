@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class ForumRole {
@@ -18,6 +19,9 @@ public class ForumRole {
 	@Column(nullable = false)
 	private String name;
 	
+	@ManyToOne
+	private ForumUser forumUser;
+	
 	@Column(nullable = false)
 	private Boolean active;
 
@@ -26,12 +30,15 @@ public class ForumRole {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ForumRole(Long id, String name, Boolean active) {
+	public ForumRole(Long id, String name, ForumUser forumUser, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.forumUser = forumUser;
 		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -55,5 +62,13 @@ public class ForumRole {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public ForumUser getForumUser() {
+		return forumUser;
+	}
+
+	public void setForumUser(ForumUser forumUser) {
+		this.forumUser = forumUser;
 	}
 }
