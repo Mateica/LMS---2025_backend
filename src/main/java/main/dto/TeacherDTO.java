@@ -114,7 +114,4 @@ public class TeacherDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
 }
