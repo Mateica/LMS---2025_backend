@@ -41,6 +41,9 @@ public class Teacher {
 	@ManyToOne
 	private TeachingMaterial teachingMaterial;
 	
+	@ManyToOne
+	private Department department;
+	
 	@Column(nullable = false)
 	private Boolean active;
 	
@@ -49,7 +52,7 @@ public class Teacher {
 	}
 
 	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, Title title,
-			ScientificField scientificField, TeachingMaterial teachingMaterial, Boolean active) {
+			ScientificField scientificField, TeachingMaterial teachingMaterial, Department department, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -59,8 +62,11 @@ public class Teacher {
 		this.title = title;
 		this.scientificField = scientificField;
 		this.teachingMaterial = teachingMaterial;
+		this.department = department;
 		this.active = active;
 	}
+
+
 
 
 
@@ -135,7 +141,14 @@ public class Teacher {
 	public void setTeachingMaterial(TeachingMaterial teachingMaterial) {
 		this.teachingMaterial = teachingMaterial;
 	}
-	
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
 	
 	
 }
