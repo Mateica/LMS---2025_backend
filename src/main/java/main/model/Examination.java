@@ -18,7 +18,7 @@ public class Examination {
 	
 	@Lob
 	@Column(nullable = false)
-	private String note;
+	private Note note;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -28,7 +28,7 @@ public class Examination {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Examination(Long id, double numberOfPoints, String note, Boolean active) {
+	public Examination(Long id, double numberOfPoints, Note note, Boolean active) {
 		super();
 		this.id = id;
 		this.numberOfPoints = numberOfPoints;
@@ -54,11 +54,11 @@ public class Examination {
 		this.numberOfPoints = numberOfPoints;
 	}
 
-	public String getNote() {
+	public Note getNote() {
 		return note;
 	}
 
-	public void setNote(String note) {
+	public void setNote(Note note) {
 		this.note = note;
 	}
 
