@@ -20,6 +20,9 @@ public class Note {
 	
 	@ManyToOne
 	private Examination examination;
+	
+	@Column(nullable = false)
+	private Boolean active;
 
 	public Note() {
 		super();
@@ -55,6 +58,14 @@ public class Note {
 
 	public void setExamination(Examination examination) {
 		this.examination = examination;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 	
