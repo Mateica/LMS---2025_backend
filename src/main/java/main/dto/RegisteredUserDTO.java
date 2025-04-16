@@ -1,9 +1,21 @@
 package main.dto;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import jakarta.persistence.OneToMany;
+import main.model.Account;
+import main.model.ForumUser;
+import main.model.Role;
+
 public class RegisteredUserDTO {
+	private Long id;
 	private String username;
 	private String password;
 	private String email;
+	private Boolean active;
 
 	public RegisteredUserDTO() {
 		super();
@@ -39,5 +51,21 @@ public class RegisteredUserDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 }

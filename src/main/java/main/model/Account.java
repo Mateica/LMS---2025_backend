@@ -85,4 +85,14 @@ public class Account {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	public RegisteredUser getRegisteredUser() {
+		return registeredUser;
+	}
+
+	public void setRegisteredUser(RegisteredUser registeredUser) {
+		this.registeredUser = registeredUser;
+	}
+	
+	
 }
