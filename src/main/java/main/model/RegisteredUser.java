@@ -32,25 +32,32 @@ public class RegisteredUser {
 	private List<ForumUser> forumUser = new ArrayList<ForumUser>();
 	
 	@OneToMany(mappedBy = "registeredUser")
+	private List<Account> accounts = new ArrayList<Account>(); 
+	
+	@OneToMany(mappedBy = "registeredUser")
 	private Set<Role> roles = new HashSet<Role>();
 	
 	@Column(nullable = false)
 	private Boolean active;
 	
 	public RegisteredUser() {}
+
 	
-	
+
 	public RegisteredUser(Long id, String username, String password, String email, List<ForumUser> forumUser,
-			Set<Role> roles, Boolean active) {
+			List<Account> accounts, Set<Role> roles, Boolean active) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.forumUser = forumUser;
+		this.accounts = accounts;
 		this.roles = roles;
 		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -108,6 +115,18 @@ public class RegisteredUser {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
 	}
 	
 }
