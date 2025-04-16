@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Role {
@@ -17,6 +18,9 @@ public class Role {
 	@Lob
 	@Column(nullable = false)
 	private String name;
+	
+	@ManyToOne
+	private RegisteredUser registeredUser;
 	
 	@Column(nullable = false)
 	private Boolean active;

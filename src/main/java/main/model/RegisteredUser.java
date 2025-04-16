@@ -1,14 +1,15 @@
 package main.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -30,25 +31,26 @@ public class RegisteredUser {
 	@OneToMany(mappedBy = "registeredUser")
 	private List<ForumUser> forumUser = new ArrayList<ForumUser>();
 	
+	@OneToMany(mappedBy = "registeredUser")
+	private Set<Role> roles = new HashSet<Role>();
+	
 	@Column(nullable = false)
 	private Boolean active;
 	
 	public RegisteredUser() {}
 	
 	
-
 	public RegisteredUser(Long id, String username, String password, String email, List<ForumUser> forumUser,
-			Boolean active) {
+			Set<Role> roles, Boolean active) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.forumUser = forumUser;
+		this.roles = roles;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -97,6 +99,15 @@ public class RegisteredUser {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 	
 }
