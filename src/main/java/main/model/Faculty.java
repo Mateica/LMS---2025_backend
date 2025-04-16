@@ -1,7 +1,9 @@
 package main.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +44,9 @@ public class Faculty {
 	private String description;
 	
 	@OneToMany(mappedBy = "faculty")
+	private Set<Department> departments = new HashSet<Department>();
+	
+	@OneToMany(mappedBy = "faculty")
 	@Column(nullable = false)
 	private List<StudyProgramme> studyProgrammes = new ArrayList<StudyProgramme>();
 	
@@ -53,7 +58,9 @@ public class Faculty {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Faculty(Long id, String name, Address address, Teacher headmaster, University university, String contactDetails, String description, ArrayList<StudyProgramme> studyProgrammes, Boolean active) {
+	public Faculty(Long id, String name, Address address, Teacher headmaster, University university,
+			String contactDetails, String description, Set<Department> departments,
+			List<StudyProgramme> studyProgrammes, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -62,9 +69,11 @@ public class Faculty {
 		this.university = university;
 		this.contactDetails = contactDetails;
 		this.description = description;
+		this.departments = departments;
 		this.studyProgrammes = studyProgrammes;
 		this.active = active;
 	}
+
 
 	public Long getId() {
 		return id;
@@ -137,6 +146,12 @@ public class Faculty {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
+	public Set<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(Set<Department> departments) {
+		this.departments = departments;
+	}
 }

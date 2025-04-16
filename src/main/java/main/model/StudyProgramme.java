@@ -28,6 +28,9 @@ public class StudyProgramme {
 	@OneToOne
 	private Teacher teacher;
 	
+	@ManyToOne
+	private Department department;
+	
 	@Column(nullable = false)
 	private Boolean active;
 
@@ -37,15 +40,17 @@ public class StudyProgramme {
 	}
 
 	public StudyProgramme(Long id, String name, Faculty faculty, YearOfStudy yearOfStudy, Teacher teacher,
-			Boolean active) {
+			Department department, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.faculty = faculty;
 		this.yearOfStudy = yearOfStudy;
 		this.teacher = teacher;
+		this.department = department;
 		this.active = active;
 	}
+
 
 
 	public Long getId() {
@@ -95,6 +100,13 @@ public class StudyProgramme {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
 	
 }
