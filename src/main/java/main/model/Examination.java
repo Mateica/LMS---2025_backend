@@ -1,11 +1,16 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Examination {
@@ -16,9 +21,11 @@ public class Examination {
 	@Column(nullable = false)
 	private double numberOfPoints;
 	
-	@Lob
-	@Column(nullable = false)
-	private Note note;
+	@OneToMany(mappedBy = "examination")
+	private List<Note> notes = new ArrayList<Note>();
+	
+	@ManyToOne
+	private StudentOnYear studentOnYear;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -28,15 +35,14 @@ public class Examination {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Examination(Long id, double numberOfPoints, Note note, Boolean active) {
+	public Examination(Long id, double numberOfPoints, List<Note> notes, StudentOnYear studentOnYear, Boolean active) {
 		super();
 		this.id = id;
 		this.numberOfPoints = numberOfPoints;
-		this.note = note;
+		this.notes = notes;
+		this.studentOnYear = studentOnYear;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -54,12 +60,20 @@ public class Examination {
 		this.numberOfPoints = numberOfPoints;
 	}
 
-	public Note getNote() {
-		return note;
+	public List<Note> getNotes() {
+		return notes;
 	}
 
-	public void setNote(Note note) {
-		this.note = note;
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
+
+	public StudentOnYear getStudentOnYear() {
+		return studentOnYear;
+	}
+
+	public void setStudentOnYear(StudentOnYear studentOnYear) {
+		this.studentOnYear = studentOnYear;
 	}
 
 	public Boolean getActive() {
