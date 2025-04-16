@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -28,7 +27,7 @@ public class Topic {
 	
 	@OneToMany(mappedBy = "topic")
 	@Column(nullable = false)
-	private List<Announcement> announcements = new ArrayList<Announcement>();
+	private List<ForumPost> posts = new ArrayList<ForumPost>();
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
@@ -42,13 +41,13 @@ public class Topic {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Topic(Long id, String name, ForumUser author, List<Announcement> announcements, Forum forum,
+	public Topic(Long id, String name, ForumUser author, List<ForumPost> posts, Forum forum,
 			Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.author = author;
-		this.announcements = announcements;
+		this.posts = posts;
 		this.forum = forum;
 		this.active = active;
 	}
@@ -79,12 +78,12 @@ public class Topic {
 		this.author = author;
 	}
 
-	public List<Announcement> getAnnouncements() {
-		return announcements;
+	public List<ForumPost> getAnnouncements() {
+		return posts;
 	}
 
-	public void setAnnouncements(List<Announcement> announcements) {
-		this.announcements = announcements;
+	public void setAnnouncements(List<ForumPost> posts) {
+		this.posts = posts;
 	}
 
 	public Forum getForum() {

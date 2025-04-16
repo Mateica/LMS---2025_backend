@@ -38,7 +38,7 @@ public class ForumUser {
 	
 	@Column(nullable = true)
 	@OneToMany(mappedBy = "author")
-	private List<Announcement> announcements = new ArrayList<Announcement>();
+	private List<ForumPost> posts = new ArrayList<ForumPost>();
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -49,14 +49,14 @@ public class ForumUser {
 	}
 	
 	public ForumUser(Long id, RegisteredUser registeredUser, List<Topic> topics, Forum forum, Set<ForumRole> forumRoles,
-			List<Announcement> announcements, Boolean active) {
+			List<ForumPost> posts, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
 		this.topics = topics;
 		this.forum = forum;
 		this.forumRoles = forumRoles;
-		this.announcements = announcements;
+		this.posts = posts;
 		this.active = active;
 	}
 
@@ -89,12 +89,12 @@ public class ForumUser {
 	}
 
 
-	public List<Announcement> getAnnouncements() {
-		return announcements;
+	public List<ForumPost> getAnnouncements() {
+		return posts;
 	}
 
-	public void setAnnouncements(List<Announcement> announcements) {
-		this.announcements = announcements;
+	public void setAnnouncements(List<ForumPost> posts) {
+		this.posts = posts;
 	}
 
 	public List<Topic> getTopics() {

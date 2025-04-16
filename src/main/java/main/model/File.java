@@ -25,14 +25,14 @@ public class File {
 	
 	@ManyToOne
 	@JoinColumn(nullable = true)
-	private Announcement announcement;
+	private ForumPost post;
 	
 	@ManyToOne
 	@JoinColumn(nullable = true)
 	private Message message;
 	
 	@ManyToOne
-	private Notification notification;
+	private Announcement announcement;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -42,17 +42,23 @@ public class File {
 	}
 
 	
-	public File(Long id, String url, String description, Announcement announcement, Message message,
-			Notification notification, Boolean active) {
+
+
+
+	public File(Long id, String url, String description, ForumPost post, Message message, Announcement announcement,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.url = url;
 		this.description = description;
-		this.announcement = announcement;
+		this.post = post;
 		this.message = message;
-		this.notification = notification;
+		this.announcement = announcement;
 		this.active = active;
 	}
+
+
+
 
 
 	public Long getId() {
@@ -83,12 +89,12 @@ public class File {
 		this.description = description;
 	}
 
-	public Announcement getAnnouncement() {
-		return announcement;
+	public ForumPost getPost() {
+		return post;
 	}
 
-	public void setAnnouncement(Announcement announcement) {
-		this.announcement = announcement;
+	public void setPost(ForumPost post) {
+		this.post = post;
 	}
 
 	public Message getMessage() {

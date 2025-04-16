@@ -23,7 +23,7 @@ public class TeacherOnRealization {
 	private SubjectRealization subjectRealization;
 	
 	@OneToOne
-	private Notification notification;
+	private Announcement announcement;
 	
 	@OneToOne
 	private TeachingType teachingType;
@@ -37,13 +37,13 @@ public class TeacherOnRealization {
 	}
 
 	public TeacherOnRealization(Long id, int numberOfClasses, Teacher teacher, SubjectRealization subjectRealization,
-			Notification notification, TeachingType teachingType, Boolean active) {
+			Announcement announcement, TeachingType teachingType, Boolean active) {
 		super();
 		this.id = id;
 		this.numberOfClasses = numberOfClasses;
 		this.teacher = teacher;
 		this.subjectRealization = subjectRealization;
-		this.notification = notification;
+		this.announcement = announcement;
 		this.teachingType = teachingType;
 		this.active = active;
 	}
@@ -82,12 +82,12 @@ public class TeacherOnRealization {
 		this.subjectRealization = subjectRealization;
 	}
 
-	public Notification getNotification() {
-		return notification;
+	public Announcement getNotification() {
+		return announcement;
 	}
 
-	public void setNotification(Notification notification) {
-		this.notification = notification;
+	public void setNotification(Announcement announcement) {
+		this.announcement = announcement;
 	}
 
 	public TeachingType getTeachingType() {

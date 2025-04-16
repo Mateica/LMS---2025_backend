@@ -10,45 +10,49 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Announcement {
-	
+public class ForumPost {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false)
-	private LocalDateTime timePublished;
+	private LocalDateTime datePublished;
 	
 	@Lob
 	@Column(nullable = false)
 	private String content;
 	
-	@Lob
-	@Column(nullable = false)
-	private String title;
+	@ManyToOne
+	private ForumUser author;
 	
-	@OneToMany(mappedBy = "announcement")
+	@OneToMany(mappedBy = "post")
+	@Column(nullable = true)
 	private List<File> attachments = new ArrayList<File>();
+	
+	@ManyToOne
+	private Topic topic;
 	
 	@Column(nullable = false)
 	private Boolean active;
 
-	public Announcement() {
+	public ForumPost() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Announcement(Long id, LocalDateTime timePublished, String content, String title, List<File> attachments,
-			Boolean active) {
+	public ForumPost(Long id, LocalDateTime datePublished, String content, ForumUser author, List<File> attachments,
+			Topic topic, Boolean active) {
 		super();
 		this.id = id;
-		this.timePublished = timePublished;
+		this.datePublished = datePublished;
 		this.content = content;
-		this.title = title;
+		this.author = author;
 		this.attachments = attachments;
+		this.topic = topic;
 		this.active = active;
 	}
 
@@ -62,12 +66,12 @@ public class Announcement {
 		this.id = id;
 	}
 
-	public LocalDateTime getTimePublished() {
-		return timePublished;
+	public LocalDateTime getDatePublished() {
+		return datePublished;
 	}
 
-	public void setTimePublished(LocalDateTime timePublished) {
-		this.timePublished = timePublished;
+	public void setDatePublished(LocalDateTime datePublished) {
+		this.datePublished = datePublished;
 	}
 
 	public String getContent() {
@@ -78,12 +82,12 @@ public class Announcement {
 		this.content = content;
 	}
 
-	public String getTitle() {
-		return title;
+	public ForumUser getAuthor() {
+		return author;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setAuthor(ForumUser author) {
+		this.author = author;
 	}
 
 	public List<File> getAttachments() {
@@ -94,6 +98,14 @@ public class Announcement {
 		this.attachments = attachments;
 	}
 
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -101,4 +113,8 @@ public class Announcement {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
+	
+	
+	
 }
