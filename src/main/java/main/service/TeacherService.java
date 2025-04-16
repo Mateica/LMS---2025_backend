@@ -47,7 +47,7 @@ public class TeacherService implements ServiceInterface<Teacher> {
 		Teacher t = repo.findById(id).orElse(null);
 		
 		if(t == null) {
-			throw new RuntimeException("No study programme with such ID!");
+			throw new RuntimeException("No teacher with such ID!");
 		}
 		
 		repo.deleteById(id);
@@ -59,7 +59,7 @@ public class TeacherService implements ServiceInterface<Teacher> {
 		Teacher t = repo.findById(id).orElse(null);
 		
 		if(t == null) {
-			throw new RuntimeException("No study programme with such ID!");
+			throw new RuntimeException("No teacher with such ID!");
 		}
 		
 		t.setActive(false);
