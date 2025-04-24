@@ -1,6 +1,9 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import main.model.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.RegisteredUserDTO;
+import main.model.Account;
 import main.model.ForumUser;
 import main.model.RegisteredUser;
 import main.service.RegisteredUserService;
@@ -54,7 +58,8 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 	@PostMapping("")
 	public ResponseEntity<RegisteredUserDTO> create(@RequestBody RegisteredUserDTO t) {
 		// TODO Auto-generated method stub
-		RegisteredUser user = service.create(new RegisteredUser(null, t.getUsername(), t.getPassword(), t.getEmail(), new ArrayList<ForumUser>(), true));
+		RegisteredUser user = service.create(new RegisteredUser(null, t.getUsername(), t.getPassword(), t.getEmail(),
+				new ArrayList<ForumUser>(), new ArrayList<Account>(), new HashSet<Role>(), true));
 		
 		if(user == null) {
 			return new ResponseEntity<RegisteredUserDTO>(HttpStatus.BAD_REQUEST);

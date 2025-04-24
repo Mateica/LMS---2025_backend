@@ -44,9 +44,6 @@ public class MessageService {
 				attachment.setMessage(message);
 				attachment.setDescription(content);
 				
-				// PRIVREMENO
-				attachment.setAnnouncement(null);
-				
 				message.getAttachments().add(attachment);
 			}
 		}

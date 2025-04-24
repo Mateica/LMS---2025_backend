@@ -3,6 +3,8 @@ package main.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import main.model.Teacher;
@@ -17,6 +19,10 @@ public class TeacherService implements ServiceInterface<Teacher> {
 	public Iterable<Teacher> findAll() {
 		// TODO Auto-generated method stub
 		return this.repo.findAll();
+	}
+	
+	public Page<Teacher> findAll(Pageable pageable){
+		return this.repo.findAll(pageable);
 	}
 
 	@Override
@@ -64,8 +70,6 @@ public class TeacherService implements ServiceInterface<Teacher> {
 		
 		t.setActive(false);
 		repo.save(t);
-		
-		
 	}
 	
 	
