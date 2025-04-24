@@ -6,6 +6,7 @@ import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +25,13 @@ import main.model.Role;
 import main.service.AccountService;
 
 @RestController
-@RequestMapping(path = "/api/accounts")
+@RequestMapping("/api/accounts")
 public class AccountController implements ControllerInterface<AccountDTO> {
 	@Autowired
 	private AccountService service;
 
 	@Override
-	@GetMapping("")
+	@GetMapping
 	public ResponseEntity<Iterable<AccountDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<AccountDTO> accounts = new ArrayList<AccountDTO>();
@@ -45,7 +46,7 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 	}
 
 	@Override
-	@GetMapping("")
+	@GetMapping("/{id}")
 	public ResponseEntity<AccountDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Account a = service.findById(id).orElse(null);
