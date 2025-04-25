@@ -1,0 +1,111 @@
+package main.controller;
+
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.tags.EvalTag;
+
+import main.dto.EvaluationTypeDTO;
+import main.model.EvaluationType;
+import main.service.EvaluationTypeService;
+
+@RestController
+@RequestMapping("/api/evaluationTypes")
+public class EvaluationTypeController implements ControllerInterface<EvaluationTypeDTO> {
+	@Autowired
+	private EvaluationTypeService service;
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@GetMapping
+	public ResponseEntity<Iterable<EvaluationTypeDTO>> findAll() {
+		// TODO Auto-generated method stub
+		ArrayList<EvaluationTypeDTO> evaluationTypes = new ArrayList<EvaluationTypeDTO>();
+		
+		for(EvaluationType et : service.findAll()) {
+			evaluationTypes.add(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()));
+		}
+		
+		return new ResponseEntity<Iterable<EvaluationTypeDTO>>(evaluationTypes, HttpStatus.OK);
+	}
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@GetMapping("/{id}")
+	public ResponseEntity<EvaluationTypeDTO> findById(Long id) {
+		// TODO Auto-generated method stub
+		EvaluationType et = service.findById(id).orElse(null);
+		
+		if(et == null) {
+			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+	}
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@PostMapping
+	public ResponseEntity<EvaluationTypeDTO> create(EvaluationTypeDTO t) {
+		// TODO Auto-generated method stub
+		EvaluationType et = service.create(new EvaluationType(null, t.getName(), true));
+		
+		if(et == null) {
+			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.CREATED);
+	}
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@PutMapping("/{id}")
+	public ResponseEntity<EvaluationTypeDTO> update(EvaluationTypeDTO t, Long id) {
+		// TODO Auto-generated method stub
+		EvaluationType et = service.findById(id).orElse(null);
+		
+		if(et == null) {
+			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		et.setId(t.getId());
+		et.setName(t.getName());
+		et.setActive(t.getActive());
+		
+		et = service.update(et)
+;
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+	}
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<EvaluationTypeDTO> delete(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Secured("{ADMIN, TEACHER}")
+	@PutMapping("/softDelete/{id}")
+	public ResponseEntity<EvaluationTypeDTO> softDelete(Long id) {
+		// TODO Auto-generated method stub
+		EvaluationType et = service.findById(id).orElse(null);
+		
+		if(et == null) {
+			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		service.softDelete(id);
+		
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+	}
+}

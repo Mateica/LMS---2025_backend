@@ -115,6 +115,8 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 			return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		service.softDelete(id);
+		
 		return new ResponseEntity<AccountDTO>(new AccountDTO(a.getId(), a.getUsername(), null, a.getEmail(),
 				new RegisteredUserDTO(a.getRegisteredUser().getUsername(), null, a.getRegisteredUser().getEmail()),
 				a.getActive()), HttpStatus.OK);
