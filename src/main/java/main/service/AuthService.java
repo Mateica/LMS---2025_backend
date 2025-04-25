@@ -7,11 +7,15 @@ import org.springframework.stereotype.Service;
 import main.dto.RegisteredUserDTO;
 import main.model.RegisteredUser;
 import main.repository.RegisteredUserRepository;
+import main.repository.RoleRepository;
 
 @Service
 public class AuthService {
 	@Autowired
 	private RegisteredUserRepository repo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -22,6 +26,7 @@ public class AuthService {
 			user.setUsername(userDTO.getUsername());
 			user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 			user.setEmail(userDTO.getEmail());
+			user.getRoles().add(roleRepo.findByName("USER"));
 			user.setActive(true);
 			
 			return this.repo.save(user);

@@ -12,4 +12,6 @@ import main.model.Role;
 public interface RoleRepository extends CrudRepository<Role, Long>, PagingAndSortingRepository<Role, Long> {
 	@Query("UPDATE Role r SET r.active = false WHERE r.id = :id")
 	public void softDelete(Long id);
+	
+	public Role findByName(String name);
 }
