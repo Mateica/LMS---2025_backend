@@ -20,7 +20,7 @@ public class FileDTO {
 		this.id = id;
 		this.url = url;
 		this.description = description;
-		this.post = post;
+		 this.post = post;
 		this.message = message;
 		this.announcement = announcement;
 		this.active = active;
@@ -50,13 +50,13 @@ public class FileDTO {
 		this.description = description;
 	}
 
-	public ForumPostDTO getPost() {
-		return post;
-	}
-
-	public void setPost(ForumPostDTO post) {
-		this.post = post;
-	}
+//	public ForumPostDTO getPost() {
+//		return post;
+//	}
+//
+//	public void setPost(ForumPostDTO post) {
+//		this.post = post;
+//	}
 
 	public MessageDTO getMessage() {
 		return message;

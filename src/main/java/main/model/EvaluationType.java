@@ -13,7 +13,6 @@ public class EvaluationType {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Lob
 	@Column(nullable = false)
 	private String name;
 
