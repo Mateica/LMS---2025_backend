@@ -14,6 +14,16 @@ public class CountryDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public CountryDTO(Long id, String name, List<PlaceDTO> places, Boolean active) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.places = places;
+		this.active = active;
+	}
+
+
 
 
 	public Long getId() {
