@@ -2,12 +2,20 @@ package main.controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import main.model.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.dto.AccountDTO;
 import main.dto.RegisteredUserDTO;
 import main.model.Account;
 import main.model.ForumUser;
@@ -41,6 +51,32 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 		
 		return new ResponseEntity<Iterable<RegisteredUserDTO>>(users,HttpStatus.OK);
 	}
+	
+	@Override
+	@GetMapping
+	@Secured("{ADMIN}")
+	public ResponseEntity<Page<RegisteredUserDTO>> findAll(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(page, size, sort);
+
+	    Page<RegisteredUser> userPage = service.findAll(pageable);
+
+	    List<RegisteredUserDTO> userDTOs = userPage.stream().map(u ->
+	        new RegisteredUserDTO(
+	        		u.getUsername(), 
+	        		u.getPassword(), 
+	        		u.getEmail()
+	        )
+	    ).collect(Collectors.toList());
+
+	    Page<RegisteredUserDTO> resultPage = new PageImpl<RegisteredUserDTO>(userDTOs, pageable, userPage.getTotalElements());
+
+	    return new ResponseEntity<Page<RegisteredUserDTO>>(resultPage, HttpStatus.OK);
+	}
+
 
 	@Override
 	@GetMapping("/{id}")
@@ -107,5 +143,4 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 		
 		return new ResponseEntity<RegisteredUserDTO>(new RegisteredUserDTO(user.getUsername(), user.getPassword(), user.getEmail()), HttpStatus.OK);
 	}
-
 }
