@@ -1,8 +1,15 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -13,13 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.CountryDTO;
 import main.dto.PlaceDTO;
 import main.model.Country;
 import main.model.Place;
-import main.service.CountryService;
 import main.service.PlaceService;
 
 @RestController
@@ -42,6 +49,37 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 		}
 		
 		return new ResponseEntity<Iterable<PlaceDTO>>(places, HttpStatus.OK);
+	}
+	
+	@Override
+	@GetMapping
+	@Secured("{ADMIN}")
+	public ResponseEntity<Page<PlaceDTO>> findAll(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(page, size, sort);
+
+	    Page<Place> placePage = service.findAll(pageable);
+
+	    List<PlaceDTO> placeDTOs = placePage.stream().map(p -> 
+	        new PlaceDTO(
+	            p.getId(),
+	            p.getName(),
+	            new CountryDTO(
+	                p.getCountry().getId(),
+	                p.getCountry().getName(),
+	                new ArrayList<PlaceDTO>(),
+	                p.getCountry().getActive()
+	            ),
+	            p.getActive()
+	        )
+	    ).collect(Collectors.toList());
+
+	    Page<PlaceDTO> resultPage = new PageImpl<>(placeDTOs, pageable, placePage.getTotalElements());
+
+	    return new ResponseEntity<>(resultPage, HttpStatus.OK);
 	}
 
 	@Override
