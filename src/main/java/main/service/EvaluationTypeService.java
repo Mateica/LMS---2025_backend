@@ -3,6 +3,8 @@ package main.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import main.model.EvaluationType;
@@ -17,6 +19,12 @@ public class EvaluationTypeService implements ServiceInterface<EvaluationType> {
 	public Iterable<EvaluationType> findAll() {
 		// TODO Auto-generated method stub
 		return this.repo.findAll();
+	}
+	
+	@Override
+	public Page<EvaluationType> findAll(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return this.repo.findAll(pageable);
 	}
 
 	@Override

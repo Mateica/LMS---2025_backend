@@ -75,7 +75,7 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 	        )
 	    ).collect(Collectors.toList());
 
-	    Page<AccountDTO> resultPage = new PageImpl<>(accountDTOs, pageable, accountPage.getTotalElements());
+	    Page<AccountDTO> resultPage = new PageImpl<AccountDTO>(accountDTOs, pageable, accountPage.getTotalElements());
 
 	    return new ResponseEntity<>(resultPage, HttpStatus.OK);
 	}

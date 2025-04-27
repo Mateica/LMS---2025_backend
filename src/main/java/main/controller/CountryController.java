@@ -86,7 +86,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	    Page<CountryDTO> resultPage = new PageImpl<>(countryDTOs, pageable, countryPage.getTotalElements());
 
-	    return new ResponseEntity<>(resultPage, HttpStatus.OK);
+	    return new ResponseEntity<Page<CountryDTO>>(resultPage, HttpStatus.OK);
 	}
 
 	@Override
