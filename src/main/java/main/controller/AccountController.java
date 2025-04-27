@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.AccountDTO;
@@ -52,7 +53,12 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 	}
 	
 	@Override
-	public ResponseEntity<Page<AccountDTO>> findAll(int page, int size, String sortBy, boolean ascending) {
+	@GetMapping
+	public ResponseEntity<Page<AccountDTO>> findAll(
+			@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
 	    Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 	    Pageable pageable = PageRequest.of(page, size, sort);
 
