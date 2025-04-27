@@ -1,11 +1,18 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.RoleDTO;
@@ -35,6 +43,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@GetMapping("")
+	@Secured("{ADMIN}")
 	public ResponseEntity<Iterable<RoleDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<RoleDTO> roles = new ArrayList<RoleDTO>();
@@ -45,9 +54,30 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 		
 		return new ResponseEntity<Iterable<RoleDTO>>(roles, HttpStatus.OK);
 	}
+	
+	@Override
+	@GetMapping
+	@Secured("{ADMIN}")
+	public ResponseEntity<Page<RoleDTO>> findAll(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(page, size, sort);
+
+	    Page<Role> rolePage = service.findAll(pageable);
+
+	    List<RoleDTO> roleDTOs = rolePage.stream().map(r ->
+	    new RoleDTO(r.getId(), r.getName(), r.getActive())).collect(Collectors.toList());
+
+	    Page<RoleDTO> resultPage = new PageImpl<RoleDTO>(roleDTOs, pageable, rolePage.getTotalElements());
+
+	    return new ResponseEntity<Page<RoleDTO>>(resultPage, HttpStatus.OK);
+	}
 
 	@Override
 	@GetMapping("/{id}")
+	@Secured("{ADMIN}")
 	public ResponseEntity<RoleDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -60,6 +90,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@PostMapping("")
+	@Secured("{ADMIN}")
 	public ResponseEntity<RoleDTO> create(@RequestBody RoleDTO t) {
 		// TODO Auto-generated method stub
 		Role r = service.create(new Role(t.getId(), t.getName(), t.getActive()));
@@ -72,6 +103,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@PutMapping("/{id}")
+	@Secured("{ADMIN}")
 	public ResponseEntity<RoleDTO> update(@RequestBody RoleDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -90,6 +122,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@DeleteMapping("/{id}")
+	@Secured("{ADMIN}")
 	public ResponseEntity<RoleDTO> delete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -104,6 +137,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@PutMapping("/deleted/{id}")
+	@Secured("{ADMIN}")
 	public ResponseEntity<RoleDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -115,6 +149,4 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 		service.softDelete(id);
 		return new ResponseEntity<RoleDTO>(new RoleDTO(r.getId(), r.getName(), r.getActive()), HttpStatus.OK);
 	}
-	
-	
 }

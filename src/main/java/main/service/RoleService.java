@@ -3,6 +3,8 @@ package main.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import main.model.Role;
@@ -25,6 +27,12 @@ public class RoleService implements ServiceInterface<Role> {
 	public Iterable<Role> findAll() {
 		// TODO Auto-generated method stub
 		return this.repo.findAll();
+	}
+	
+	@Override
+	public Page<Role> findAll(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return this.repo.findAll(pageable);
 	}
 
 	@Override
