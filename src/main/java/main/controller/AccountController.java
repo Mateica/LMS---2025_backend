@@ -2,11 +2,17 @@ package main.controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +50,30 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 		
 		return new ResponseEntity<Iterable<AccountDTO>>(accounts, HttpStatus.OK);
 	}
+	
+	@Override
+	public ResponseEntity<Page<AccountDTO>> findAll(int page, int size, String sortBy, boolean ascending) {
+	    Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(page, size, sort);
+
+	    Page<Account> accountPage = service.findAll(pageable);
+
+	    List<AccountDTO> accountDTOs = accountPage.stream().map(a ->
+	        new AccountDTO(
+	            a.getId(),
+	            a.getUsername(),
+	            null,
+	            a.getEmail(),
+	            new RegisteredUserDTO(a.getRegisteredUser().getUsername(), null, a.getRegisteredUser().getEmail()),
+	            a.getActive()
+	        )
+	    ).collect(Collectors.toList());
+
+	    Page<AccountDTO> resultPage = new PageImpl<>(accountDTOs, pageable, accountPage.getTotalElements());
+
+	    return new ResponseEntity<>(resultPage, HttpStatus.OK);
+	}
+
 
 	@Override
 	@GetMapping("/{id}")
