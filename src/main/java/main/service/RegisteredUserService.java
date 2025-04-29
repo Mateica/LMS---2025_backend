@@ -32,6 +32,10 @@ public class RegisteredUserService implements ServiceInterface<RegisteredUser> {
 		// TODO Auto-generated method stub
 		return this.repo.findById(id);
 	}
+	
+	public RegisteredUser findByUsernameAndPassword(String username, String password) {
+		return this.repo.findByUsernameAndPassword(username, password);
+	}
 
 	@Override
 	public RegisteredUser create(RegisteredUser t) {

@@ -17,6 +17,7 @@ import main.dto.RegisteredUserDTO;
 import main.dto.LoginDTO;
 import main.model.RegisteredUser;
 import main.service.AuthService;
+import main.service.RegisteredUserService;
 import main.util.TokenUtils;
 import main.config.SecurityConfig;
 
@@ -25,6 +26,9 @@ import main.config.SecurityConfig;
 public class AuthController {
 	@Autowired
 	private AuthService service;
+	
+	@Autowired
+	private RegisteredUserService userService;
 	
 	@Autowired
 	private SecurityConfig sc;
@@ -52,13 +56,13 @@ public class AuthController {
 	
 	@PostMapping(path = "/login")
 	public ResponseEntity<String> login(@RequestBody LoginDTO korisnikDTO) throws Exception {
-		RegisteredUser user = korisnikService.findByUsernameAndPassword(korisnikDTO.getUsername(), sc.passwordEncoder().encode(korisnikDTO.getPassword()));
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(korisnik.getKorisnickoIme(),
-				korisnik.getLozinka());
+		RegisteredUser user = userService.findByUsernameAndPassword(korisnikDTO.getUsername(), sc.passwordEncoder().encode(korisnikDTO.getPassword()));
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(),
+				user.getPassword());
 		Authentication auth = authenticationManager.authenticate(token);
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		
-		String jwt = tokenUtils.generateToken(userDetailsService.loadUserByUsername(korisnik.getKorisnickoIme()));
+		String jwt = tokenUtils.generateToken(userDetailsService.loadUserByUsername(user.getUsername()));
 		System.out.println(jwt);
 		return new ResponseEntity<String>(jwt, HttpStatus.OK);
 	}
