@@ -10,6 +10,7 @@ import main.model.RegisteredUser;
 @Repository
 public interface RegisteredUserRepository extends CrudRepository<RegisteredUser, Long>, PagingAndSortingRepository<RegisteredUser, Long> {
 	@Query("UPDATE RegisteredUser r SET r.active = false WHERE r.id = :id")
-	public void softDelete(Long id);	
+	public void softDelete(Long id);
+	public RegisteredUser findByUsername(String username);
 	public RegisteredUser findByUsernameAndPassword(String username, String password);
 }
