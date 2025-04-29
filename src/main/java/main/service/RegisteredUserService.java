@@ -33,6 +33,10 @@ public class RegisteredUserService implements ServiceInterface<RegisteredUser> {
 		return this.repo.findById(id);
 	}
 	
+	public RegisteredUser findByUsername(String username) {
+		return this.repo.findByUsername(username);
+	}
+	
 	public RegisteredUser findByUsernameAndPassword(String username, String password) {
 		return this.repo.findByUsernameAndPassword(username, password);
 	}

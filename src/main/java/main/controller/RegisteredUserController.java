@@ -53,7 +53,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping("/params")
 	@Secured("{ADMIN}")
 	public ResponseEntity<Page<RegisteredUserDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

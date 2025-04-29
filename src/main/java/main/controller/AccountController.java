@@ -53,7 +53,7 @@ public class AccountController implements ControllerInterface<AccountDTO> {
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping("/params")
 	public ResponseEntity<Page<AccountDTO>> findAll(
 			@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

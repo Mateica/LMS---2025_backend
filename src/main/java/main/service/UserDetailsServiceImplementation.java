@@ -9,26 +9,28 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-import primer2.model.DodeljenoPravoPristupa;
-import primer2.model.Korisnik;
+import main.model.RegisteredUser;
+import main.model.Role;
 
+@Service
 public class UserDetailsServiceImplementation implements UserDetailsService {
 	@Autowired
-	private KorisnikService service;
+	private RegisteredUserService service;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
-		Korisnik k = service.findByUsername(username);
+		RegisteredUser user = service.findByUsername(username);
 		
-		if(k != null) {
+		if(user != null) {
 			ArrayList<GrantedAuthority> prava = new ArrayList<GrantedAuthority>();
 			
-			for(DodeljenoPravoPristupa p : k.getPravaPristupa()) {
-				prava.add(new SimpleGrantedAuthority(p.getPravoPristupa().getNaziv()));
+			for(Role r : user.getRoles()) {
+				prava.add(new SimpleGrantedAuthority(r.getName()));
 			}
 			
-			return new User(k.getKorisnickoIme(), k.getLozinka(),prava);
+			return new User(user.getUsername(), user.getPassword(),prava);
 		}
 		
 		throw new UsernameNotFoundException("User not found!");

@@ -56,7 +56,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping("/params")
 	@Secured("{ADMIN}")
 	public ResponseEntity<Page<RoleDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

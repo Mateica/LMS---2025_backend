@@ -59,7 +59,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping("/params")
 	public ResponseEntity<Page<CountryDTO>> findAll(
 			@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

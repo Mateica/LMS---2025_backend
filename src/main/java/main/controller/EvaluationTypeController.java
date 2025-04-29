@@ -47,7 +47,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 	
 	@Override
-	@GetMapping
+	@GetMapping("/params")
 	public ResponseEntity<Page<EvaluationTypeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
