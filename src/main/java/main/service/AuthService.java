@@ -38,5 +38,13 @@ public class AuthService {
 			return null;
 		}	
 	}
+
+	public RegisteredUser findByUsernameAndPassword(String username, String password) {
+		RegisteredUser user =  this.repo.findByUsername(username);
+		if(passwordEncoder.matches(password, user.getPassword())) {
+			return user;
+		}
+		return null;
+	}
 	
 }

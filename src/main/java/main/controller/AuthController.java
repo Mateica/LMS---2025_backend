@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.RegisteredUserDTO;
+import main.dto.TokenDTO;
 import main.dto.LoginDTO;
 import main.model.RegisteredUser;
 import main.service.AuthService;
@@ -44,27 +45,33 @@ public class AuthController {
 
 	
 	@PostMapping("/register")
-	public ResponseEntity<RegisteredUser> register(@RequestBody RegisteredUserDTO userDTO){
+	public ResponseEntity<RegisteredUserDTO> register(@RequestBody RegisteredUserDTO userDTO){
 		RegisteredUser user = service.register(userDTO);
 		
 		if(user == null) {
-			return new ResponseEntity<RegisteredUser>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<RegisteredUserDTO>(HttpStatus.BAD_REQUEST);
 		}
 		
-		return new ResponseEntity<RegisteredUser>(user, HttpStatus.CREATED);
+		return new ResponseEntity<RegisteredUserDTO>(new RegisteredUserDTO(user.getUsername(), null, user.getEmail()), HttpStatus.CREATED);
 	}
 	
 	@PostMapping(path = "/login")
-	public ResponseEntity<String> login(@RequestBody LoginDTO korisnikDTO) throws Exception {
-		RegisteredUser user = userService.findByUsernameAndPassword(korisnikDTO.getUsername(), sc.passwordEncoder().encode(korisnikDTO.getPassword()));
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(),
-				user.getPassword());
-		Authentication auth = authenticationManager.authenticate(token);
-		SecurityContextHolder.getContext().setAuthentication(auth);
+	public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO korisnikDTO) throws Exception {
+		RegisteredUser user = service.findByUsernameAndPassword(korisnikDTO.getUsername(), 
+				korisnikDTO.getPassword());
+		if(user == null) {
+			return ResponseEntity.badRequest().build();
+		}
+//		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(),
+//				user.getPassword());
+//		Authentication auth = authenticationManager.authenticate(token);
+//		SecurityContextHolder.getContext().setAuthentication(auth);
+
 		
 		String jwt = tokenUtils.generateToken(userDetailsService.loadUserByUsername(user.getUsername()));
+		TokenDTO token = new TokenDTO(jwt);
 		System.out.println(jwt);
-		return new ResponseEntity<String>(jwt, HttpStatus.OK);
+		return new ResponseEntity<TokenDTO>(token, HttpStatus.OK);
 	}
 	
 	

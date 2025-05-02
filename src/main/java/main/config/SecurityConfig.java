@@ -29,12 +29,12 @@ public class SecurityConfig {
 		return httpSecurity
 				.cors(Customizer.withDefaults())
 				.csrf(csrf -> csrf.disable())
-				/*.authorizeHttpRequests(auth -> auth
+				.authorizeHttpRequests(auth -> auth
 											.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 											.requestMatchers("/api/auth/**", "/api/accounts/**").permitAll()
-											.anyRequest().authenticated())*/
+											.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.addFilterBefore(this.getAuthenticationFilterBean(conf), UsernamePasswordAuthenticationFilter.class)
+				//.addFilterBefore(this.getAuthenticationFilterBean(conf), UsernamePasswordAuthenticationFilter.class)
 				.build();
 		
 	}
@@ -53,7 +53,7 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	

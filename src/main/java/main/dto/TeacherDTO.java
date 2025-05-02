@@ -6,6 +6,7 @@ public class TeacherDTO {
 	private String firstName;
 	private String lastName;
 	private String umcn;
+	private String biography;
 	private TitleDTO title;
 	private ScientificFieldDTO scientificField;
 	private TeachingMaterialDTO teachingMaterial;
@@ -17,23 +18,22 @@ public class TeacherDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TeacherDTO(Long id, RegisteredUserDTO user, String firstName, String lastName, String umcn, TitleDTO title,
-			ScientificFieldDTO scientificField, TeachingMaterialDTO teachingMaterial, DepartmentDTO department,
-			Boolean active) {
+	public TeacherDTO(Long id, RegisteredUserDTO user, String firstName, String lastName, String umcn, String biography,
+			TitleDTO title, ScientificFieldDTO scientificField, TeachingMaterialDTO teachingMaterial,
+			DepartmentDTO department, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.umcn = umcn;
+		this.biography = biography;
 		this.title = title;
 		this.scientificField = scientificField;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -73,6 +73,14 @@ public class TeacherDTO {
 
 	public void setUmcn(String umcn) {
 		this.umcn = umcn;
+	}
+
+	public String getBiography() {
+		return biography;
+	}
+
+	public void setBiography(String biography) {
+		this.biography = biography;
 	}
 
 	public TitleDTO getTitle() {

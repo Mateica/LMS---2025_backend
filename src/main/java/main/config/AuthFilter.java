@@ -30,6 +30,13 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		System.out.println(httpRequest.getServletPath());
+		if(httpRequest.getServletPath().contains("/api/auth")) {
+			System.out.println("TEST1");
+			super.doFilter(request, response, chain);
+		}else {
+			System.out.println("TEST2");
 		String token = ((HttpServletRequest) request).getHeader("Authorization");
 		
 		if(tokenUtils.isTokenExpired(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -43,5 +50,6 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 		}
 		
 		super.doFilter(request, response, chain);
+		}
 	}
 }

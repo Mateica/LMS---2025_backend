@@ -18,7 +18,7 @@ public class Title {
 	@Column(nullable = false)
 	private Date dateElected;
 	
-	@Column(nullable = false)
+	@Column
 	private Date dateAbolished;
 	
 	@OneToOne

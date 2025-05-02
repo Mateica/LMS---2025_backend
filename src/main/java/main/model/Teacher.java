@@ -17,6 +17,7 @@ public class Teacher {
 	private Long id;
 	
 	@OneToOne
+	@Column(nullable = false)
 	private RegisteredUser user;
 	
 	@Lob
@@ -30,6 +31,10 @@ public class Teacher {
 	@Lob
 	@Column(nullable = false)
 	private String umcn;
+	
+	@Lob
+	@Column(nullable = false)
+	private String biography;
 	
 	@OneToOne
 	private Title title;
@@ -51,24 +56,23 @@ public class Teacher {
 		super();
 	}
 
-	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, Title title,
-			ScientificField scientificField, TeachingMaterial teachingMaterial, Department department, Boolean active) {
+
+	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, String biography,
+			Title title, ScientificField scientificField, TeachingMaterial teachingMaterial, Department department,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.umcn = umcn;
+		this.biography = biography;
 		this.title = title;
 		this.scientificField = scientificField;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
 	}
-
-
-
-
 
 	public Long getId() {
 		return id;
@@ -149,7 +153,15 @@ public class Teacher {
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-	
-	
+
+
+	public String getBiography() {
+		return biography;
+	}
+
+
+	public void setBiography(String biography) {
+		this.biography = biography;
+	}
 }
 
