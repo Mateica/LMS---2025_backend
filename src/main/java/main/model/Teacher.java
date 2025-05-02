@@ -1,5 +1,8 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +20,6 @@ public class Teacher {
 	private Long id;
 	
 	@OneToOne
-	@Column(nullable = false)
 	private RegisteredUser user;
 	
 	@Lob
@@ -36,12 +38,8 @@ public class Teacher {
 	@Column(nullable = false)
 	private String biography;
 	
-	@OneToOne
-	private Title title;
-	
-	//@OneToMany(mappedBy = "teacher")
-	@Column(nullable = false)
-	private ScientificField scientificField; // Jedan nastavnik moze imati samo jedno zvanjeu jednoj oblasti, ali moze biti biran u vise oblasti
+	@OneToMany(mappedBy = "teacher")
+	private List<Title> titles = new ArrayList<Title>();
 	
 	@ManyToOne
 	private TeachingMaterial teachingMaterial;
@@ -56,9 +54,8 @@ public class Teacher {
 		super();
 	}
 
-
 	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, String biography,
-			Title title, ScientificField scientificField, TeachingMaterial teachingMaterial, Department department,
+			List<Title> titles, TeachingMaterial teachingMaterial, Department department,
 			Boolean active) {
 		super();
 		this.id = id;
@@ -67,8 +64,7 @@ public class Teacher {
 		this.lastName = lastName;
 		this.umcn = umcn;
 		this.biography = biography;
-		this.title = title;
-		this.scientificField = scientificField;
+		this.titles = titles;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
@@ -114,28 +110,21 @@ public class Teacher {
 		this.umcn = umcn;
 	}
 
-	public Title getTitle() {
-		return title;
+	public String getBiography() {
+		return biography;
 	}
 
-	public void setTitle(Title title) {
-		this.title = title;
+	public void setBiography(String biography) {
+		this.biography = biography;
+	}
+	
+
+	public List<Title> getTitles() {
+		return titles;
 	}
 
-	public ScientificField getScientificField() {
-		return scientificField;
-	}
-
-	public void setScientificField(ScientificField scientificField) {
-		this.scientificField = scientificField;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setTitles(List<Title> titles) {
+		this.titles = titles;
 	}
 
 	public TeachingMaterial getTeachingMaterial() {
@@ -154,14 +143,14 @@ public class Teacher {
 		this.department = department;
 	}
 
-
-	public String getBiography() {
-		return biography;
+	public Boolean getActive() {
+		return active;
 	}
 
-
-	public void setBiography(String biography) {
-		this.biography = biography;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
+	
+	
 }
 

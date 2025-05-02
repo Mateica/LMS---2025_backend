@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import main.model.Role;
+import main.model.Teacher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,17 +28,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.AccountDTO;
+import main.dto.ProfileDTO;
 import main.dto.RegisteredUserDTO;
 import main.model.Account;
 import main.model.ForumUser;
 import main.model.RegisteredUser;
 import main.service.RegisteredUserService;
+import main.service.TeacherService;
 
 @RestController
 @RequestMapping(path = "/api/registeredUsers")
 public class RegisteredUserController implements ControllerInterface<RegisteredUserDTO> {
 	@Autowired
 	private RegisteredUserService service;
+	
+	@Autowired
+	private TeacherService teacherService;
 	
 	@Override
 	@GetMapping("")
@@ -142,5 +148,20 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 		service.softDelete(id);
 		
 		return new ResponseEntity<RegisteredUserDTO>(new RegisteredUserDTO(user.getUsername(), user.getPassword(), user.getEmail()), HttpStatus.OK);
+	}
+	
+	@PutMapping("/updateProfile")
+	public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profile){
+		RegisteredUser user = service.findByUsername(profile.getUsername());
+		
+		if(user == null) {
+			return new ResponseEntity<ProfileDTO>(HttpStatus.BAD_REQUEST);
+		}
+		
+		if(user.getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("TEACHER"))) {
+			Teacher teacher = teacherService.updateProfile(user, profile);
+		}
+		
+		return new ResponseEntity<ProfileDTO>(profile, HttpStatus.OK);
 	}
 }

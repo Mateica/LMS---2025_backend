@@ -1,5 +1,6 @@
 package main.service;
 
+import java.awt.color.ProfileDataException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import main.dto.ProfileDTO;
+import main.model.RegisteredUser;
 import main.model.Teacher;
 import main.repository.TeacherRepository;
 
@@ -70,6 +73,21 @@ public class TeacherService implements ServiceInterface<Teacher> {
 		
 		t.setActive(false);
 		repo.save(t);
+	}
+	
+	public Teacher updateProfile(RegisteredUser user, ProfileDTO profile) {
+		Teacher teacher = repo.findByUser(user);
+		
+		if(teacher == null) {
+			throw new RuntimeException("No such user!");
+		}
+		
+		teacher.setFirstName(profile.getFirstName());
+		teacher.setLastName(profile.getLastName());
+		teacher.setUmcn(profile.getUmcn());
+		teacher.setBiography(profile.getBiography());
+		
+		return this.repo.save(teacher);
 	}
 	
 	

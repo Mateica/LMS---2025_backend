@@ -7,9 +7,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+	    uniqueConstraints = @UniqueConstraint(columnNames = {"teacher_id", "field_id"})
+	)
 public class Title {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +28,15 @@ public class Title {
 	@Column
 	private Date dateAbolished;
 	
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "field_id")
 	private ScientificField scientificField;
 	
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "teacher_id")
+	private Teacher teacher;
+	
+	@ManyToOne
 	private TitleType titleType;
 	
 	@Column(nullable = false)
