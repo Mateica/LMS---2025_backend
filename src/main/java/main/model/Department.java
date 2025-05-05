@@ -37,6 +37,9 @@ public class Department {
 	
 	@OneToMany(mappedBy = "department")
 	private Set<StudyProgramme> studyProgrammes = new HashSet<StudyProgramme>();
+	
+	@Column(nullable = false)
+	private Boolean active;
 
 	public Department() {
 		super();
@@ -44,7 +47,7 @@ public class Department {
 	}
 
 	public Department(Long id, String name, String description, Faculty faculty, Set<Teacher> staff, Teacher chief,
-			Set<StudyProgramme> studyProgrammes) {
+			Set<StudyProgramme> studyProgrammes, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -53,6 +56,7 @@ public class Department {
 		this.staff = staff;
 		this.chief = chief;
 		this.studyProgrammes = studyProgrammes;
+		this.active = active;
 	}
 
 
@@ -112,4 +116,14 @@ public class Department {
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
 	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
+	
 }
