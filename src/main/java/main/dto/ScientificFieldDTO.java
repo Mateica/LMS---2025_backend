@@ -1,21 +1,32 @@
 package main.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import main.model.Title;
+
 public class ScientificFieldDTO {
 	private Long id;
-	private String name;
-	private TeacherDTO teacher;
-	private Boolean active;
 	
+	private String name;
+	
+	private List<TitleDTO> titles = new ArrayList<TitleDTO>();
+	
+	private Boolean active;
+
 	public ScientificFieldDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ScientificFieldDTO(Long id, String name, TeacherDTO teacher, Boolean active) {
+	public ScientificFieldDTO(Long id, String name, List<TitleDTO> titles, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.teacher = teacher;
+		this.titles = titles;
 		this.active = active;
 	}
 
@@ -35,12 +46,12 @@ public class ScientificFieldDTO {
 		this.name = name;
 	}
 
-	public TeacherDTO getTeacher() {
-		return teacher;
+	public List<TitleDTO> getTitles() {
+		return titles;
 	}
 
-	public void setTeacher(TeacherDTO teacher) {
-		this.teacher = teacher;
+	public void setTitles(List<TitleDTO> titles) {
+		this.titles = titles;
 	}
 
 	public Boolean getActive() {
