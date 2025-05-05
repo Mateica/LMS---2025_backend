@@ -1,16 +1,39 @@
 package main.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.border.TitledBorder;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import main.model.Department;
+import main.model.RegisteredUser;
+import main.model.TeachingMaterial;
+import main.model.Title;
+
 public class TeacherDTO {
 	private Long id;
+
 	private RegisteredUserDTO user;
+	
 	private String firstName;
+	
 	private String lastName;
+	
 	private String umcn;
+	
 	private String biography;
-	private TitleDTO title;
-	private ScientificFieldDTO scientificField;
+	
+	private List<TitleDTO> titles = new ArrayList<TitleDTO>();
+	
 	private TeachingMaterialDTO teachingMaterial;
+
 	private DepartmentDTO department;
+	
 	private Boolean active;
 	
 	public TeacherDTO() {
@@ -19,8 +42,7 @@ public class TeacherDTO {
 	}
 
 	public TeacherDTO(Long id, RegisteredUserDTO user, String firstName, String lastName, String umcn, String biography,
-			TitleDTO title, ScientificFieldDTO scientificField, TeachingMaterialDTO teachingMaterial,
-			DepartmentDTO department, Boolean active) {
+			List<TitleDTO> titles, TeachingMaterialDTO teachingMaterial, DepartmentDTO department, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -28,8 +50,7 @@ public class TeacherDTO {
 		this.lastName = lastName;
 		this.umcn = umcn;
 		this.biography = biography;
-		this.title = title;
-		this.scientificField = scientificField;
+		this.titles = titles;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
@@ -83,20 +104,12 @@ public class TeacherDTO {
 		this.biography = biography;
 	}
 
-	public TitleDTO getTitle() {
-		return title;
+	public List<TitleDTO> getTitles() {
+		return titles;
 	}
 
-	public void setTitle(TitleDTO title) {
-		this.title = title;
-	}
-
-	public ScientificFieldDTO getScientificField() {
-		return scientificField;
-	}
-
-	public void setScientificField(ScientificFieldDTO scientificField) {
-		this.scientificField = scientificField;
+	public void setTitles(List<TitleDTO> titles) {
+		this.titles = titles;
 	}
 
 	public TeachingMaterialDTO getTeachingMaterial() {
@@ -122,4 +135,5 @@ public class TeacherDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
 }
