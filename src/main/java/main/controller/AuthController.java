@@ -57,7 +57,7 @@ public class AuthController {
 	
 	@PostMapping(path = "/login")
 	public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO korisnikDTO) throws Exception {
-		RegisteredUser user = service.findByUsernameAndPassword(korisnikDTO.getUsername(), 
+		RegisteredUser user = service.findByUsernameAndPassword(korisnikDTO.getEmail(), 
 				korisnikDTO.getPassword());
 		if(user == null) {
 			return ResponseEntity.badRequest().build();

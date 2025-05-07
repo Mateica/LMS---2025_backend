@@ -1,5 +1,11 @@
 package main.dto;
 
+import main.dto.FacultyDTO;
+import main.dto.YearOfStudyDTO;
+import main.dto.TeacherDTO;
+import main.dto.DepartmentDTO;
+
+
 public class StudyProgrammeDTO {
 	private Long id;
 	private String name;

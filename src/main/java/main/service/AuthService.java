@@ -39,8 +39,10 @@ public class AuthService {
 		}	
 	}
 
-	public RegisteredUser findByUsernameAndPassword(String username, String password) {
-		RegisteredUser user =  this.repo.findByUsername(username);
+	public RegisteredUser findByUsernameAndPassword(String email, String password) {
+		RegisteredUser user =  this.repo.findByEmail(email);
+		System.out.println(user.getPassword());
+		System.out.println(passwordEncoder.matches(password, user.getPassword()));
 		if(passwordEncoder.matches(password, user.getPassword())) {
 			return user;
 		}

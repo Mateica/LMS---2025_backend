@@ -34,7 +34,7 @@ public class SecurityConfig {
 											.requestMatchers("/api/auth/**", "/api/accounts/**").permitAll()
 											.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				//.addFilterBefore(this.getAuthenticationFilterBean(conf), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(this.getAuthenticationFilterBean(conf), UsernamePasswordAuthenticationFilter.class)
 				.build();
 		
 	}

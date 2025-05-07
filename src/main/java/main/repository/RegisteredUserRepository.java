@@ -13,4 +13,5 @@ public interface RegisteredUserRepository extends CrudRepository<RegisteredUser,
 	public void softDelete(Long id);
 	public RegisteredUser findByUsername(String username);
 	public RegisteredUser findByUsernameAndPassword(String username, String password);
+	public RegisteredUser findByEmail(String email);
 }

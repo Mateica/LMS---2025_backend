@@ -3,6 +3,8 @@ package main.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.processing.Pattern;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
