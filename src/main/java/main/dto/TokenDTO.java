@@ -20,6 +20,5 @@ public class TokenDTO {
 	public void setJwtToken(String jwtToken) {
 		this.jwtToken = jwtToken;
 	}
-	
-	
+
 }

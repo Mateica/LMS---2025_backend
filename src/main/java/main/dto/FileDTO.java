@@ -8,19 +8,19 @@ public class FileDTO {
 	private MessageDTO message;
 	private AnnouncementDTO announcement;
 	private Boolean active;
-	
+
 	public FileDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public FileDTO(Long id, String url, String description, ForumPost post, Message message, Announcement announcement,
+	public FileDTO(Long id, String url, String description, ForumPostDTO post, MessageDTO message, AnnouncementDTO announcement,
 			Boolean active) {
 		super();
 		this.id = id;
 		this.url = url;
 		this.description = description;
-		 this.post = post;
+		this.post = post;
 		this.message = message;
 		this.announcement = announcement;
 		this.active = active;
@@ -50,13 +50,13 @@ public class FileDTO {
 		this.description = description;
 	}
 
-//	public ForumPostDTO getPost() {
-//		return post;
-//	}
-//
-//	public void setPost(ForumPostDTO post) {
-//		this.post = post;
-//	}
+	public ForumPostDTO getPost() {
+		return post;
+	}
+
+	public void setPost(ForumPostDTO post) {
+		this.post = post;
+	}
 
 	public MessageDTO getMessage() {
 		return message;
