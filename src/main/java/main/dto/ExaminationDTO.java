@@ -8,7 +8,7 @@ import main.model.StudentOnYear;
 public class ExaminationDTO {
 
 	private Long id;
-	private double numberOfPoints;
+	private Double numberOfPoints;
 	private List<Note> notes = new ArrayList<Note>();
 	private StudentOnYear studentOnYear;
 	private Boolean active;
@@ -18,7 +18,7 @@ public class ExaminationDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ExaminationDTO(Long id, double numberOfPoints, List<Note> notes, StudentOnYear studentOnYear,
+	public ExaminationDTO(Long id, Double numberOfPoints, List<Note> notes, StudentOnYear studentOnYear,
 			Boolean active) {
 		super();
 		this.id = id;
@@ -36,11 +36,11 @@ public class ExaminationDTO {
 		this.id = id;
 	}
 
-	public double getNumberOfPoints() {
+	public Double getNumberOfPoints() {
 		return numberOfPoints;
 	}
 
-	public void setNumberOfPoints(double numberOfPoints) {
+	public void setNumberOfPoints(Double numberOfPoints) {
 		this.numberOfPoints = numberOfPoints;
 	}
 
