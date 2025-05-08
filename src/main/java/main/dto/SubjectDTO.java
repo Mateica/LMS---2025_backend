@@ -8,17 +8,17 @@ public class SubjectDTO {
 
 	private Long id;
 	private String name;
-	private int ects;
+	private Integer ects;
 	private boolean compulsory;
-	private int numberOfClasses;
-	private int numberOfPractices;
-	private int otherTypesOfClasses;
-	private int researchWork;
-	private int classesLeft;
-	private int numberOfSemesters;
-	private YearOfStudy yearOfStudy;
-	private Outcome outcome;
-	private Subject prerequisite;
+	private Integer numberOfClasses;
+	private Integer numberOfPractices;
+	private Integer otherTypesOfClasses;
+	private Integer researchWork;
+	private Integer classesLeft;
+	private Integer numberOfSemesters;
+	private YearOfStudyDTO yearOfStudy;
+	private OutcomeDTO outcome;
+	private SubjectDTO prerequisite;
 	private Boolean active;
 
 	public SubjectDTO() {
@@ -26,9 +26,10 @@ public class SubjectDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectDTO(Long id, String name, int ects, boolean compulsory, int numberOfClasses, int numberOfPractices,
-			int otherTypesOfClasses, int researchWork, int classesLeft, int numberOfSemesters, YearOfStudy yearOfStudy,
-			Outcome outcome, Subject prerequisite, Boolean active) {
+	public SubjectDTO(Long id, String name, Integer ects, boolean compulsory, Integer numberOfClasses,
+			Integer numberOfPractices, Integer otherTypesOfClasses, Integer researchWork, Integer classesLeft,
+			Integer numberOfSemesters, YearOfStudyDTO yearOfStudy, OutcomeDTO outcome, SubjectDTO prerequisite,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -62,11 +63,11 @@ public class SubjectDTO {
 		this.name = name;
 	}
 
-	public int getEcts() {
+	public Integer getEcts() {
 		return ects;
 	}
 
-	public void setEcts(int ects) {
+	public void setEcts(Integer ects) {
 		this.ects = ects;
 	}
 
@@ -78,75 +79,75 @@ public class SubjectDTO {
 		this.compulsory = compulsory;
 	}
 
-	public int getNumberOfClasses() {
+	public Integer getNumberOfClasses() {
 		return numberOfClasses;
 	}
 
-	public void setNumberOfClasses(int numberOfClasses) {
+	public void setNumberOfClasses(Integer numberOfClasses) {
 		this.numberOfClasses = numberOfClasses;
 	}
 
-	public int getNumberOfPractices() {
+	public Integer getNumberOfPractices() {
 		return numberOfPractices;
 	}
 
-	public void setNumberOfPractices(int numberOfPractices) {
+	public void setNumberOfPractices(Integer numberOfPractices) {
 		this.numberOfPractices = numberOfPractices;
 	}
 
-	public int getOtherTypesOfClasses() {
+	public Integer getOtherTypesOfClasses() {
 		return otherTypesOfClasses;
 	}
 
-	public void setOtherTypesOfClasses(int otherTypesOfClasses) {
+	public void setOtherTypesOfClasses(Integer otherTypesOfClasses) {
 		this.otherTypesOfClasses = otherTypesOfClasses;
 	}
 
-	public int getResearchWork() {
+	public Integer getResearchWork() {
 		return researchWork;
 	}
 
-	public void setResearchWork(int researchWork) {
+	public void setResearchWork(Integer researchWork) {
 		this.researchWork = researchWork;
 	}
 
-	public int getClassesLeft() {
+	public Integer getClassesLeft() {
 		return classesLeft;
 	}
 
-	public void setClassesLeft(int classesLeft) {
+	public void setClassesLeft(Integer classesLeft) {
 		this.classesLeft = classesLeft;
 	}
 
-	public int getNumberOfSemesters() {
+	public Integer getNumberOfSemesters() {
 		return numberOfSemesters;
 	}
 
-	public void setNumberOfSemesters(int numberOfSemesters) {
+	public void setNumberOfSemesters(Integer numberOfSemesters) {
 		this.numberOfSemesters = numberOfSemesters;
 	}
 
-	public YearOfStudy getYearOfStudy() {
+	public YearOfStudyDTO getYearOfStudy() {
 		return yearOfStudy;
 	}
 
-	public void setYearOfStudy(YearOfStudy yearOfStudy) {
+	public void setYearOfStudy(YearOfStudyDTO yearOfStudy) {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	public Outcome getOutcome() {
+	public OutcomeDTO getOutcome() {
 		return outcome;
 	}
 
-	public void setOutcome(Outcome outcome) {
+	public void setOutcome(OutcomeDTO outcome) {
 		this.outcome = outcome;
 	}
 
-	public Subject getPrerequisite() {
+	public SubjectDTO getPrerequisite() {
 		return prerequisite;
 	}
 
-	public void setPrerequisite(Subject prerequisite) {
+	public void setPrerequisite(SubjectDTO prerequisite) {
 		this.prerequisite = prerequisite;
 	}
 
@@ -157,5 +158,9 @@ public class SubjectDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
+
+	
 
 }
