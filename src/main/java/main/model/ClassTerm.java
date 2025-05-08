@@ -1,26 +1,42 @@
-package main.dto;
+package main.model;
 
 import java.time.LocalDateTime;
-import main.model.Outcome;
-import main.model.SubjectRealization;
-import main.model.TeachingType;
 
-public class ClassTimeDTO {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
+@Entity
+public class ClassTerm {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(nullable = false)
 	private LocalDateTime startTime;
+	
+	@Column(nullable = false)
 	private LocalDateTime endTime;
+	
+	@OneToOne
 	private Outcome outcome;
+	
+	@OneToOne
 	private TeachingType teachingType;
+	
+	@OneToOne
 	private SubjectRealization subjectRealization;
+	
+	@Column(nullable = false)
 	private Boolean active;
+	
+	public ClassTerm() {}
 
-	public ClassTimeDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public ClassTimeDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, Outcome outcome,
+	
+	public ClassTerm(Long id, LocalDateTime startTime, LocalDateTime endTime, Outcome outcome,
 			TeachingType teachingType, SubjectRealization subjectRealization, Boolean active) {
 		super();
 		this.id = id;
@@ -31,6 +47,10 @@ public class ClassTimeDTO {
 		this.subjectRealization = subjectRealization;
 		this.active = active;
 	}
+
+
+
+
 
 	public Long getId() {
 		return id;
@@ -56,13 +76,16 @@ public class ClassTimeDTO {
 		this.endTime = endTime;
 	}
 
+	
 	public Outcome getOutcome() {
 		return outcome;
 	}
 
+
 	public void setOutcome(Outcome outcome) {
 		this.outcome = outcome;
 	}
+
 
 	public TeachingType getTeachingType() {
 		return teachingType;
@@ -87,5 +110,6 @@ public class ClassTimeDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
+	
+	
 }
