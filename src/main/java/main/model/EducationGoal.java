@@ -62,6 +62,19 @@ public class EducationGoal {
 	public void setAftermath(Outcome outcome) {
 		this.outcome = outcome;
 	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public void setOutcome(Outcome outcome) {
+		this.outcome = outcome;
+	}
+	
 	
 	
 	

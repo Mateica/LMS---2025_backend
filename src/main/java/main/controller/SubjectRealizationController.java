@@ -23,13 +23,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.dto.EducationGoalDTO;
+import main.dto.EvaluationDTO;
+import main.dto.EvaluationInstrumentDTO;
+import main.dto.EvaluationTypeDTO;
+import main.dto.ExaminationDTO;
 import main.dto.OutcomeDTO;
 import main.dto.SubjectDTO;
 import main.dto.SubjectRealizationDTO;
+import main.dto.TeacherOnRealizationDTO;
 import main.dto.YearOfStudyDTO;
 import main.model.EducationGoal;
+import main.model.EvaluationInstrument;
+import main.model.EvaluationType;
+import main.model.Examination;
 import main.model.Outcome;
 import main.model.Subject;
+import main.model.SubjectRealization;
+import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.YearOfStudy;
 import main.service.SubjectRealizationService;
@@ -44,60 +55,132 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	@Override
 	@GetMapping("")
 	@Secured({"ADMIN", "TEACHER"})
-	public ResponseEntity<Iterable<SubjectDTO>> findAll() {
+	public ResponseEntity<Iterable<SubjectRealizationDTO>> findAll() {
 		// TODO Auto-generated method stub
-		ArrayList<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
+		ArrayList<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();
 		
-		for(Subject s : service.findAll()) {
-			if(s.getPrerequisite() != null) {
-				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-						s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-						s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-						new YearOfStudyDTO(),
-						new OutcomeDTO(),
-						new SubjectDTO(), s.getActive()));
+		for(SubjectRealization s : service.findAll()) {
+			if(s.getSubject().getPrerequisite() != null) {
+				subjectRealizations.add(new SubjectRealizationDTO(s.getId(),
+						new EvaluationDTO(),
+						new TeacherOnRealizationDTO(),
+						new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
+						s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
+						s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
+						s.getSubject().getClassesLeft(), 
+						s.getSubject().getNumberOfSemesters(),
+						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
+								s.getSubject().getYearOfStudy().getYearOfStudy(),
+								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
+						new OutcomeDTO(s.getSubject().getOutcome().getId(),
+								s.getSubject().getOutcome().getDescription(), 
+								new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
+										s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
+										s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
+								s.getSubject().getOutcome().getActive()),
+						new SubjectDTO(s.getSubject().getPrerequisite().getId(), 
+								s.getSubject().getPrerequisite().getName(),
+								s.getSubject().getPrerequisite().getEcts(), 
+								s.getSubject().getPrerequisite().isCompulsory(),
+								s.getSubject().getPrerequisite().getNumberOfClasses(), 
+								s.getSubject().getPrerequisite().getNumberOfPractices(),
+								s.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+								s.getSubject().getPrerequisite().getResearchWork(),
+								s.getSubject().getPrerequisite().getClassesLeft(), 
+								s.getSubject().getPrerequisite().getNumberOfSemesters(),
+								new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
+										s.getSubject().getYearOfStudy().getYearOfStudy(),
+										new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
+								new OutcomeDTO(s.getSubject().getOutcome().getId(),
+										s.getSubject().getOutcome().getDescription(), 
+										new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
+												s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
+												s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
+										s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()), s.getActive()), s.getActive()));
 			}else {
-				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-						s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-						s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-						new YearOfStudyDTO(),
+				subjectRealizations.add(new SubjectRealizationDTO(s.getId(),
+						new EvaluationDTO(),
+						new TeacherOnRealizationDTO(),
+						new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
+						s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
+						s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
+						s.getSubject().getClassesLeft(), 
+						s.getSubject().getNumberOfSemesters(),
+						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
+								s.getSubject().getYearOfStudy().getYearOfStudy(),
+								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
 						new OutcomeDTO(),
-						new SubjectDTO(),
-						s.getActive()));
+						new SubjectDTO(), s.getActive()), s.getActive()));
 			}
 		}
 		
-		return new ResponseEntity<Iterable<SubjectDTO>>(subjects, HttpStatus.OK);
+		return new ResponseEntity<Iterable<SubjectRealizationDTO>>(subjectRealizations, HttpStatus.OK);
 	}
 	
 	@Override
 	@GetMapping("/params")
 	@Secured({"ADMIN"})
-	public ResponseEntity<Page<SubjectDTO>> findAll(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Page<SubjectRealizationDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 	    Pageable pageable = PageRequest.of(page, size, sort);
 
-	    Page<Subject> subjectPage = service.findAll(pageable);
+	    Page<SubjectRealization> subjectRealizationPage = service.findAll(pageable);
 
-	    List<SubjectDTO> subjectDTOs = subjectPage.stream().map(s ->
-	    new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
-				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
-						s.getPrerequisite().getEcts(), 
-						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getPrerequisite().getActive()))
-	    		.collect(Collectors.toList());
+	    List<SubjectRealizationDTO> subjectRealizationDTOs = subjectRealizationPage.stream().map(s -> 
+	    new SubjectRealizationDTO(
+	    		s.getId(), 
+	    		new EvaluationDTO(s.getEvaluation().getId(), 
+	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
+	    				s.getEvaluation().getNumberOfPoints(),
+	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
+	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
+	    				new EvaluationInstrumentDTO(),
+	    				new ExaminationDTO(),
+	    				s.getActive()),
+				new TeacherOnRealizationDTO(),
+				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
+				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
+				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
+				s.getSubject().getClassesLeft(), 
+				s.getSubject().getNumberOfSemesters(),
+				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
+						s.getSubject().getYearOfStudy().getYearOfStudy(),
+						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
+				new OutcomeDTO(s.getSubject().getOutcome().getId(),
+						s.getSubject().getOutcome().getDescription(), 
+						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
+								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
+								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
+						s.getSubject().getOutcome().getActive()),
+				new SubjectDTO(s.getSubject().getPrerequisite().getId(), 
+						s.getSubject().getPrerequisite().getName(),
+						s.getSubject().getPrerequisite().getEcts(), 
+						s.getSubject().getPrerequisite().isCompulsory(),
+						s.getSubject().getPrerequisite().getNumberOfClasses(), 
+						s.getSubject().getPrerequisite().getNumberOfPractices(),
+						s.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+						s.getSubject().getPrerequisite().getResearchWork(),
+						s.getSubject().getPrerequisite().getClassesLeft(), 
+						s.getSubject().getPrerequisite().getNumberOfSemesters(),
+						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
+								s.getSubject().getYearOfStudy().getYearOfStudy(),
+								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
+						new OutcomeDTO(s.getSubject().getOutcome().getId(),
+								s.getSubject().getOutcome().getDescription(), 
+								new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
+										s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
+										s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
+								s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
+				s.getActive()), s.getActive()
+	        )
+	    ).collect(Collectors.toList());
 
-	    Page<SubjectDTO> resultPage = new PageImpl<SubjectDTO>(subjectDTOs, pageable, subjectPage.getTotalElements());
+	    Page<SubjectRealizationDTO> resultPage = new PageImpl<SubjectRealizationDTO>(subjectRealizationDTOs, pageable, subjectPage.getTotalElements());
 
-	    return new ResponseEntity<Page<SubjectDTO>>(resultPage, HttpStatus.OK);
+	    return new ResponseEntity<Page<SubjectRealizationDTO>>(resultPage, HttpStatus.OK);
 	}
 
 	@Override

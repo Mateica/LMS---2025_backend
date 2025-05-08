@@ -11,9 +11,9 @@ public class EvaluationDTO {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private int numberOfPoints;
-	private EvaluationType evaluationType;
-	private EvaluationInstrument evaluationInstrument;
-	private Examination examination;
+	private EvaluationTypeDTO evaluationType;
+	private EvaluationInstrumentDTO evaluationInstrument;
+	private ExaminationDTO examination;
 	private Boolean active;
 
 	public EvaluationDTO() {
@@ -22,7 +22,7 @@ public class EvaluationDTO {
 	}
 
 	public EvaluationDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, int numberOfPoints,
-			EvaluationType evaluationType, EvaluationInstrument evaluationInstrument, Examination examination,
+			EvaluationTypeDTO evaluationType, EvaluationInstrumentDTO evaluationInstrument, ExaminationDTO examination,
 			Boolean active) {
 		super();
 		this.id = id;
@@ -67,27 +67,27 @@ public class EvaluationDTO {
 		this.numberOfPoints = numberOfPoints;
 	}
 
-	public EvaluationType getEvaluationType() {
+	public EvaluationTypeDTO getEvaluationType() {
 		return evaluationType;
 	}
 
-	public void setEvaluationType(EvaluationType evaluationType) {
+	public void setEvaluationType(EvaluationTypeDTO evaluationType) {
 		this.evaluationType = evaluationType;
 	}
 
-	public EvaluationInstrument getEvaluationInstrument() {
+	public EvaluationInstrumentDTO getEvaluationInstrument() {
 		return evaluationInstrument;
 	}
 
-	public void setEvaluationInstrument(EvaluationInstrument evaluationInstrument) {
+	public void setEvaluationInstrument(EvaluationInstrumentDTO evaluationInstrument) {
 		this.evaluationInstrument = evaluationInstrument;
 	}
 
-	public Examination getExamination() {
+	public ExaminationDTO getExamination() {
 		return examination;
 	}
 
-	public void setExamination(Examination examination) {
+	public void setExamination(ExaminationDTO examination) {
 		this.examination = examination;
 	}
 
@@ -98,5 +98,7 @@ public class EvaluationDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

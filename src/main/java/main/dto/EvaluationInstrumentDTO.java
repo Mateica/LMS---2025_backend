@@ -5,6 +5,7 @@ import main.model.File;
 public class EvaluationInstrumentDTO {
 
 	private Long id;
+	private String name;
 	private File file;
 	private Boolean active;
 
@@ -13,9 +14,10 @@ public class EvaluationInstrumentDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EvaluationInstrumentDTO(Long id, File file, Boolean active) {
+	public EvaluationInstrumentDTO(Long id, String name, File file, Boolean active) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.file = file;
 		this.active = active;
 	}
@@ -26,6 +28,14 @@ public class EvaluationInstrumentDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public File getFile() {
@@ -44,4 +54,5 @@ public class EvaluationInstrumentDTO {
 		this.active = active;
 	}
 
+	
 }

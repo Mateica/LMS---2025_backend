@@ -9,7 +9,7 @@ public class YearOfStudyDTO {
 
 	private Long id;
 	private LocalDateTime yearOfStudy;
-	private List<Subject> subjects = new ArrayList<Subject>();
+	private List<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
 	private Boolean active;
 
 	public YearOfStudyDTO() {
@@ -17,7 +17,7 @@ public class YearOfStudyDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public YearOfStudyDTO(Long id, LocalDateTime yearOfStudy, List<Subject> subjects, Boolean active) {
+	public YearOfStudyDTO(Long id, LocalDateTime yearOfStudy, List<SubjectDTO> subjects, Boolean active) {
 		super();
 		this.id = id;
 		this.yearOfStudy = yearOfStudy;
@@ -41,11 +41,11 @@ public class YearOfStudyDTO {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	public List<Subject> getSubjects() {
+	public List<SubjectDTO> getSubjects() {
 		return subjects;
 	}
 
-	public void setSubjects(List<Subject> subjects) {
+	public void setSubjects(List<SubjectDTO> subjects) {
 		this.subjects = subjects;
 	}
 
@@ -56,5 +56,7 @@ public class YearOfStudyDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

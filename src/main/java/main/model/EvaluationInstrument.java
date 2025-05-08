@@ -13,6 +13,9 @@ public class EvaluationInstrument {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false)
+	private String name;
+	
 	@OneToOne
 	private File file;
 	
@@ -24,14 +27,13 @@ public class EvaluationInstrument {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EvaluationInstrument(Long id, File file, Boolean active) {
+	public EvaluationInstrument(Long id, String name, File file, Boolean active) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.file = file;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -39,6 +41,14 @@ public class EvaluationInstrument {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public File getFile() {
@@ -56,6 +66,8 @@ public class EvaluationInstrument {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 	
 	
 }
