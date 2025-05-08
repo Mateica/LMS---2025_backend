@@ -7,9 +7,9 @@ import main.model.TeacherOnRealization;
 public class SubjectRealizationDTO {
 
 	private Long id;
-	private Evaluation evaluation;
-	private TeacherOnRealization teacherOnRealization;
-	private Subject subject;
+	private EvaluationDTO evaluation;
+	private TeacherOnRealizationDTO teacherOnRealization;
+	private SubjectDTO subject;
 	private Boolean active;
 
 	public SubjectRealizationDTO() {
@@ -17,8 +17,8 @@ public class SubjectRealizationDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectRealizationDTO(Long id, Evaluation evaluation, TeacherOnRealization teacherOnRealization,
-			Subject subject, Boolean active) {
+	public SubjectRealizationDTO(Long id, EvaluationDTO evaluation, TeacherOnRealizationDTO teacherOnRealization,
+			SubjectDTO subject, Boolean active) {
 		super();
 		this.id = id;
 		this.evaluation = evaluation;
@@ -35,27 +35,27 @@ public class SubjectRealizationDTO {
 		this.id = id;
 	}
 
-	public Evaluation getEvaluation() {
+	public EvaluationDTO getEvaluation() {
 		return evaluation;
 	}
 
-	public void setEvaluation(Evaluation evaluation) {
+	public void setEvaluation(EvaluationDTO evaluation) {
 		this.evaluation = evaluation;
 	}
 
-	public TeacherOnRealization getTeacherOnRealization() {
+	public TeacherOnRealizationDTO getTeacherOnRealization() {
 		return teacherOnRealization;
 	}
 
-	public void setTeacherOnRealization(TeacherOnRealization teacherOnRealization) {
+	public void setTeacherOnRealization(TeacherOnRealizationDTO teacherOnRealization) {
 		this.teacherOnRealization = teacherOnRealization;
 	}
 
-	public Subject getSubject() {
+	public SubjectDTO getSubject() {
 		return subject;
 	}
 
-	public void setSubject(Subject subject) {
+	public void setSubject(SubjectDTO subject) {
 		this.subject = subject;
 	}
 
@@ -66,5 +66,4 @@ public class SubjectRealizationDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
 }
