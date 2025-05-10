@@ -11,10 +11,10 @@ public class DepartmentDTO {
 	private Long id;
 	private String name;
 	private String description;
-	private Faculty faculty;
-	private Set<Teacher> staff = new HashSet<Teacher>();
-	private Teacher chief;
-	private Set<StudyProgramme> studyProgrammes = new HashSet<StudyProgramme>();
+	private FacultyDTO faculty;
+	private Set<TeacherDTO> staff = new HashSet<TeacherDTO>();
+	private TeacherDTO chief;
+	private Set<StudyProgrammeDTO> studyProgrammes = new HashSet<StudyProgrammeDTO>();
 	private Boolean active;
 
 	public DepartmentDTO() {
@@ -22,8 +22,8 @@ public class DepartmentDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DepartmentDTO(Long id, String name, String description, Faculty faculty, Set<Teacher> staff, Teacher chief,
-			Set<StudyProgramme> studyProgrammes, Boolean active) {
+	public DepartmentDTO(Long id, String name, String description, FacultyDTO faculty, Set<TeacherDTO> staff,
+			TeacherDTO chief, Set<StudyProgrammeDTO> studyProgrammes, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -59,35 +59,35 @@ public class DepartmentDTO {
 		this.description = description;
 	}
 
-	public Faculty getFaculty() {
+	public FacultyDTO getFaculty() {
 		return faculty;
 	}
 
-	public void setFaculty(Faculty faculty) {
+	public void setFaculty(FacultyDTO faculty) {
 		this.faculty = faculty;
 	}
 
-	public Set<Teacher> getStaff() {
+	public Set<TeacherDTO> getStaff() {
 		return staff;
 	}
 
-	public void setStaff(Set<Teacher> staff) {
+	public void setStaff(Set<TeacherDTO> staff) {
 		this.staff = staff;
 	}
 
-	public Teacher getChief() {
+	public TeacherDTO getChief() {
 		return chief;
 	}
 
-	public void setChief(Teacher chief) {
+	public void setChief(TeacherDTO chief) {
 		this.chief = chief;
 	}
 
-	public Set<StudyProgramme> getStudyProgrammes() {
+	public Set<StudyProgrammeDTO> getStudyProgrammes() {
 		return studyProgrammes;
 	}
 
-	public void setStudyProgrammes(Set<StudyProgramme> studyProgrammes) {
+	public void setStudyProgrammes(Set<StudyProgrammeDTO> studyProgrammes) {
 		this.studyProgrammes = studyProgrammes;
 	}
 
@@ -98,5 +98,6 @@ public class DepartmentDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
 
-}
+	}

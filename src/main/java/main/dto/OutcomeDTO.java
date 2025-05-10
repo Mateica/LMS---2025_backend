@@ -9,7 +9,7 @@ public class OutcomeDTO {
 	private Long id;
 	private String description;
 	private EducationGoalDTO educationGoal;
-	private TeachingMaterial teachingMaterial;
+	private TeachingMaterialDTO teachingMaterial;
 	private SubjectDTO subject;
 	private Boolean active;
 
@@ -18,7 +18,7 @@ public class OutcomeDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public OutcomeDTO(Long id, String description, EducationGoalDTO educationGoal, TeachingMaterial teachingMaterial,
+	public OutcomeDTO(Long id, String description, EducationGoalDTO educationGoal, TeachingMaterialDTO teachingMaterial,
 			SubjectDTO subject, Boolean active) {
 		super();
 		this.id = id;
@@ -53,11 +53,11 @@ public class OutcomeDTO {
 		this.educationGoal = educationGoal;
 	}
 
-	public TeachingMaterial getTeachingMaterial() {
+	public TeachingMaterialDTO getTeachingMaterial() {
 		return teachingMaterial;
 	}
 
-	public void setTeachingMaterial(TeachingMaterial teachingMaterial) {
+	public void setTeachingMaterial(TeachingMaterialDTO teachingMaterial) {
 		this.teachingMaterial = teachingMaterial;
 	}
 
@@ -76,6 +76,4 @@ public class OutcomeDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	
 }

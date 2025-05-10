@@ -14,13 +14,13 @@ public class FacultyDTO {
 
 	private Long id;
 	private String name;
-	private Address address;
-	private Teacher headmaster;
-	private University university;
+	private AddressDTO address;
+	private TeacherDTO headmaster;
+	private UniversityDTO university;
 	private String contactDetails;
 	private String description;
-	private Set<Department> departments = new HashSet<Department>();
-	private List<StudyProgramme> studyProgrammes = new ArrayList<StudyProgramme>();
+	private Set<DepartmentDTO> departments = new HashSet<DepartmentDTO>();
+	private List<StudyProgrammeDTO> studyProgrammes = new ArrayList<StudyProgrammeDTO>();
 	private Boolean active;
 
 	public FacultyDTO() {
@@ -28,9 +28,9 @@ public class FacultyDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FacultyDTO(Long id, String name, Address address, Teacher headmaster, University university,
-			String contactDetails, String description, Set<Department> departments,
-			List<StudyProgramme> studyProgrammes, Boolean active) {
+	public FacultyDTO(Long id, String name, AddressDTO address, TeacherDTO headmaster, UniversityDTO university,
+			String contactDetails, String description, Set<DepartmentDTO> departments,
+			List<StudyProgrammeDTO> studyProgrammes, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -60,27 +60,27 @@ public class FacultyDTO {
 		this.name = name;
 	}
 
-	public Address getAddress() {
+	public AddressDTO getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
 
-	public Teacher getHeadmaster() {
+	public TeacherDTO getHeadmaster() {
 		return headmaster;
 	}
 
-	public void setHeadmaster(Teacher headmaster) {
+	public void setHeadmaster(TeacherDTO headmaster) {
 		this.headmaster = headmaster;
 	}
 
-	public University getUniversity() {
+	public UniversityDTO getUniversity() {
 		return university;
 	}
 
-	public void setUniversity(University university) {
+	public void setUniversity(UniversityDTO university) {
 		this.university = university;
 	}
 
@@ -100,19 +100,19 @@ public class FacultyDTO {
 		this.description = description;
 	}
 
-	public Set<Department> getDepartments() {
+	public Set<DepartmentDTO> getDepartments() {
 		return departments;
 	}
 
-	public void setDepartments(Set<Department> departments) {
+	public void setDepartments(Set<DepartmentDTO> departments) {
 		this.departments = departments;
 	}
 
-	public List<StudyProgramme> getStudyProgrammes() {
+	public List<StudyProgrammeDTO> getStudyProgrammes() {
 		return studyProgrammes;
 	}
 
-	public void setStudyProgrammes(List<StudyProgramme> studyProgrammes) {
+	public void setStudyProgrammes(List<StudyProgrammeDTO> studyProgrammes) {
 		this.studyProgrammes = studyProgrammes;
 	}
 
@@ -123,5 +123,7 @@ public class FacultyDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }
