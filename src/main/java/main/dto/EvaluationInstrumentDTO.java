@@ -6,7 +6,7 @@ public class EvaluationInstrumentDTO {
 
 	private Long id;
 	private String name;
-	private File file;
+	private FileDTO file;
 	private Boolean active;
 
 	public EvaluationInstrumentDTO() {
@@ -14,7 +14,7 @@ public class EvaluationInstrumentDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EvaluationInstrumentDTO(Long id, String name, File file, Boolean active) {
+	public EvaluationInstrumentDTO(Long id, String name, FileDTO file, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -38,11 +38,11 @@ public class EvaluationInstrumentDTO {
 		this.name = name;
 	}
 
-	public File getFile() {
+	public FileDTO getFile() {
 		return file;
 	}
 
-	public void setFile(File file) {
+	public void setFile(FileDTO file) {
 		this.file = file;
 	}
 
@@ -53,6 +53,6 @@ public class EvaluationInstrumentDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
+	
 	
 }

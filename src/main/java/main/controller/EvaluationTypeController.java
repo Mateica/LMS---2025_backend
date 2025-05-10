@@ -33,7 +33,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	private EvaluationTypeService service;
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@GetMapping
 	public ResponseEntity<Iterable<EvaluationTypeDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -47,6 +47,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 	
 	@Override
+	@Secured({"ADMIN, TEACHER"})
 	@GetMapping("/params")
 	public ResponseEntity<Page<EvaluationTypeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -71,7 +72,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@GetMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> findById(Long id) {
 		// TODO Auto-generated method stub
@@ -84,7 +85,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@PostMapping
 	public ResponseEntity<EvaluationTypeDTO> create(EvaluationTypeDTO t) {
 		// TODO Auto-generated method stub
@@ -97,7 +98,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@PutMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> update(EvaluationTypeDTO t, Long id) {
 		// TODO Auto-generated method stub
@@ -117,7 +118,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> delete(Long id) {
 		// TODO Auto-generated method stub
@@ -125,7 +126,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured("{ADMIN, TEACHER}")
+	@Secured({"ADMIN, TEACHER"})
 	@PutMapping("/softDelete/{id}")
 	public ResponseEntity<EvaluationTypeDTO> softDelete(Long id) {
 		// TODO Auto-generated method stub
