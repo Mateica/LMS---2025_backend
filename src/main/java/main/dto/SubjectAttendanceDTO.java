@@ -1,12 +1,15 @@
 package main.dto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import main.model.Student;
 import main.model.SubjectRealization;
 
 public class SubjectAttendanceDTO {
-
 	private Long id;
 	private int finalGrade;
-	private SubjectRealization subjectRealization;
+	private SubjectRealizationDTO subjectRealization;
+	private StudentDTO student; 
 	private Boolean active;
 
 	public SubjectAttendanceDTO() {
@@ -14,11 +17,13 @@ public class SubjectAttendanceDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectAttendanceDTO(Long id, int finalGrade, SubjectRealization subjectRealization, Boolean active) {
+	public SubjectAttendanceDTO(Long id, int finalGrade, SubjectRealizationDTO subjectRealization, StudentDTO student,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.finalGrade = finalGrade;
 		this.subjectRealization = subjectRealization;
+		this.student = student;
 		this.active = active;
 	}
 
@@ -38,12 +43,20 @@ public class SubjectAttendanceDTO {
 		this.finalGrade = finalGrade;
 	}
 
-	public SubjectRealization getSubjectRealization() {
+	public SubjectRealizationDTO getSubjectRealization() {
 		return subjectRealization;
 	}
 
-	public void setSubjectRealization(SubjectRealization subjectRealization) {
+	public void setSubjectRealization(SubjectRealizationDTO subjectRealization) {
 		this.subjectRealization = subjectRealization;
+	}
+
+	public StudentDTO getStudent() {
+		return student;
+	}
+
+	public void setStudent(StudentDTO student) {
+		this.student = student;
 	}
 
 	public Boolean getActive() {
@@ -53,5 +66,7 @@ public class SubjectAttendanceDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

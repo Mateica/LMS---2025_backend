@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,8 +24,11 @@ public class SubjectAttendance implements Serializable{
 	@Column(nullable = false)
 	private int finalGrade;
 	
-	@OneToOne
+	@ManyToOne
 	private SubjectRealization subjectRealization;
+	
+	@ManyToOne
+	private Student student; 
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -34,15 +38,15 @@ public class SubjectAttendance implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectAttendance(Long id, int finalGrade, SubjectRealization subjectRealization, Boolean active) {
+	public SubjectAttendance(Long id, int finalGrade, SubjectRealization subjectRealization, Student student,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.finalGrade = finalGrade;
 		this.subjectRealization = subjectRealization;
+		this.student = student;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -68,6 +72,14 @@ public class SubjectAttendance implements Serializable{
 		this.subjectRealization = subjectRealization;
 	}
 
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -75,4 +87,10 @@ public class SubjectAttendance implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 }

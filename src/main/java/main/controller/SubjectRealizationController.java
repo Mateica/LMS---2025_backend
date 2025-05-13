@@ -65,7 +65,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 
 	@Override
 	@GetMapping("")
-	@Secured({"ADMIN", "TEACHER"})
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<SubjectRealizationDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();

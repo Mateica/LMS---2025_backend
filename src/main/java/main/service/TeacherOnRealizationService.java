@@ -1,5 +1,6 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class TeacherOnRealizationService implements ServiceInterface<TeacherOnRe
 	public Page<TeacherOnRealization> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<TeacherOnRealization> findByTeacherId(Long id) {
+		return this.repo.findByTeacherId(id);
 	}
 
 	@Override

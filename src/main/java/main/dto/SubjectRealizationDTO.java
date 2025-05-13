@@ -5,11 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import main.model.Announcement;
+
 public class SubjectRealizationDTO {
 
 	private Long id;
 	private List<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
 	private Set<TeacherOnRealizationDTO> teacherOnRealization = new HashSet<TeacherOnRealizationDTO>();
+	private List<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
 	private SubjectDTO subject;
 	private Boolean active;
 
@@ -19,11 +22,13 @@ public class SubjectRealizationDTO {
 	}
 
 	public SubjectRealizationDTO(Long id, List<EvaluationDTO> evaluations,
-			Set<TeacherOnRealizationDTO> teacherOnRealization, SubjectDTO subject, Boolean active) {
+			Set<TeacherOnRealizationDTO> teacherOnRealization, List<AnnouncementDTO> announcements, SubjectDTO subject,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.evaluations = evaluations;
 		this.teacherOnRealization = teacherOnRealization;
+		this.announcements = announcements;
 		this.subject = subject;
 		this.active = active;
 	}
@@ -52,6 +57,14 @@ public class SubjectRealizationDTO {
 		this.teacherOnRealization = teacherOnRealization;
 	}
 
+	public List<AnnouncementDTO> getAnnouncements() {
+		return announcements;
+	}
+
+	public void setAnnouncements(List<AnnouncementDTO> announcements) {
+		this.announcements = announcements;
+	}
+
 	public SubjectDTO getSubject() {
 		return subject;
 	}
@@ -67,10 +80,4 @@ public class SubjectRealizationDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	
-
-	
-	
-
 }

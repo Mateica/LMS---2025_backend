@@ -1,5 +1,8 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,8 +44,8 @@ public class Student {
 	@OneToOne
 	private StudentOnYear studentOnYear;
 	
-	@Column(nullable = false)
-	private SubjectAttendance subjectAttendance;
+	@OneToMany(mappedBy = "student")
+	private List<SubjectAttendance> subjectAttendances = new ArrayList<SubjectAttendance>();
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -53,7 +56,7 @@ public class Student {
 	}
 
 	public Student(Long id, RegisteredUser user, String firstName, String lastName, String umcn, String indexNumber,
-			Address address, StudentOnYear studentOnYear, SubjectAttendance subjectAttendance, Boolean active) {
+			Address address, StudentOnYear studentOnYear, List<SubjectAttendance> subjectAttendances, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -63,11 +66,9 @@ public class Student {
 		this.indexNumber = indexNumber;
 		this.address = address;
 		this.studentOnYear = studentOnYear;
-		this.subjectAttendance = subjectAttendance;
+		this.subjectAttendances = subjectAttendances;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -133,12 +134,12 @@ public class Student {
 		this.studentOnYear = studentOnYear;
 	}
 
-	public SubjectAttendance getSubjectAttendance() {
-		return subjectAttendance;
+	public List<SubjectAttendance> getSubjectAttendances() {
+		return subjectAttendances;
 	}
 
-	public void setSubjectAttendance(SubjectAttendance subjectAttendance) {
-		this.subjectAttendance = subjectAttendance;
+	public void setSubjectAttendances(List<SubjectAttendance> subjectAttendances) {
+		this.subjectAttendances = subjectAttendances;
 	}
 
 	public Boolean getActive() {
@@ -148,9 +149,6 @@ public class Student {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
-	
+
 	
 }
