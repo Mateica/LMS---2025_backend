@@ -12,28 +12,22 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import main.model.Department;
 import main.model.RegisteredUser;
+import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.Title;
 
 public class TeacherDTO {
 	private Long id;
-
 	private RegisteredUserDTO user;
-	
 	private String firstName;
 	
 	private String lastName;
-	
 	private String umcn;
-	
 	private String biography;
-	
 	private List<TitleDTO> titles = new ArrayList<TitleDTO>();
-	
+	private List<TeacherOnRealizationDTO> teachersOnRealization = new ArrayList<TeacherOnRealizationDTO>();
 	private TeachingMaterialDTO teachingMaterial;
-
 	private DepartmentDTO department;
-	
 	private Boolean active;
 	
 	public TeacherDTO() {
@@ -42,7 +36,8 @@ public class TeacherDTO {
 	}
 
 	public TeacherDTO(Long id, RegisteredUserDTO user, String firstName, String lastName, String umcn, String biography,
-			List<TitleDTO> titles, TeachingMaterialDTO teachingMaterial, DepartmentDTO department, Boolean active) {
+			List<TitleDTO> titles, List<TeacherOnRealizationDTO> teachersOnRealization,
+			TeachingMaterialDTO teachingMaterial, DepartmentDTO department, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -51,6 +46,7 @@ public class TeacherDTO {
 		this.umcn = umcn;
 		this.biography = biography;
 		this.titles = titles;
+		this.teachersOnRealization = teachersOnRealization;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
@@ -112,6 +108,14 @@ public class TeacherDTO {
 		this.titles = titles;
 	}
 
+	public List<TeacherOnRealizationDTO> getTeachersOnRealization() {
+		return teachersOnRealization;
+	}
+
+	public void setTeachersOnRealization(List<TeacherOnRealizationDTO> teachersOnRealization) {
+		this.teachersOnRealization = teachersOnRealization;
+	}
+
 	public TeachingMaterialDTO getTeachingMaterial() {
 		return teachingMaterial;
 	}
@@ -135,5 +139,7 @@ public class TeacherDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

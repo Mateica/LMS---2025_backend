@@ -1,10 +1,15 @@
 package main.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -16,16 +21,13 @@ public class TeacherOnRealization {
 	@Column(nullable = false)
 	private int numberOfClasses;
 	
-	@OneToOne
+	@ManyToOne
 	private Teacher teacher;
 	
-	@OneToOne
+	@ManyToOne
 	private SubjectRealization subjectRealization;
 	
-	@OneToOne
-	private Announcement announcement;
-	
-	@OneToOne
+	@ManyToOne
 	private TeachingType teachingType;
 	
 	@Column(nullable = false)
@@ -37,18 +39,15 @@ public class TeacherOnRealization {
 	}
 
 	public TeacherOnRealization(Long id, int numberOfClasses, Teacher teacher, SubjectRealization subjectRealization,
-			Announcement announcement, TeachingType teachingType, Boolean active) {
+			TeachingType teachingType, Boolean active) {
 		super();
 		this.id = id;
 		this.numberOfClasses = numberOfClasses;
 		this.teacher = teacher;
 		this.subjectRealization = subjectRealization;
-		this.announcement = announcement;
 		this.teachingType = teachingType;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -82,14 +81,6 @@ public class TeacherOnRealization {
 		this.subjectRealization = subjectRealization;
 	}
 
-	public Announcement getNotification() {
-		return announcement;
-	}
-
-	public void setNotification(Announcement announcement) {
-		this.announcement = announcement;
-	}
-
 	public TeachingType getTeachingType() {
 		return teachingType;
 	}
@@ -105,4 +96,6 @@ public class TeacherOnRealization {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 }

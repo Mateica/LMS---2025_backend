@@ -62,7 +62,7 @@ import main.service.EvaluationTypeService;
 import main.service.OutcomeService;
 
 @RestController
-@RequestMapping("/api/outcomes")
+@RequestMapping("/api/syllabi")
 public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	@Autowired
 	private OutcomeService service;

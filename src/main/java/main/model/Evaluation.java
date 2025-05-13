@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -33,6 +34,9 @@ public class Evaluation {
 	@OneToOne
 	private Examination examination;
 	
+	@ManyToOne
+	private SubjectRealization subjectRealization;
+	
 	@Column(nullable = false)
 	private Boolean active;
 
@@ -41,7 +45,8 @@ public class Evaluation {
 	}
 
 	public Evaluation(Long id, LocalDateTime startTime, LocalDateTime endTime, int numberOfPoints,
-			EvaluationType evaluationType, EvaluationInstrument evaluationInstrument, Examination examination) {
+			EvaluationType evaluationType, EvaluationInstrument evaluationInstrument, Examination examination,
+			SubjectRealization subjectRealization, Boolean active) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -50,6 +55,8 @@ public class Evaluation {
 		this.evaluationType = evaluationType;
 		this.evaluationInstrument = evaluationInstrument;
 		this.examination = examination;
+		this.subjectRealization = subjectRealization;
+		this.active = active;
 	}
 
 	public Long getId() {
@@ -108,6 +115,14 @@ public class Evaluation {
 		this.examination = examination;
 	}
 
+	public SubjectRealization getSubjectRealization() {
+		return subjectRealization;
+	}
+
+	public void setSubjectRealization(SubjectRealization subjectRealization) {
+		this.subjectRealization = subjectRealization;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -115,7 +130,7 @@ public class Evaluation {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
 	
 	
 }

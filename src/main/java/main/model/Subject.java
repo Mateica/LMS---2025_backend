@@ -1,5 +1,8 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -49,6 +53,9 @@ public class Subject {
 	@OneToOne
 	private Outcome outcome;
 	
+	@OneToMany(mappedBy = "subject")
+	private List<SubjectRealization> subjectRealizations = new ArrayList<SubjectRealization>();
+	
 	@OneToOne // Mozda 1 : *?
 //	@Column(nullable = true)
 	private Subject prerequisite;
@@ -61,11 +68,9 @@ public class Subject {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
 	public Subject(Long id, String name, int ects, boolean compulsory, int numberOfClasses, int numberOfPractices,
 			int otherTypesOfClasses, int researchWork, int classesLeft, int numberOfSemesters, YearOfStudy yearOfStudy,
-			Outcome outcome, Subject prerequisite, Boolean active) {
+			Outcome outcome, List<SubjectRealization> subjectRealizations, Subject prerequisite, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -79,11 +84,10 @@ public class Subject {
 		this.numberOfSemesters = numberOfSemesters;
 		this.yearOfStudy = yearOfStudy;
 		this.outcome = outcome;
+		this.subjectRealizations = subjectRealizations;
 		this.prerequisite = prerequisite;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -173,19 +177,21 @@ public class Subject {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	
-
 	public Outcome getOutcome() {
 		return outcome;
 	}
-
-
 
 	public void setOutcome(Outcome outcome) {
 		this.outcome = outcome;
 	}
 
+	public List<SubjectRealization> getSubjectRealizations() {
+		return subjectRealizations;
+	}
 
+	public void setSubjectRealizations(List<SubjectRealization> subjectRealizations) {
+		this.subjectRealizations = subjectRealizations;
+	}
 
 	public Subject getPrerequisite() {
 		return prerequisite;
@@ -202,6 +208,7 @@ public class Subject {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
 	
 	
 }

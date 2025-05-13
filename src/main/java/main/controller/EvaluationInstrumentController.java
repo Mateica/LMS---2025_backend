@@ -110,7 +110,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PutMapping("/{id}")
 	public ResponseEntity<EvaluationInstrumentDTO> update(EvaluationInstrumentDTO t, Long id) {
 		// TODO Auto-generated method stub

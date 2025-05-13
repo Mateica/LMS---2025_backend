@@ -1,7 +1,11 @@
 package main.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.model.Outcome;
 import main.model.Subject;
+import main.model.SubjectRealization;
 import main.model.YearOfStudy;
 
 public class SubjectDTO {
@@ -18,6 +22,7 @@ public class SubjectDTO {
 	private Integer numberOfSemesters;
 	private YearOfStudyDTO yearOfStudy;
 	private OutcomeDTO outcome;
+	private List<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();
 	private SubjectDTO prerequisite;
 	private Boolean active;
 
@@ -28,8 +33,8 @@ public class SubjectDTO {
 
 	public SubjectDTO(Long id, String name, Integer ects, boolean compulsory, Integer numberOfClasses,
 			Integer numberOfPractices, Integer otherTypesOfClasses, Integer researchWork, Integer classesLeft,
-			Integer numberOfSemesters, YearOfStudyDTO yearOfStudy, OutcomeDTO outcome, SubjectDTO prerequisite,
-			Boolean active) {
+			Integer numberOfSemesters, YearOfStudyDTO yearOfStudy, OutcomeDTO outcome,
+			List<SubjectRealizationDTO> subjectRealizations, SubjectDTO prerequisite, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -43,6 +48,7 @@ public class SubjectDTO {
 		this.numberOfSemesters = numberOfSemesters;
 		this.yearOfStudy = yearOfStudy;
 		this.outcome = outcome;
+		this.subjectRealizations = subjectRealizations;
 		this.prerequisite = prerequisite;
 		this.active = active;
 	}
@@ -143,6 +149,14 @@ public class SubjectDTO {
 		this.outcome = outcome;
 	}
 
+	public List<SubjectRealizationDTO> getSubjectRealizations() {
+		return subjectRealizations;
+	}
+
+	public void setSubjectRealizations(List<SubjectRealizationDTO> subjectRealizations) {
+		this.subjectRealizations = subjectRealizations;
+	}
+
 	public SubjectDTO getPrerequisite() {
 		return prerequisite;
 	}
@@ -158,9 +172,6 @@ public class SubjectDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
 	
-
 	
-
 }

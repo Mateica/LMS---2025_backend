@@ -1,14 +1,15 @@
 package main.dto;
 
-import main.model.Evaluation;
-import main.model.Subject;
-import main.model.TeacherOnRealization;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SubjectRealizationDTO {
 
 	private Long id;
-	private EvaluationDTO evaluation;
-	private TeacherOnRealizationDTO teacherOnRealization;
+	private List<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+	private Set<TeacherOnRealizationDTO> teacherOnRealization = new HashSet<TeacherOnRealizationDTO>();
 	private SubjectDTO subject;
 	private Boolean active;
 
@@ -17,11 +18,11 @@ public class SubjectRealizationDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectRealizationDTO(Long id, EvaluationDTO evaluation, TeacherOnRealizationDTO teacherOnRealization,
-			SubjectDTO subject, Boolean active) {
+	public SubjectRealizationDTO(Long id, List<EvaluationDTO> evaluations,
+			Set<TeacherOnRealizationDTO> teacherOnRealization, SubjectDTO subject, Boolean active) {
 		super();
 		this.id = id;
-		this.evaluation = evaluation;
+		this.evaluations = evaluations;
 		this.teacherOnRealization = teacherOnRealization;
 		this.subject = subject;
 		this.active = active;
@@ -35,19 +36,19 @@ public class SubjectRealizationDTO {
 		this.id = id;
 	}
 
-	public EvaluationDTO getEvaluation() {
-		return evaluation;
+	public List<EvaluationDTO> getEvaluations() {
+		return evaluations;
 	}
 
-	public void setEvaluation(EvaluationDTO evaluation) {
-		this.evaluation = evaluation;
+	public void setEvaluations(List<EvaluationDTO> evaluations) {
+		this.evaluations = evaluations;
 	}
 
-	public TeacherOnRealizationDTO getTeacherOnRealization() {
+	public Set<TeacherOnRealizationDTO> getTeacherOnRealization() {
 		return teacherOnRealization;
 	}
 
-	public void setTeacherOnRealization(TeacherOnRealizationDTO teacherOnRealization) {
+	public void setTeacherOnRealization(Set<TeacherOnRealizationDTO> teacherOnRealization) {
 		this.teacherOnRealization = teacherOnRealization;
 	}
 
@@ -66,6 +67,9 @@ public class SubjectRealizationDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
+
 	
 	
 

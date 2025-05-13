@@ -1,10 +1,17 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -13,13 +20,13 @@ public class SubjectRealization {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne
-	private Evaluation evaluation;
+	@OneToMany(mappedBy = "subjectRealization")
+	private List<Evaluation> evaluations = new ArrayList<Evaluation>();
 	
-	@OneToOne(mappedBy = "subjectRealization")
-	private TeacherOnRealization teacherOnRealization;
+	@OneToMany(mappedBy = "subjectRealization")
+	private Set<TeacherOnRealization> teachersOnRealization = new HashSet<TeacherOnRealization>();
 	
-	@OneToOne
+	@ManyToOne
 	private Subject subject;
 	
 	@Column(nullable = false)
@@ -30,17 +37,15 @@ public class SubjectRealization {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectRealization(Long id, Evaluation evaluation, TeacherOnRealization teacherOnRealization,
+	public SubjectRealization(Long id, List<Evaluation> evaluations, Set<TeacherOnRealization> teachersOnRealization,
 			Subject subject, Boolean active) {
 		super();
 		this.id = id;
-		this.evaluation = evaluation;
-		this.teacherOnRealization = teacherOnRealization;
+		this.evaluations = evaluations;
+		this.teachersOnRealization = teachersOnRealization;
 		this.subject = subject;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -50,20 +55,20 @@ public class SubjectRealization {
 		this.id = id;
 	}
 
-	public Evaluation getEvaluation() {
-		return evaluation;
+	public List<Evaluation> getEvaluations() {
+		return evaluations;
 	}
 
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
+	public void setEvaluations(List<Evaluation> evaluations) {
+		this.evaluations = evaluations;
 	}
 
-	public TeacherOnRealization getTeacherOnRealization() {
-		return teacherOnRealization;
+	public Set<TeacherOnRealization> getTeachersOnRealization() {
+		return teachersOnRealization;
 	}
 
-	public void setTeacherOnRealization(TeacherOnRealization teacherOnRealization) {
-		this.teacherOnRealization = teacherOnRealization;
+	public void setTeachersOnRealization(Set<TeacherOnRealization> teachersOnRealization) {
+		this.teachersOnRealization = teachersOnRealization;
 	}
 
 	public Subject getSubject() {
@@ -81,6 +86,8 @@ public class SubjectRealization {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
+	
 	
 	
 	
