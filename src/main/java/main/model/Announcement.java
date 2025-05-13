@@ -10,11 +10,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Announcement {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,6 +25,9 @@ public class Announcement {
 	@Lob
 	@Column(nullable = false)
 	private String content;
+	
+	@ManyToOne
+	private SubjectRealization subjectRealization;
 	
 	@Lob
 	@Column(nullable = false)
@@ -41,18 +44,17 @@ public class Announcement {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Announcement(Long id, LocalDateTime timePublished, String content, String title, List<File> attachments,
-			Boolean active) {
+	public Announcement(Long id, LocalDateTime timePublished, String content, SubjectRealization subjectRealization,
+			String title, List<File> attachments, Boolean active) {
 		super();
 		this.id = id;
 		this.timePublished = timePublished;
 		this.content = content;
+		this.subjectRealization = subjectRealization;
 		this.title = title;
 		this.attachments = attachments;
 		this.active = active;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -76,6 +78,14 @@ public class Announcement {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public SubjectRealization getSubjectRealization() {
+		return subjectRealization;
+	}
+
+	public void setSubjectRealization(SubjectRealization subjectRealization) {
+		this.subjectRealization = subjectRealization;
 	}
 
 	public String getTitle() {

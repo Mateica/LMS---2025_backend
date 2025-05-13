@@ -25,13 +25,13 @@ public class Evaluation {
 	@Column(nullable = false)
 	private int numberOfPoints;
 	
-	@OneToOne
+	@ManyToOne
 	private EvaluationType evaluationType;
 	
-	@OneToOne
+	@ManyToOne
 	private EvaluationInstrument evaluationInstrument;
 	
-	@OneToOne
+	@ManyToOne
 	private Examination examination;
 	
 	@ManyToOne
@@ -131,6 +131,5 @@ public class Evaluation {
 		this.active = active;
 	}
 
-	
 	
 }

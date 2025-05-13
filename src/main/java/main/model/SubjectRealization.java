@@ -26,6 +26,9 @@ public class SubjectRealization {
 	@OneToMany(mappedBy = "subjectRealization")
 	private Set<TeacherOnRealization> teachersOnRealization = new HashSet<TeacherOnRealization>();
 	
+	@OneToMany(mappedBy = "announcement")
+	private List<Announcement> announcements = new ArrayList<Announcement>();
+	
 	@ManyToOne
 	private Subject subject;
 	
@@ -38,11 +41,12 @@ public class SubjectRealization {
 	}
 
 	public SubjectRealization(Long id, List<Evaluation> evaluations, Set<TeacherOnRealization> teachersOnRealization,
-			Subject subject, Boolean active) {
+			List<Announcement> announcements, Subject subject, Boolean active) {
 		super();
 		this.id = id;
 		this.evaluations = evaluations;
 		this.teachersOnRealization = teachersOnRealization;
+		this.announcements = announcements;
 		this.subject = subject;
 		this.active = active;
 	}
@@ -71,6 +75,14 @@ public class SubjectRealization {
 		this.teachersOnRealization = teachersOnRealization;
 	}
 
+	public List<Announcement> getAnnouncements() {
+		return announcements;
+	}
+
+	public void setAnnouncements(List<Announcement> announcements) {
+		this.announcements = announcements;
+	}
+
 	public Subject getSubject() {
 		return subject;
 	}
@@ -86,9 +98,4 @@ public class SubjectRealization {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
-	
-	
 }

@@ -1,19 +1,26 @@
 package main.dto;
 
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import main.model.EvaluationInstrument;
 import main.model.EvaluationType;
 import main.model.Examination;
+import main.model.SubjectRealization;
 
 public class EvaluationDTO {
-
 	private Long id;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private int numberOfPoints;
-	private EvaluationTypeDTO evaluationType;
-	private EvaluationInstrumentDTO evaluationInstrument;
-	private ExaminationDTO examination;
+	
+	private EvaluationType evaluationType;
+	private EvaluationInstrument evaluationInstrument;
+	private Examination examination;
+	
+	private SubjectRealization subjectRealization;
 	private Boolean active;
 
 	public EvaluationDTO() {
@@ -22,8 +29,8 @@ public class EvaluationDTO {
 	}
 
 	public EvaluationDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, int numberOfPoints,
-			EvaluationTypeDTO evaluationType, EvaluationInstrumentDTO evaluationInstrument, ExaminationDTO examination,
-			Boolean active) {
+			EvaluationType evaluationType, EvaluationInstrument evaluationInstrument, Examination examination,
+			SubjectRealization subjectRealization, Boolean active) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -32,6 +39,7 @@ public class EvaluationDTO {
 		this.evaluationType = evaluationType;
 		this.evaluationInstrument = evaluationInstrument;
 		this.examination = examination;
+		this.subjectRealization = subjectRealization;
 		this.active = active;
 	}
 
@@ -67,28 +75,36 @@ public class EvaluationDTO {
 		this.numberOfPoints = numberOfPoints;
 	}
 
-	public EvaluationTypeDTO getEvaluationType() {
+	public EvaluationType getEvaluationType() {
 		return evaluationType;
 	}
 
-	public void setEvaluationType(EvaluationTypeDTO evaluationType) {
+	public void setEvaluationType(EvaluationType evaluationType) {
 		this.evaluationType = evaluationType;
 	}
 
-	public EvaluationInstrumentDTO getEvaluationInstrument() {
+	public EvaluationInstrument getEvaluationInstrument() {
 		return evaluationInstrument;
 	}
 
-	public void setEvaluationInstrument(EvaluationInstrumentDTO evaluationInstrument) {
+	public void setEvaluationInstrument(EvaluationInstrument evaluationInstrument) {
 		this.evaluationInstrument = evaluationInstrument;
 	}
 
-	public ExaminationDTO getExamination() {
+	public Examination getExamination() {
 		return examination;
 	}
 
-	public void setExamination(ExaminationDTO examination) {
+	public void setExamination(Examination examination) {
 		this.examination = examination;
+	}
+
+	public SubjectRealization getSubjectRealization() {
+		return subjectRealization;
+	}
+
+	public void setSubjectRealization(SubjectRealization subjectRealization) {
+		this.subjectRealization = subjectRealization;
 	}
 
 	public Boolean getActive() {
@@ -99,6 +115,7 @@ public class EvaluationDTO {
 		this.active = active;
 	}
 
+	
 	
 
 }
