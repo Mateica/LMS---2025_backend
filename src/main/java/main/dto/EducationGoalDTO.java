@@ -6,7 +6,7 @@ public class EducationGoalDTO {
 
 	private Long id;
 	private String description;
-	private Outcome outcome;
+	private OutcomeDTO outcome;
 	private Boolean active;
 
 	public EducationGoalDTO() {
@@ -14,7 +14,7 @@ public class EducationGoalDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EducationGoalDTO(Long id, String description, Outcome outcome, Boolean active) {
+	public EducationGoalDTO(Long id, String description, OutcomeDTO outcome, Boolean active) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -38,11 +38,11 @@ public class EducationGoalDTO {
 		this.description = description;
 	}
 
-	public Outcome getOutcome() {
+	public OutcomeDTO getOutcome() {
 		return outcome;
 	}
 
-	public void setOutcome(Outcome outcome) {
+	public void setOutcome(OutcomeDTO outcome) {
 		this.outcome = outcome;
 	}
 
@@ -54,4 +54,5 @@ public class EducationGoalDTO {
 		this.active = active;
 	}
 
+	
 }

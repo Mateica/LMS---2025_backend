@@ -183,7 +183,7 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 	
 	@GetMapping("/teacherSubjects/{id}")
 	@Secured({"ADMIN", "TEACHER"})
-	public ResponseEntity<Iterable<TeacherOnRealizationDTO>> findByTeacher(@PathVariable("id") Long id){
+	public ResponseEntity<Iterable<TeacherOnRealizationDTO>> findAllTeacherSubjects(@PathVariable("id") Long id){
 		ArrayList<TeacherOnRealizationDTO> teachersOnRealization = null;
 		
 		teachersOnRealization = (ArrayList<TeacherOnRealizationDTO>) service.findByTeacherId(id)
