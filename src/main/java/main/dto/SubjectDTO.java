@@ -30,6 +30,18 @@ public class SubjectDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public SubjectDTO(Long id, String name, Integer ects, Boolean active) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.ects = ects;
+		this.active = active;
+	}
+
+
 
 	public SubjectDTO(Long id, String name, Integer ects, boolean compulsory, Integer numberOfClasses,
 			Integer numberOfPractices, Integer otherTypesOfClasses, Integer researchWork, Integer classesLeft,

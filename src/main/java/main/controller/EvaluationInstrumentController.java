@@ -35,7 +35,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	private EvaluationInstrumentService service;
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@GetMapping
 	public ResponseEntity<Iterable<EvaluationInstrumentDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -52,7 +52,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 	
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@GetMapping("/params")
 	public ResponseEntity<Page<EvaluationInstrumentDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -79,7 +79,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@GetMapping("/{id}")
 	public ResponseEntity<EvaluationInstrumentDTO> findById(Long id) {
 		// TODO Auto-generated method stub
@@ -94,7 +94,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PostMapping
 	public ResponseEntity<EvaluationInstrumentDTO> create(EvaluationInstrumentDTO t) {
 		// TODO Auto-generated method stub
@@ -134,7 +134,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<EvaluationInstrumentDTO> delete(Long id) {
 		// TODO Auto-generated method stub
@@ -142,7 +142,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PutMapping("/softDelete/{id}")
 	public ResponseEntity<EvaluationInstrumentDTO> softDelete(Long id) {
 		// TODO Auto-generated method stub
