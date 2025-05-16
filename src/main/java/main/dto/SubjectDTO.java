@@ -21,7 +21,7 @@ public class SubjectDTO {
 	private Integer classesLeft;
 	private Integer numberOfSemesters;
 	private YearOfStudyDTO yearOfStudy;
-	private OutcomeDTO outcome;
+	private List<OutcomeDTO> syllabi = new ArrayList<OutcomeDTO>();
 	private List<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();
 	private SubjectDTO prerequisite;
 	private Boolean active;
@@ -33,7 +33,7 @@ public class SubjectDTO {
 
 	public SubjectDTO(Long id, String name, Integer ects, boolean compulsory, Integer numberOfClasses,
 			Integer numberOfPractices, Integer otherTypesOfClasses, Integer researchWork, Integer classesLeft,
-			Integer numberOfSemesters, YearOfStudyDTO yearOfStudy, OutcomeDTO outcome,
+			Integer numberOfSemesters, YearOfStudyDTO yearOfStudy, List<OutcomeDTO> syllabi,
 			List<SubjectRealizationDTO> subjectRealizations, SubjectDTO prerequisite, Boolean active) {
 		super();
 		this.id = id;
@@ -47,7 +47,7 @@ public class SubjectDTO {
 		this.classesLeft = classesLeft;
 		this.numberOfSemesters = numberOfSemesters;
 		this.yearOfStudy = yearOfStudy;
-		this.outcome = outcome;
+		this.syllabi = syllabi;
 		this.subjectRealizations = subjectRealizations;
 		this.prerequisite = prerequisite;
 		this.active = active;
@@ -141,12 +141,12 @@ public class SubjectDTO {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	public OutcomeDTO getOutcome() {
-		return outcome;
+	public List<OutcomeDTO> getSyllabi() {
+		return syllabi;
 	}
 
-	public void setOutcome(OutcomeDTO outcome) {
-		this.outcome = outcome;
+	public void setSyllabi(List<OutcomeDTO> syllabi) {
+		this.syllabi = syllabi;
 	}
 
 	public List<SubjectRealizationDTO> getSubjectRealizations() {
@@ -172,6 +172,7 @@ public class SubjectDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
 	
 	
 }

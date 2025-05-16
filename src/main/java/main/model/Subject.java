@@ -50,8 +50,8 @@ public class Subject {
 	@ManyToOne
 	private YearOfStudy yearOfStudy;
 	
-	@OneToOne
-	private Outcome outcome;
+	@OneToMany(mappedBy = "outcome")
+	private List<Outcome> syllabi = new ArrayList<Outcome>();
 	
 	@OneToMany(mappedBy = "subject")
 	private List<SubjectRealization> subjectRealizations = new ArrayList<SubjectRealization>();
@@ -70,7 +70,7 @@ public class Subject {
 
 	public Subject(Long id, String name, int ects, boolean compulsory, int numberOfClasses, int numberOfPractices,
 			int otherTypesOfClasses, int researchWork, int classesLeft, int numberOfSemesters, YearOfStudy yearOfStudy,
-			Outcome outcome, List<SubjectRealization> subjectRealizations, Subject prerequisite, Boolean active) {
+			List<Outcome> syllabi, List<SubjectRealization> subjectRealizations, Subject prerequisite, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -83,7 +83,7 @@ public class Subject {
 		this.classesLeft = classesLeft;
 		this.numberOfSemesters = numberOfSemesters;
 		this.yearOfStudy = yearOfStudy;
-		this.outcome = outcome;
+		this.syllabi = syllabi;
 		this.subjectRealizations = subjectRealizations;
 		this.prerequisite = prerequisite;
 		this.active = active;
@@ -177,12 +177,12 @@ public class Subject {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	public Outcome getOutcome() {
-		return outcome;
+	public List<Outcome> getSyllabi() {
+		return syllabi;
 	}
 
-	public void setOutcome(Outcome outcome) {
-		this.outcome = outcome;
+	public void setSyllabi(List<Outcome> syllabi) {
+		this.syllabi = syllabi;
 	}
 
 	public List<SubjectRealization> getSubjectRealizations() {
@@ -208,7 +208,6 @@ public class Subject {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
 	
 	
 }
