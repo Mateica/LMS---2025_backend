@@ -1,7 +1,9 @@
 package main.dto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
@@ -18,9 +20,8 @@ public class StudentDTO {
 	private String firstName;
 	private String lastName;
 	private String umcn;
-	private String indexNumber;
 	private AddressDTO address;
-	private StudentOnYearDTO studentOnYear;
+	private Set<StudentOnYearDTO> studentsOnYear = new HashSet<StudentOnYearDTO>();
 	private List<SubjectAttendanceDTO> subjectAttendances = new ArrayList<SubjectAttendance>();
 	private Boolean active;
 	
@@ -30,17 +31,16 @@ public class StudentDTO {
 	}
 
 	public StudentDTO(Long id, RegisteredUserDTO user, String firstName, String lastName, String umcn,
-			String indexNumber, AddressDTO address, StudentOnYearDTO studentOnYear,
-			List<SubjectAttendanceDTO> subjectAttendances, Boolean active) {
+			AddressDTO address, Set<StudentOnYearDTO> studentsOnYear, List<SubjectAttendanceDTO> subjectAttendances,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.umcn = umcn;
-		this.indexNumber = indexNumber;
 		this.address = address;
-		this.studentOnYear = studentOnYear;
+		this.studentsOnYear = studentsOnYear;
 		this.subjectAttendances = subjectAttendances;
 		this.active = active;
 	}
@@ -85,14 +85,6 @@ public class StudentDTO {
 		this.umcn = umcn;
 	}
 
-	public String getIndexNumber() {
-		return indexNumber;
-	}
-
-	public void setIndexNumber(String indexNumber) {
-		this.indexNumber = indexNumber;
-	}
-
 	public AddressDTO getAddress() {
 		return address;
 	}
@@ -101,12 +93,12 @@ public class StudentDTO {
 		this.address = address;
 	}
 
-	public StudentOnYearDTO getStudentOnYear() {
-		return studentOnYear;
+	public Set<StudentOnYearDTO> getStudentsOnYear() {
+		return studentsOnYear;
 	}
 
-	public void setStudentOnYear(StudentOnYearDTO studentOnYear) {
-		this.studentOnYear = studentOnYear;
+	public void setStudentsOnYear(Set<StudentOnYearDTO> studentsOnYear) {
+		this.studentsOnYear = studentsOnYear;
 	}
 
 	public List<SubjectAttendanceDTO> getSubjectAttendances() {

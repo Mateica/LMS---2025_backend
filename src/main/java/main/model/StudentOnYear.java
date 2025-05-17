@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.mapping.Array;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -23,8 +22,11 @@ public class StudentOnYear {
 	@Column(nullable = false)
 	private LocalDateTime dateOfApplication;
 	
-	@OneToOne
+	@ManyToOne
 	private Student student;
+	
+	@Column(nullable = false)
+	private String indexNumber;
 	
 	@OneToOne
 	private YearOfStudy yearOfStudy;
@@ -35,13 +37,18 @@ public class StudentOnYear {
 	@Column(nullable = false)
 	private Boolean active;
 	
-	
-	public StudentOnYear(Long id, LocalDateTime dateOfApplication, Student student, YearOfStudy yearOfStudy,
-			List<Examination> examinations, Boolean active) {
+	public StudentOnYear() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public StudentOnYear(Long id, LocalDateTime dateOfApplication, Student student, String indexNumber,
+			YearOfStudy yearOfStudy, List<Examination> examinations, Boolean active) {
 		super();
 		this.id = id;
 		this.dateOfApplication = dateOfApplication;
 		this.student = student;
+		this.indexNumber = indexNumber;
 		this.yearOfStudy = yearOfStudy;
 		this.examinations = examinations;
 		this.active = active;
@@ -71,12 +78,28 @@ public class StudentOnYear {
 		this.student = student;
 	}
 
+	public String getIndexNumber() {
+		return indexNumber;
+	}
+
+	public void setIndexNumber(String indexNumber) {
+		this.indexNumber = indexNumber;
+	}
+
 	public YearOfStudy getYearOfStudy() {
 		return yearOfStudy;
 	}
 
 	public void setYearOfStudy(YearOfStudy yearOfStudy) {
 		this.yearOfStudy = yearOfStudy;
+	}
+
+	public List<Examination> getExaminations() {
+		return examinations;
+	}
+
+	public void setExaminations(List<Examination> examinations) {
+		this.examinations = examinations;
 	}
 
 	public Boolean getActive() {
@@ -87,12 +110,5 @@ public class StudentOnYear {
 		this.active = active;
 	}
 
-	public List<Examination> getExaminations() {
-		return examinations;
-	}
-
-	public void setExaminations(List<Examination> examinations) {
-		this.examinations = examinations;
-	}
 	
 }

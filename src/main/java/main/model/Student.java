@@ -1,7 +1,9 @@
 package main.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,28 +23,21 @@ public class Student {
 	@OneToOne
 	private RegisteredUser user;
 	
-	@Lob
 	@Column(nullable = false)
 	private String firstName;
 	
-	@Lob
 	@Column(nullable = false)
 	private String lastName;
 	
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, length = 13)
 	private String umcn;
-	
-	@Lob
-	@Column(nullable = false)
-	private String indexNumber;
 	
 	@OneToOne
 	private Address address;
 	
 	
-	@OneToOne
-	private StudentOnYear studentOnYear;
+	@OneToMany(mappedBy = "student")
+	private Set<StudentOnYear> studentsOnYear = new HashSet<StudentOnYear>();
 	
 	@OneToMany(mappedBy = "student")
 	private List<SubjectAttendance> subjectAttendances = new ArrayList<SubjectAttendance>();
@@ -55,17 +50,16 @@ public class Student {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Student(Long id, RegisteredUser user, String firstName, String lastName, String umcn, String indexNumber,
-			Address address, StudentOnYear studentOnYear, List<SubjectAttendance> subjectAttendances, Boolean active) {
+	public Student(Long id, RegisteredUser user, String firstName, String lastName, String umcn, Address address,
+			Set<StudentOnYear> studentsOnYear, List<SubjectAttendance> subjectAttendances, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.umcn = umcn;
-		this.indexNumber = indexNumber;
 		this.address = address;
-		this.studentOnYear = studentOnYear;
+		this.studentsOnYear = studentsOnYear;
 		this.subjectAttendances = subjectAttendances;
 		this.active = active;
 	}
@@ -110,14 +104,6 @@ public class Student {
 		this.umcn = umcn;
 	}
 
-	public String getIndexNumber() {
-		return indexNumber;
-	}
-
-	public void setIndexNumber(String indexNumber) {
-		this.indexNumber = indexNumber;
-	}
-
 	public Address getAddress() {
 		return address;
 	}
@@ -126,12 +112,12 @@ public class Student {
 		this.address = address;
 	}
 
-	public StudentOnYear getStudentOnYear() {
-		return studentOnYear;
+	public Set<StudentOnYear> getStudentsOnYear() {
+		return studentsOnYear;
 	}
 
-	public void setStudentOnYear(StudentOnYear studentOnYear) {
-		this.studentOnYear = studentOnYear;
+	public void setStudentsOnYear(Set<StudentOnYear> studentsOnYear) {
+		this.studentsOnYear = studentsOnYear;
 	}
 
 	public List<SubjectAttendance> getSubjectAttendances() {

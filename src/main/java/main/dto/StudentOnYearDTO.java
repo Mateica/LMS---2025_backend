@@ -11,9 +11,10 @@ public class StudentOnYearDTO {
 
 	private Long id;
 	private LocalDateTime dateOfApplication;
-	private Student student;
-	private YearOfStudy yearOfStudy;
-	private List<Examination> examinations = new ArrayList<Examination>();
+	private StudentDTO student;
+	private String indexNumber;
+	private YearOfStudyDTO yearOfStudy;
+	private List<ExaminationDTO> examinations = new ArrayList<ExaminationDTO>();
 	private Boolean active;
 
 	public StudentOnYearDTO() {
@@ -21,12 +22,13 @@ public class StudentOnYearDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentOnYearDTO(Long id, LocalDateTime dateOfApplication, Student student, YearOfStudy yearOfStudy,
-			List<Examination> examinations, Boolean active) {
+	public StudentOnYearDTO(Long id, LocalDateTime dateOfApplication, StudentDTO student, String indexNumber,
+			YearOfStudyDTO yearOfStudy, List<ExaminationDTO> examinations, Boolean active) {
 		super();
 		this.id = id;
 		this.dateOfApplication = dateOfApplication;
 		this.student = student;
+		this.indexNumber = indexNumber;
 		this.yearOfStudy = yearOfStudy;
 		this.examinations = examinations;
 		this.active = active;
@@ -48,27 +50,35 @@ public class StudentOnYearDTO {
 		this.dateOfApplication = dateOfApplication;
 	}
 
-	public Student getStudent() {
+	public StudentDTO getStudent() {
 		return student;
 	}
 
-	public void setStudent(Student student) {
+	public void setStudent(StudentDTO student) {
 		this.student = student;
 	}
 
-	public YearOfStudy getYearOfStudy() {
+	public String getIndexNumber() {
+		return indexNumber;
+	}
+
+	public void setIndexNumber(String indexNumber) {
+		this.indexNumber = indexNumber;
+	}
+
+	public YearOfStudyDTO getYearOfStudy() {
 		return yearOfStudy;
 	}
 
-	public void setYearOfStudy(YearOfStudy yearOfStudy) {
+	public void setYearOfStudy(YearOfStudyDTO yearOfStudy) {
 		this.yearOfStudy = yearOfStudy;
 	}
 
-	public List<Examination> getExaminations() {
+	public List<ExaminationDTO> getExaminations() {
 		return examinations;
 	}
 
-	public void setExaminations(List<Examination> examinations) {
+	public void setExaminations(List<ExaminationDTO> examinations) {
 		this.examinations = examinations;
 	}
 
@@ -80,4 +90,6 @@ public class StudentOnYearDTO {
 		this.active = active;
 	}
 
+	
+	
 }
