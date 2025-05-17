@@ -22,7 +22,7 @@ public class StudentDTO {
 	private String umcn;
 	private AddressDTO address;
 	private Set<StudentOnYearDTO> studentsOnYear = new HashSet<StudentOnYearDTO>();
-	private List<SubjectAttendanceDTO> subjectAttendances = new ArrayList<SubjectAttendance>();
+	private List<SubjectAttendanceDTO> subjectAttendances = new ArrayList<SubjectAttendanceDTO>();
 	private Boolean active;
 	
 	public StudentDTO() {

@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +24,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.dto.AnnouncementDTO;
+import main.dto.EducationGoalDTO;
+import main.dto.EvaluationDTO;
 import main.dto.OutcomeDTO;
 import main.dto.RoleDTO;
 import main.dto.SubjectDTO;
+import main.dto.SubjectRealizationDTO;
+import main.dto.TeacherOnRealizationDTO;
+import main.dto.TeachingMaterialDTO;
 import main.dto.YearOfStudyDTO;
+import main.model.Announcement;
 import main.model.EducationGoal;
+import main.model.Evaluation;
+import main.model.File;
 import main.model.Outcome;
 import main.model.Role;
 import main.model.Subject;
+import main.model.SubjectRealization;
+import main.model.Teacher;
+import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.YearOfStudy;
 import main.service.SubjectService;
@@ -43,7 +56,7 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	@Override
 	@GetMapping("")
-	@Secured({"ADMIN", "TEACHER"})
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<SubjectDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
@@ -51,17 +64,28 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 		for(Subject s : service.findAll()) {
 			if(s.getPrerequisite() != null) {
 				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-						s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-						s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-						new YearOfStudyDTO(),
-						new OutcomeDTO(),
-						new SubjectDTO(), s.getActive()));
+						s.isCompulsory(),
+						s.getNumberOfClasses(), s.getNumberOfPractices(),
+						s.getOtherTypesOfClasses(), 
+						s.getResearchWork(),
+						s.getClassesLeft(),
+						s.getNumberOfSemesters(),
+						new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(),null, s.getYearOfStudy().getActive()),
+						new ArrayList<OutcomeDTO>(),
+						new ArrayList<SubjectRealizationDTO>(),
+						new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),s.getPrerequisite().getEcts(),
+								s.getPrerequisite().getActive()),
+						s.getActive()));
 			}else {
 				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
 						s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-						s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
+						s.getOtherTypesOfClasses(), 
+						s.getResearchWork(),
+						s.getClassesLeft(),
+						s.getNumberOfSemesters(),
 						new YearOfStudyDTO(),
-						new OutcomeDTO(),
+						new ArrayList<OutcomeDTO>(),
+						new ArrayList<SubjectRealizationDTO>(),
 						new SubjectDTO(),
 						s.getActive()));
 			}
@@ -84,15 +108,18 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	    List<SubjectDTO> subjectDTOs = subjectPage.stream().map(s ->
 	    new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
-				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
-						s.getPrerequisite().getEcts(), 
-						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getPrerequisite().getActive()))
+				s.isCompulsory(),
+				s.getNumberOfClasses(), s.getNumberOfPractices(),
+				s.getOtherTypesOfClasses(), 
+				s.getResearchWork(),
+				s.getClassesLeft(),
+				s.getNumberOfSemesters(),
+				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(),null, s.getYearOfStudy().getActive()),
+				new ArrayList<OutcomeDTO>(),
+				new ArrayList<SubjectRealizationDTO>(),
+				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),s.getPrerequisite().getEcts(),
+						s.getPrerequisite().getActive()),
+				s.getActive()))
 	    		.collect(Collectors.toList());
 
 	    Page<SubjectDTO> resultPage = new PageImpl<SubjectDTO>(subjectDTOs, pageable, subjectPage.getTotalElements());
@@ -111,15 +138,18 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 			return new ResponseEntity<SubjectDTO>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<SubjectDTO>(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
-				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
-						s.getPrerequisite().getEcts(), 
-						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getActive()), HttpStatus.OK);
+				s.isCompulsory(),
+				s.getNumberOfClasses(), s.getNumberOfPractices(),
+				s.getOtherTypesOfClasses(), 
+				s.getResearchWork(),
+				s.getClassesLeft(),
+				s.getNumberOfSemesters(),
+				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(),null, s.getYearOfStudy().getActive()),
+				new ArrayList<OutcomeDTO>(),
+				new ArrayList<SubjectRealizationDTO>(),
+				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),s.getPrerequisite().getEcts(),
+						s.getPrerequisite().getActive()),
+				s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -127,27 +157,39 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 	@Secured({"ADMIN"})
 	public ResponseEntity<SubjectDTO> create(@RequestBody SubjectDTO t) {
 		// TODO Auto-generated method stub
-		Subject s = service.create(new Subject(null, t.getName(),t.getEcts(), 
-				t.isCompulsory(), t.getNumberOfClasses(), t.getNumberOfPractices(),
-				t.getOtherTypesOfClasses(), t.getResearchWork(), t.getClassesLeft(), t.getNumberOfSemesters(),
-				new YearOfStudy(),
-				new Outcome(t.getOutcome().getId(), t.getOutcome().getDescription(), 
-						null, null, null, t.getOutcome().getActive()),
-				new Subject(), true));
+		Subject s = service.create(new Subject(t.getId(), t.getName(),t.getEcts(), 
+				t.isCompulsory(),
+				t.getNumberOfClasses(), t.getNumberOfPractices(),
+				t.getOtherTypesOfClasses(), 
+				t.getResearchWork(),
+				t.getClassesLeft(),
+				t.getNumberOfSemesters(),
+				new YearOfStudy(t.getYearOfStudy().getId(), t.getYearOfStudy().getYearOfStudy(),new ArrayList<Subject>(), t.getYearOfStudy().getActive()),
+				new ArrayList<Outcome>(),
+				new ArrayList<SubjectRealization>(),
+				new Subject(t.getPrerequisite().getId(), t.getPrerequisite().getName(),t.getPrerequisite().getEcts(),
+						t.getPrerequisite().isCompulsory(), t.getPrerequisite().getNumberOfClasses(),
+						t.getPrerequisite().getNumberOfPractices(), t.getPrerequisite().getOtherTypesOfClasses(),
+						t.getPrerequisite().getResearchWork(), t.getPrerequisite().getClassesLeft(), t.getPrerequisite().getNumberOfSemesters(),
+						new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true),
+				t.getActive()));
 		
 		if(s == null) {
 			return new ResponseEntity<SubjectDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<SubjectDTO>(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
-				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
-				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
-				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
-						s.getPrerequisite().getEcts(), 
-						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getActive()), HttpStatus.CREATED);
+				s.isCompulsory(),
+				s.getNumberOfClasses(), s.getNumberOfPractices(),
+				s.getOtherTypesOfClasses(), 
+				s.getResearchWork(),
+				s.getClassesLeft(),
+				s.getNumberOfSemesters(),
+				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(),null, s.getYearOfStudy().getActive()),
+				new ArrayList<OutcomeDTO>(),
+				new ArrayList<SubjectRealizationDTO>(),
+				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),s.getPrerequisite().getEcts(),
+						s.getPrerequisite().getActive()),
+				s.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -160,60 +202,124 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 		ArrayList<Subject> subjectsOnYear = new ArrayList<Subject>();
 		ArrayList<SubjectDTO> subjectsOnYearDTO= new ArrayList<SubjectDTO>();
 		
+		ArrayList<SubjectRealization> subjectRealizations = new ArrayList<SubjectRealization>();
+		ArrayList<SubjectRealizationDTO> subjectRealizationDTOs = new ArrayList<SubjectRealizationDTO>();
+		
+		ArrayList<Outcome> syllabi = new ArrayList<Outcome>();
+		ArrayList<OutcomeDTO> syllabusDTOs = new ArrayList<OutcomeDTO>();
+		
 		
 		if(s == null) {
 			return new ResponseEntity<SubjectDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		for(SubjectRealization sr : s.getSubjectRealizations()) {
+			subjectRealizationDTOs.add(new SubjectRealizationDTO(sr.getId(), new ArrayList<EvaluationDTO>(),
+					new HashSet<TeacherOnRealizationDTO>(), new ArrayList<AnnouncementDTO>(), 
+					new SubjectDTO(sr.getSubject().getId(), sr.getSubject().getName(), sr.getSubject().getEcts(), sr.getSubject().getActive()),
+					sr.getActive()));
+		}
+		
+		for(SubjectRealizationDTO srdto : subjectRealizationDTOs) {
+			subjectRealizations.add(new SubjectRealization(srdto.getId(), new ArrayList<Evaluation>(),
+					new HashSet<TeacherOnRealization>(),
+					new ArrayList<Announcement>(), new Subject(srdto.getSubject().getId(),
+							srdto.getSubject().getName(),
+							srdto.getSubject().getEcts(), 
+							srdto.getSubject().isCompulsory(),
+							srdto.getSubject().getNumberOfClasses(), 
+							srdto.getSubject().getNumberOfPractices(),
+							srdto.getSubject().getOtherTypesOfClasses(), 
+							srdto.getSubject().getResearchWork(),
+							srdto.getSubject().getClassesLeft(),
+							srdto.getSubject().getNumberOfSemesters(),
+							new YearOfStudy(srdto.getSubject().getYearOfStudy().getId(),
+									srdto.getSubject().getYearOfStudy().getYearOfStudy(),
+									new ArrayList<Subject>(), srdto.getSubject().getYearOfStudy().getActive()),
+							new ArrayList<Outcome>(),
+							new ArrayList<SubjectRealization>(),
+							new Subject(srdto.getSubject().getPrerequisite().getId(),
+									srdto.getSubject().getPrerequisite().getName(),
+									srdto.getSubject().getPrerequisite().getEcts(),
+									srdto.getSubject().getPrerequisite().isCompulsory(),
+									srdto.getSubject().getPrerequisite().getNumberOfClasses(),
+									srdto.getSubject().getPrerequisite().getNumberOfPractices(),
+									srdto.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+									srdto.getSubject().getPrerequisite().getResearchWork(),
+									srdto.getSubject().getPrerequisite().getClassesLeft(), 
+									srdto.getSubject().getPrerequisite().getNumberOfSemesters(),
+									new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true),
+							srdto.getSubject().getActive()),
+					srdto.getActive()));
+		}
+		
+		for(Outcome o : s.getSyllabi()) {
+			syllabusDTOs.add(new OutcomeDTO(o.getId(), o.getDescription(), new EducationGoalDTO(),
+					new TeachingMaterialDTO(o.getTeachingMaterial().getId(), null, null, null, null, o.getTeachingMaterial().getActive()),
+					new SubjectDTO(o.getSubject().getId(),
+							o.getSubject().getName(),
+							o.getSubject().getEcts(),
+							o.getSubject().getActive()),
+					o.getActive()));
+		}
+		
+		for(OutcomeDTO odto : syllabusDTOs) {
+			syllabi.add(new Outcome(odto.getId(), odto.getDescription(), 
+					new EducationGoal(odto.getEducationGoal().getId(),
+							odto.getEducationGoal().getDescription(),
+							null, odto.getEducationGoal().getActive()),
+					new TeachingMaterial(odto.getTeachingMaterial().getId(),
+							odto.getTeachingMaterial().getName(),
+							new ArrayList<Teacher>(), 
+							odto.getTeachingMaterial().getYearOfPublication(),
+							new File(odto.getTeachingMaterial().getFile().getId(),
+									odto.getTeachingMaterial().getFile().getUrl(),
+									odto.getTeachingMaterial().getFile().getDescription(),
+									null, null, null, odto.getTeachingMaterial().getFile().getActive()),
+							odto.getTeachingMaterial().getActive()),
+					new Subject(odto.getSubject().getPrerequisite().getId(),
+							odto.getSubject().getPrerequisite().getName(),
+							odto.getSubject().getPrerequisite().getEcts(),
+							odto.getSubject().getPrerequisite().isCompulsory(),
+							odto.getSubject().getPrerequisite().getNumberOfClasses(),
+							odto.getSubject().getPrerequisite().getNumberOfPractices(),
+							odto.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+							odto.getSubject().getPrerequisite().getResearchWork(),
+							odto.getSubject().getPrerequisite().getClassesLeft(), 
+							odto.getSubject().getPrerequisite().getNumberOfSemesters(),
+							new YearOfStudy(), new ArrayList<Outcome>(), 
+							new ArrayList<SubjectRealization>(), null, true),
+					odto.getSubject().getActive()));
 		}
 		
 		for(Subject yearSubject : s.getYearOfStudy().getSubjects()) {
 			subjectsOnYearDTO.add(new SubjectDTO(yearSubject.getId(), 
 					yearSubject.getName(),
 					yearSubject.getEcts(),
-					yearSubject.isCompulsory(), yearSubject.getNumberOfClasses(),
-					yearSubject.getNumberOfPractices(),
-					yearSubject.getOtherTypesOfClasses(),
-					yearSubject.getResearchWork(),
-					yearSubject.getClassesLeft(),
-					yearSubject.getNumberOfSemesters(),
-					new YearOfStudyDTO(yearSubject.getYearOfStudy().getId(),
-							yearSubject.getYearOfStudy().getYearOfStudy(),
-							new ArrayList<SubjectDTO>(), yearSubject.getYearOfStudy().getActive()),
-					new OutcomeDTO(yearSubject.getOutcome().getId(), yearSubject.getOutcome().getDescription(), 
-							null, null, null, yearSubject.getOutcome().getActive()), 
-					new SubjectDTO(), null));
+					yearSubject.isCompulsory()));
 		}
 		
 		for(SubjectDTO dto : subjectsOnYearDTO) {
 			subjectsOnYear.add(new Subject(dto.getId(), 
 					dto.getName(),
 					dto.getEcts(),
-					dto.isCompulsory(), dto.getNumberOfClasses(),
-					dto.getNumberOfPractices(),
-					dto.getOtherTypesOfClasses(),
+					dto.isCompulsory(), dto.getNumberOfClasses(), dto.getNumberOfPractices(),
+					dto.getOtherTypesOfClasses(), 
 					dto.getResearchWork(),
 					dto.getClassesLeft(),
 					dto.getNumberOfSemesters(),
-					new YearOfStudy(dto.getYearOfStudy().getId(),
-							dto.getYearOfStudy().getYearOfStudy(),
-							subjectsOnYear, 
-							dto.getYearOfStudy().getActive()),
-					new Outcome(dto.getOutcome().getId(),
-							dto.getOutcome().getDescription(),
-							new EducationGoal(dto.getOutcome().getEducationGoal().getId(),
-									dto.getOutcome().getEducationGoal().getDescription(),
-								null, dto.getOutcome().getEducationGoal().getActive()),
-							new TeachingMaterial(), new Subject(dto.getOutcome().getSubject().getId(), 
-									dto.getOutcome().getSubject().getName(),
-									dto.getOutcome().getSubject().getEcts(),
-									dto.getOutcome().getSubject().isCompulsory(),
-									dto.getOutcome().getSubject().getNumberOfClasses(),
-									dto.getOutcome().getSubject().getNumberOfPractices(),
-									dto.getOutcome().getSubject().getOtherTypesOfClasses(),
-									dto.getOutcome().getSubject().getResearchWork(),
-									dto.getOutcome().getSubject().getClassesLeft(),
-									dto.getOutcome().getSubject().getNumberOfSemesters(),
-									null, null, null, true), dto.getOutcome().getActive()), 
-					new Subject(), null));
+					new YearOfStudy(dto.getYearOfStudy().getId(), dto.getYearOfStudy().getYearOfStudy(),
+							new ArrayList<Subject>(), t.getYearOfStudy().getActive()),
+					new ArrayList<Outcome>(),
+					new ArrayList<SubjectRealization>(),
+					new Subject(dto.getPrerequisite().getId(), dto.getPrerequisite().getName(),
+							dto.getPrerequisite().getEcts(),
+							dto.getPrerequisite().isCompulsory(), dto.getPrerequisite().getNumberOfClasses(),
+							dto.getPrerequisite().getNumberOfPractices(), dto.getPrerequisite().getOtherTypesOfClasses(),
+							dto.getPrerequisite().getResearchWork(), dto.getPrerequisite().getClassesLeft(), 
+							dto.getPrerequisite().getNumberOfSemesters(),
+							new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true),
+					dto.getActive()));
 		}
 		
 		s.setName(t.getName());
@@ -226,60 +332,14 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 		s.setNumberOfPractices(t.getNumberOfPractices());
 		s.setNumberOfSemesters(t.getNumberOfSemesters());
 		s.setYearOfStudy(new YearOfStudy(t.getYearOfStudy().getId(), t.getYearOfStudy().getYearOfStudy(),null, true));
-		s.setOutcome(new Outcome(t.getOutcome().getId(),
-				t.getOutcome().getDescription(),
-				new EducationGoal(),
-				new TeachingMaterial(), new Subject(t.getOutcome().getSubject().getId(), 
-						t.getOutcome().getSubject().getName(),
-						t.getOutcome().getSubject().getEcts(),
-						t.getOutcome().getSubject().isCompulsory(),
-						t.getOutcome().getSubject().getNumberOfClasses(),
-						t.getOutcome().getSubject().getNumberOfPractices(),
-						t.getOutcome().getSubject().getOtherTypesOfClasses(),
-						t.getOutcome().getSubject().getResearchWork(),
-						t.getOutcome().getSubject().getClassesLeft(),
-						t.getOutcome().getSubject().getNumberOfSemesters(),
-						null, null, null, true), t.getOutcome().getActive()));
+		s.setSyllabi(syllabi);
+		s.setSubjectRealizations(subjectRealizations);
 		
-		s.setPrerequisite(new Subject(t.getPrerequisite().getId(), 
-				t.getPrerequisite().getName(),
-				t.getPrerequisite().getEcts(),
-				t.getPrerequisite().isCompulsory(),
-				t.getPrerequisite().getNumberOfClasses(),
-				t.getPrerequisite().getNumberOfPractices(),
-				t.getPrerequisite().getOtherTypesOfClasses(),
-				t.getPrerequisite().getResearchWork(),
-				t.getPrerequisite().getClassesLeft(),
-				t.getPrerequisite().getNumberOfSemesters(),
-				new YearOfStudy(t.getPrerequisite().getYearOfStudy().getId(),
-						t.getPrerequisite().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<Subject>(), t.getPrerequisite().getYearOfStudy().getActive()),
-				new Outcome(t.getOutcome().getId(),
-						t.getOutcome().getDescription(),
-						new EducationGoal(),
-						new TeachingMaterial(), new Subject(t.getOutcome().getSubject().getId(), 
-								t.getOutcome().getSubject().getName(),
-								t.getOutcome().getSubject().getEcts(),
-								t.getOutcome().getSubject().isCompulsory(),
-								t.getOutcome().getSubject().getNumberOfClasses(),
-								t.getOutcome().getSubject().getNumberOfPractices(),
-								t.getOutcome().getSubject().getOtherTypesOfClasses(),
-								t.getOutcome().getSubject().getResearchWork(),
-								t.getOutcome().getSubject().getClassesLeft(),
-								t.getOutcome().getSubject().getNumberOfSemesters(),
-								null, null, null, true), t.getOutcome().getActive()),
-				new Subject(t.getPrerequisite().getId(), 
-						t.getPrerequisite().getName(),
-						t.getPrerequisite().getEcts(),
-						t.getPrerequisite().isCompulsory(),
-						t.getPrerequisite().getNumberOfClasses(),
-						t.getPrerequisite().getNumberOfPractices(),
-						t.getPrerequisite().getOtherTypesOfClasses(),
-						t.getPrerequisite().getResearchWork(),
-						t.getPrerequisite().getClassesLeft(),
-						t.getPrerequisite().getNumberOfSemesters(),
-						null, null, null, true), t.getActive()));
-		s.setActive(t.getActive());
+		s.setPrerequisite(new Subject(t.getPrerequisite().getId(), t.getPrerequisite().getName(),t.getPrerequisite().getEcts(),
+						t.getPrerequisite().isCompulsory(), t.getPrerequisite().getNumberOfClasses(),
+						t.getPrerequisite().getNumberOfPractices(), t.getPrerequisite().getOtherTypesOfClasses(),
+						t.getPrerequisite().getResearchWork(), t.getPrerequisite().getClassesLeft(), t.getPrerequisite().getNumberOfSemesters(),
+						new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true));
 		
 		s = service.update(s);
 		
@@ -287,12 +347,12 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
 				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
 				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
+				syllabusDTOs,
+				subjectRealizationDTOs,
 				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
 						s.getPrerequisite().getEcts(), 
 						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getActive()), HttpStatus.OK);
+						null, null, null, null, null, null, null, null, null,null, null), s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -310,8 +370,127 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 		// TODO Auto-generated method stub
 		Subject s = service.findById(id).orElse(null);
 		
+		ArrayList<Subject> subjectsOnYear = new ArrayList<Subject>();
+		ArrayList<SubjectDTO> subjectsOnYearDTO= new ArrayList<SubjectDTO>();
+		
+		ArrayList<SubjectRealization> subjectRealizations = new ArrayList<SubjectRealization>();
+		ArrayList<SubjectRealizationDTO> subjectRealizationDTOs = new ArrayList<SubjectRealizationDTO>();
+		
+		ArrayList<Outcome> syllabi = new ArrayList<Outcome>();
+		ArrayList<OutcomeDTO> syllabusDTOs = new ArrayList<OutcomeDTO>();
+		
+		
 		if(s == null) {
 			return new ResponseEntity<SubjectDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		for(SubjectRealization sr : s.getSubjectRealizations()) {
+			subjectRealizationDTOs.add(new SubjectRealizationDTO(sr.getId(), new ArrayList<EvaluationDTO>(),
+					new HashSet<TeacherOnRealizationDTO>(), new ArrayList<AnnouncementDTO>(), 
+					new SubjectDTO(sr.getSubject().getId(), sr.getSubject().getName(), sr.getSubject().getEcts(), sr.getSubject().getActive()),
+					sr.getActive()));
+		}
+		
+		for(SubjectRealizationDTO srdto : subjectRealizationDTOs) {
+			subjectRealizations.add(new SubjectRealization(srdto.getId(), new ArrayList<Evaluation>(),
+					new HashSet<TeacherOnRealization>(),
+					new ArrayList<Announcement>(), new Subject(srdto.getSubject().getId(),
+							srdto.getSubject().getName(),
+							srdto.getSubject().getEcts(), 
+							srdto.getSubject().isCompulsory(),
+							srdto.getSubject().getNumberOfClasses(), 
+							srdto.getSubject().getNumberOfPractices(),
+							srdto.getSubject().getOtherTypesOfClasses(), 
+							srdto.getSubject().getResearchWork(),
+							srdto.getSubject().getClassesLeft(),
+							srdto.getSubject().getNumberOfSemesters(),
+							new YearOfStudy(srdto.getSubject().getYearOfStudy().getId(),
+									srdto.getSubject().getYearOfStudy().getYearOfStudy(),
+									new ArrayList<Subject>(), srdto.getSubject().getYearOfStudy().getActive()),
+							new ArrayList<Outcome>(),
+							new ArrayList<SubjectRealization>(),
+							new Subject(srdto.getSubject().getPrerequisite().getId(),
+									srdto.getSubject().getPrerequisite().getName(),
+									srdto.getSubject().getPrerequisite().getEcts(),
+									srdto.getSubject().getPrerequisite().isCompulsory(),
+									srdto.getSubject().getPrerequisite().getNumberOfClasses(),
+									srdto.getSubject().getPrerequisite().getNumberOfPractices(),
+									srdto.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+									srdto.getSubject().getPrerequisite().getResearchWork(),
+									srdto.getSubject().getPrerequisite().getClassesLeft(), 
+									srdto.getSubject().getPrerequisite().getNumberOfSemesters(),
+									new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true),
+							srdto.getSubject().getActive()),
+					srdto.getActive()));
+		}
+		
+		for(Outcome o : s.getSyllabi()) {
+			syllabusDTOs.add(new OutcomeDTO(o.getId(), o.getDescription(), new EducationGoalDTO(),
+					new TeachingMaterialDTO(o.getTeachingMaterial().getId(), null, null, null, null, o.getTeachingMaterial().getActive()),
+					new SubjectDTO(o.getSubject().getId(),
+							o.getSubject().getName(),
+							o.getSubject().getEcts(),
+							o.getSubject().getActive()),
+					o.getActive()));
+		}
+		
+		for(OutcomeDTO odto : syllabusDTOs) {
+			syllabi.add(new Outcome(odto.getId(), odto.getDescription(), 
+					new EducationGoal(odto.getEducationGoal().getId(),
+							odto.getEducationGoal().getDescription(),
+							null, odto.getEducationGoal().getActive()),
+					new TeachingMaterial(odto.getTeachingMaterial().getId(),
+							odto.getTeachingMaterial().getName(),
+							new ArrayList<Teacher>(), 
+							odto.getTeachingMaterial().getYearOfPublication(),
+							new File(odto.getTeachingMaterial().getFile().getId(),
+									odto.getTeachingMaterial().getFile().getUrl(),
+									odto.getTeachingMaterial().getFile().getDescription(),
+									null, null, null, odto.getTeachingMaterial().getFile().getActive()),
+							odto.getTeachingMaterial().getActive()),
+					new Subject(odto.getSubject().getPrerequisite().getId(),
+							odto.getSubject().getPrerequisite().getName(),
+							odto.getSubject().getPrerequisite().getEcts(),
+							odto.getSubject().getPrerequisite().isCompulsory(),
+							odto.getSubject().getPrerequisite().getNumberOfClasses(),
+							odto.getSubject().getPrerequisite().getNumberOfPractices(),
+							odto.getSubject().getPrerequisite().getOtherTypesOfClasses(),
+							odto.getSubject().getPrerequisite().getResearchWork(),
+							odto.getSubject().getPrerequisite().getClassesLeft(), 
+							odto.getSubject().getPrerequisite().getNumberOfSemesters(),
+							new YearOfStudy(), new ArrayList<Outcome>(), 
+							new ArrayList<SubjectRealization>(), null, true),
+					odto.getSubject().getActive()));
+		}
+		
+		for(Subject yearSubject : s.getYearOfStudy().getSubjects()) {
+			subjectsOnYearDTO.add(new SubjectDTO(yearSubject.getId(), 
+					yearSubject.getName(),
+					yearSubject.getEcts(),
+					yearSubject.isCompulsory()));
+		}
+		
+		for(SubjectDTO dto : subjectsOnYearDTO) {
+			subjectsOnYear.add(new Subject(dto.getId(), 
+					dto.getName(),
+					dto.getEcts(),
+					dto.isCompulsory(), dto.getNumberOfClasses(), dto.getNumberOfPractices(),
+					dto.getOtherTypesOfClasses(), 
+					dto.getResearchWork(),
+					dto.getClassesLeft(),
+					dto.getNumberOfSemesters(),
+					new YearOfStudy(dto.getYearOfStudy().getId(), dto.getYearOfStudy().getYearOfStudy(),
+							new ArrayList<Subject>(), dto.getYearOfStudy().getActive()),
+					new ArrayList<Outcome>(),
+					new ArrayList<SubjectRealization>(),
+					new Subject(dto.getPrerequisite().getId(), dto.getPrerequisite().getName(),
+							dto.getPrerequisite().getEcts(),
+							dto.getPrerequisite().isCompulsory(), dto.getPrerequisite().getNumberOfClasses(),
+							dto.getPrerequisite().getNumberOfPractices(), dto.getPrerequisite().getOtherTypesOfClasses(),
+							dto.getPrerequisite().getResearchWork(), dto.getPrerequisite().getClassesLeft(), 
+							dto.getPrerequisite().getNumberOfSemesters(),
+							new YearOfStudy(), new ArrayList<Outcome>(), new ArrayList<SubjectRealization>(), null, true),
+					dto.getActive()));
 		}
 		
 		service.softDelete(id);
@@ -319,12 +498,12 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 				s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
 				s.getOtherTypesOfClasses(), s.getResearchWork(), s.getClassesLeft(), s.getNumberOfSemesters(),
 				new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(), null, null),
-				new OutcomeDTO(s.getOutcome().getId(), s.getOutcome().getDescription(), 
-						null, null, null, s.getOutcome().getActive()),
+				syllabusDTOs,
+				subjectRealizationDTOs,
 				new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),
 						s.getPrerequisite().getEcts(), 
 						s.getPrerequisite().isCompulsory(), 
-						null, null, null, null, null, null, null, null, null,null), s.getActive()), HttpStatus.OK);
+						null, null, null, null, null, null, null, null, null,null, null), s.getActive()), HttpStatus.OK);
 	}
 	
 	
