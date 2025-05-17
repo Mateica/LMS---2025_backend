@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.dto.AnnouncementDTO;
 import main.dto.DepartmentDTO;
 import main.dto.EducationGoalDTO;
 import main.dto.EvaluationDTO;
 import main.dto.EvaluationInstrumentDTO;
 import main.dto.EvaluationTypeDTO;
 import main.dto.ExaminationDTO;
+import main.dto.FileDTO;
 import main.dto.OutcomeDTO;
 import main.dto.RegisteredUserDTO;
 import main.dto.StudentDTO;
@@ -38,12 +41,14 @@ import main.dto.SubjectRealizationDTO;
 import main.dto.TeacherDTO;
 import main.dto.TeacherOnRealizationDTO;
 import main.dto.YearOfStudyDTO;
+import main.model.Announcement;
 import main.model.Department;
 import main.model.EducationGoal;
 import main.model.Evaluation;
 import main.model.EvaluationInstrument;
 import main.model.EvaluationType;
 import main.model.Examination;
+import main.model.File;
 import main.model.Outcome;
 import main.model.RegisteredUser;
 import main.model.Student;
@@ -69,126 +74,70 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	public ResponseEntity<Iterable<SubjectRealizationDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();
+		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teachersOnRealization = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
 		
 		for(SubjectRealization s : service.findAll()) {
+			
+			for(Evaluation e : s.getEvaluations()) {
+				evaluations.add(new EvaluationDTO(e.getId(), 
+						e.getStartTime(),
+						e.getEndTime(), 
+						e.getNumberOfPoints(),
+						new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+								new ArrayList<EvaluationDTO>(), 
+								e.getEvaluationType().getActive()),
+						new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
+								new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+										e.getEvaluationInstrument().getFile().getUrl(), 
+										e.getEvaluationInstrument().getFile().getDescription(),
+										null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+								e.getEvaluationInstrument().getActive()),
+						new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
+								null, null, e.getExamination().getActive()),
+						null, e.getActive()));
+			}
+			
+			for(TeacherOnRealization t : s.getTeachersOnRealization()) {
+				teachersOnRealization.add(new TeacherOnRealizationDTO(t.getId(), t.getNumberOfClasses(),
+						new TeacherDTO(t.getTeacher().getId(), null,
+								t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
+								t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
+								t.getTeacher().getActive()),
+						null, null, t.getActive()));
+			}
+			
+			for(Announcement a : s.getAnnouncements()) {
+				ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+				
+				attachments = (ArrayList<FileDTO>) a.getAttachments()
+								.stream()
+								.map(f -> 
+								new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+										null, null, null, f.getActive()))
+								.collect(Collectors.toList());
+				announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+						null, a.getTitle(), attachments, a.getActive()));
+			}
+			
 			if(s.getSubject().getPrerequisite() != null) {
 				subjectRealizations.add(new SubjectRealizationDTO(s.getId(),
-						new EvaluationDTO(s.getEvaluation().getId(), 
-			    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-			    				s.getEvaluation().getNumberOfPoints(),
-			    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-			    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-			    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-			    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-			    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-			    						s.getEvaluation().getExamination().getNumberOfPoints(),
-			    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-			    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-			    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-			    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-			    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-			    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-			    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-			    						s.getEvaluation().getExamination().getActive()),
-			    				s.getActive()),
-						new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-								s.getTeacherOnRealization().getNumberOfClasses(), 
-								new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-										new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-												null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-										s.getTeacherOnRealization().getTeacher().getFirstName(),
-										s.getTeacherOnRealization().getTeacher().getLastName(),
-										s.getTeacherOnRealization().getTeacher().getUmcn(),
-										s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-										new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-												s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-												s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-												s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-										s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-								s.getTeacherOnRealization().getActive()),
-						new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-						s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-						s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-						s.getSubject().getClassesLeft(), 
-						s.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-								s.getSubject().getYearOfStudy().getYearOfStudy(),
-								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(s.getSubject().getOutcome().getId(),
-								s.getSubject().getOutcome().getDescription(), 
-								new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-										s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-										s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-								s.getSubject().getOutcome().getActive()),
-						new SubjectDTO(s.getSubject().getPrerequisite().getId(), 
-								s.getSubject().getPrerequisite().getName(),
-								s.getSubject().getPrerequisite().getEcts(), 
-								s.getSubject().getPrerequisite().isCompulsory(),
-								s.getSubject().getPrerequisite().getNumberOfClasses(), 
-								s.getSubject().getPrerequisite().getNumberOfPractices(),
-								s.getSubject().getPrerequisite().getOtherTypesOfClasses(),
-								s.getSubject().getPrerequisite().getResearchWork(),
-								s.getSubject().getPrerequisite().getClassesLeft(), 
-								s.getSubject().getPrerequisite().getNumberOfSemesters(),
-								new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-										s.getSubject().getYearOfStudy().getYearOfStudy(),
-										new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-								new OutcomeDTO(s.getSubject().getOutcome().getId(),
-										s.getSubject().getOutcome().getDescription(), 
-										new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-												s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-												s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-										s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()), s.getActive()), s.getActive()));
+						evaluations,
+						teachersOnRealization,
+						announcements,
+						new SubjectDTO(s.getSubject().getId(),
+								s.getSubject().getName(),
+								s.getSubject().getEcts(), 
+								s.getSubject().isCompulsory()), 
+						s.getSubject().getActive()));
 			}else {
 				subjectRealizations.add(new SubjectRealizationDTO(s.getId(),
-						new EvaluationDTO(s.getEvaluation().getId(), 
-			    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-			    				s.getEvaluation().getNumberOfPoints(),
-			    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-			    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-			    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-			    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-			    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-			    						s.getEvaluation().getExamination().getNumberOfPoints(),
-			    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-			    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-			    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-			    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-			    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-			    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-			    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-			    						s.getEvaluation().getExamination().getActive()),
-			    				s.getActive()),
-						new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-								s.getTeacherOnRealization().getNumberOfClasses(), 
-								new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-										new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-												null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-										s.getTeacherOnRealization().getTeacher().getFirstName(),
-										s.getTeacherOnRealization().getTeacher().getLastName(),
-										s.getTeacherOnRealization().getTeacher().getUmcn(),
-										s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-										new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-												s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-												s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-												s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-										s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-								s.getTeacherOnRealization().getActive()),
-						new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-						s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-						s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-						s.getSubject().getClassesLeft(), 
-						s.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-								s.getSubject().getYearOfStudy().getYearOfStudy(),
-								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(s.getSubject().getOutcome().getId(),
-								s.getSubject().getOutcome().getDescription(), 
-								new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-										s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-										s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-								s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-				s.getActive()));
+						evaluations,
+						teachersOnRealization,
+						announcements,
+						null, 
+						s.getSubject().getActive()));
 			}
 		}
 		
@@ -206,81 +155,63 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	    Pageable pageable = PageRequest.of(page, size, sort);
 
 	    Page<SubjectRealization> subjectRealizationPage = service.findAll(pageable);
+	    
+	    ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teachersOnRealization = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
+		
+		for(SubjectRealization s : subjectRealizationPage) {
+			
+			for(Evaluation e : s.getEvaluations()) {
+				evaluations.add(new EvaluationDTO(e.getId(), 
+						e.getStartTime(),
+						e.getEndTime(), 
+						e.getNumberOfPoints(),
+						new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+								new ArrayList<EvaluationDTO>(), 
+								e.getEvaluationType().getActive()),
+						new EvaluationInstrumentDTO(),
+						new ExaminationDTO(), null, e.getActive()));
+			}
+			
+			for(TeacherOnRealization t : s.getTeachersOnRealization()) {
+				teachersOnRealization.add(new TeacherOnRealizationDTO(t.getId(), t.getNumberOfClasses(),
+						new TeacherDTO(t.getTeacher().getId(), null,
+								t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
+								t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
+								t.getTeacher().getActive()),
+						null, null, t.getActive()));
+			}
+			
+			for(Announcement a : s.getAnnouncements()) {
+				ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+				
+				attachments = (ArrayList<FileDTO>) a.getAttachments()
+								.stream()
+								.map(f -> 
+								new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+										null, null, null, f.getActive()))
+								.collect(Collectors.toList());
+				announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+						null, a.getTitle(), attachments, a.getActive()));
+			}
+		}
+		
+		
 
 	    List<SubjectRealizationDTO> subjectRealizationDTOs = subjectRealizationPage.stream().map(s -> 
-	    new SubjectRealizationDTO(
-	    		s.getId(), 
-	    		new EvaluationDTO(s.getEvaluation().getId(), 
-	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-	    				s.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-	    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-	    						s.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						s.getEvaluation().getExamination().getActive()),
-	    				s.getActive()),
-				new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-						s.getTeacherOnRealization().getNumberOfClasses(), 
-						new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-								s.getTeacherOnRealization().getTeacher().getFirstName(),
-								s.getTeacherOnRealization().getTeacher().getLastName(),
-								s.getTeacherOnRealization().getTeacher().getUmcn(),
-								s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						s.getTeacherOnRealization().getActive()),
-				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-				s.getSubject().getClassesLeft(), 
-				s.getSubject().getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-						s.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-				new OutcomeDTO(s.getSubject().getOutcome().getId(),
-						s.getSubject().getOutcome().getDescription(), 
-						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						s.getSubject().getOutcome().getActive()),
-				new SubjectDTO(s.getSubject().getPrerequisite().getId(), 
-						s.getSubject().getPrerequisite().getName(),
-						s.getSubject().getPrerequisite().getEcts(), 
-						s.getSubject().getPrerequisite().isCompulsory(),
-						s.getSubject().getPrerequisite().getNumberOfClasses(), 
-						s.getSubject().getPrerequisite().getNumberOfPractices(),
-						s.getSubject().getPrerequisite().getOtherTypesOfClasses(),
-						s.getSubject().getPrerequisite().getResearchWork(),
-						s.getSubject().getPrerequisite().getClassesLeft(), 
-						s.getSubject().getPrerequisite().getNumberOfSemesters(),
-						new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-								s.getSubject().getYearOfStudy().getYearOfStudy(),
-								new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(s.getSubject().getOutcome().getId(),
-								s.getSubject().getOutcome().getDescription(), 
-								new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-										s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-										s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-								s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-				s.getActive()), s.getActive()
-	        )
+	    		new SubjectRealizationDTO(s.getId(),
+						evaluations,
+						teachersOnRealization,
+						announcements,
+						new SubjectDTO(s.getSubject().getId(),
+								s.getSubject().getName(),
+								s.getSubject().getEcts(), 
+								s.getSubject().isCompulsory()), 
+						s.getSubject().getActive())
 	    ).collect(Collectors.toList());
 
-	    Page<SubjectRealizationDTO> resultPage = new PageImpl<SubjectRealizationDTO>(subjectRealizationDTOs, pageable, subjectPage.getTotalElements());
+	    Page<SubjectRealizationDTO> resultPage = new PageImpl<SubjectRealizationDTO>(subjectRealizationDTOs, pageable, subjectRealizationPage.getTotalElements());
 
 	    return new ResponseEntity<Page<SubjectRealizationDTO>>(resultPage, HttpStatus.OK);
 	}
@@ -295,55 +226,59 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 		if(s == null) {
 			return new ResponseEntity<SubjectRealizationDTO>(HttpStatus.NOT_FOUND);
 		}
+		
+		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teachersOnRealization = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
+		
+		for(Evaluation e : s.getEvaluations()) {
+			evaluations.add(new EvaluationDTO(e.getId(), 
+					e.getStartTime(),
+					e.getEndTime(), 
+					e.getNumberOfPoints(),
+					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+							new ArrayList<EvaluationDTO>(), 
+							e.getEvaluationType().getActive()),
+					new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
+							new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+									e.getEvaluationInstrument().getFile().getUrl(), 
+									e.getEvaluationInstrument().getFile().getDescription(),
+									null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+							e.getEvaluationInstrument().getActive()),
+					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
+							null, null, e.getExamination().getActive()), null, e.getActive()));
+		}
+		
+		for(TeacherOnRealization t : s.getTeachersOnRealization()) {
+			teachersOnRealization.add(new TeacherOnRealizationDTO(t.getId(), t.getNumberOfClasses(),
+					new TeacherDTO(t.getTeacher().getId(), null,
+							t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
+							t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
+							t.getTeacher().getActive()),
+					null, null, t.getActive()));
+		}
+		
+		for(Announcement a : s.getAnnouncements()) {
+			ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+			
+			attachments = (ArrayList<FileDTO>) a.getAttachments()
+							.stream()
+							.map(f -> 
+							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+									null, null, null, f.getActive()))
+							.collect(Collectors.toList());
+			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+					null, a.getTitle(), attachments, a.getActive()));
+		}
+		
+		
 		return new ResponseEntity<SubjectRealizationDTO>(new SubjectRealizationDTO(s.getId(),
-				new EvaluationDTO(s.getEvaluation().getId(), 
-	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-	    				s.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-	    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-	    						s.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						s.getEvaluation().getExamination().getActive()),
-	    				s.getActive()),
-				new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-						s.getTeacherOnRealization().getNumberOfClasses(), 
-						new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-								s.getTeacherOnRealization().getTeacher().getFirstName(),
-								s.getTeacherOnRealization().getTeacher().getLastName(),
-								s.getTeacherOnRealization().getTeacher().getUmcn(),
-								s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						s.getTeacherOnRealization().getActive()),
-				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-				s.getSubject().getClassesLeft(), 
-				s.getSubject().getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-						s.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-				new OutcomeDTO(s.getSubject().getOutcome().getId(),
-						s.getSubject().getOutcome().getDescription(), 
-						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-		s.getActive()), HttpStatus.OK);
+				evaluations,
+				teachersOnRealization,
+				announcements,
+				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(), s.getSubject().getEcts(),
+						s.getSubject().getActive()), 
+				s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -352,111 +287,77 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	public ResponseEntity<SubjectRealizationDTO> create(@RequestBody SubjectRealizationDTO t) {
 		// TODO Auto-generated method stub
 		SubjectRealization s = service.create(new SubjectRealization(null,
-				new Evaluation(t.getEvaluation().getId(), 
-	    				t.getEvaluation().getStartTime(), t.getEvaluation().getEndTime(),
-	    				t.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationType(t.getEvaluation().getEvaluationType().getId(),
-	    						t.getEvaluation().getEvaluationType().getName(), 
-	    						t.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrument(t.getEvaluation().getEvaluationInstrument().getId(),
-	    						t.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new Examination(t.getEvaluation().getExamination().getId(),
-	    						t.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYear(t.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								t.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new Student(t.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, t.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										t.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										t.getEvaluation().getExamination().getStudentOnYear().getStudent().getUmcn(),
-	    										t.getEvaluation().getExamination().getStudentOnYear().getStudent().getIndexNumber(),
-	    										null, null, null, t.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, t.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						t.getEvaluation().getExamination().getActive())),
-				new TeacherOnRealization(t.getTeacherOnRealization().getId(), 
-						t.getTeacherOnRealization().getNumberOfClasses(), 
-						new Teacher(t.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUser(t.getTeacherOnRealization().getTeacher().getUser().getId(),
-										t.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										t.getTeacherOnRealization().getTeacher().getUser().getPassword(),
-										t.getTeacherOnRealization().getTeacher().getUser().getEmail(), null, null, null, null),
-								t.getTeacherOnRealization().getTeacher().getFirstName(),
-								t.getTeacherOnRealization().getTeacher().getLastName(),
-								t.getTeacherOnRealization().getTeacher().getUmcn(),
-								t.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new Department(t.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										t.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										t.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										t.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								t.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						t.getTeacherOnRealization().getActive()),
-				new Subject(t.getSubject().getId(), t.getSubject().getName(),t.getSubject().getEcts(), 
-				t.getSubject().isCompulsory(), t.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				t.getSubject().getOtherTypesOfClasses(), t.getSubject().getResearchWork(),
-				t.getSubject().getClassesLeft(), 
-				t.getSubject().getNumberOfSemesters(),
-				new YearOfStudy(t.getSubject().getYearOfStudy().getId(),
-						t.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<Subject>(), t.getSubject().getYearOfStudy().getActive()),
-				new Outcome(t.getSubject().getOutcome().getId(),
-						t.getSubject().getOutcome().getDescription(), 
-						new EducationGoal(t.getSubject().getOutcome().getEducationGoal().getId(),
-								t.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								t.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						t.getSubject().getOutcome().getActive()), null, t.getSubject().getActive()),
+				new ArrayList<Evaluation>(),
+				new HashSet<TeacherOnRealization>(),
+				new ArrayList<Announcement>(),
+				new Subject(t.getSubject().getId(),
+						t.getSubject().getName(), 
+						t.getSubject().getEcts(),
+						t.getSubject().isCompulsory(),
+						t.getSubject().getNumberOfClasses(),
+						t.getSubject().getNumberOfPractices(),
+						t.getSubject().getOtherTypesOfClasses(),
+						t.getSubject().getResearchWork(), 
+						t.getSubject().getClassesLeft(),
+						t.getSubject().getNumberOfSemesters(),
+						new YearOfStudy(t.getSubject().getYearOfStudy().getId(), 
+								t.getSubject().getYearOfStudy().getYearOfStudy(),
+								new ArrayList<Subject>(),
+								t.getSubject().getYearOfStudy().getActive()),
+						new ArrayList<Outcome>(),
+						new ArrayList<SubjectRealization>(), null, true),
 		t.getActive()));
 		
 		if(s == null) {
 			return new ResponseEntity<SubjectRealizationDTO>(HttpStatus.BAD_REQUEST);
 		}
+		
+		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teachersOnRealization = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
+		
+		for(Evaluation e : s.getEvaluations()) {
+			evaluations.add(new EvaluationDTO(e.getId(), 
+					e.getStartTime(),
+					e.getEndTime(), 
+					e.getNumberOfPoints(),
+					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+							new ArrayList<EvaluationDTO>(), 
+							e.getEvaluationType().getActive()),
+					new EvaluationInstrumentDTO(),
+					new ExaminationDTO(), null, e.getActive()));
+		}
+		
+		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
+			teachersOnRealization.add(new TeacherOnRealizationDTO(tor.getId(), tor.getNumberOfClasses(),
+					new TeacherDTO(tor.getTeacher().getId(), null,
+							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
+							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
+							tor.getTeacher().getActive()),
+					null, null, tor.getActive()));
+		}
+		
+		for(Announcement a : s.getAnnouncements()) {
+			ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+			
+			attachments = (ArrayList<FileDTO>) a.getAttachments()
+							.stream()
+							.map(f -> 
+							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+									null, null, null, f.getActive()))
+							.collect(Collectors.toList());
+			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+					null, a.getTitle(), attachments, a.getActive()));
+		}
+		
+		
 		return new ResponseEntity<SubjectRealizationDTO>(new SubjectRealizationDTO(s.getId(),
-				new EvaluationDTO(s.getEvaluation().getId(), 
-	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-	    				s.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-	    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-	    						s.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						s.getEvaluation().getExamination().getActive()),
-	    				s.getActive()),
-				new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-						s.getTeacherOnRealization().getNumberOfClasses(), 
-						new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-								s.getTeacherOnRealization().getTeacher().getFirstName(),
-								s.getTeacherOnRealization().getTeacher().getLastName(),
-								s.getTeacherOnRealization().getTeacher().getUmcn(),
-								s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						s.getTeacherOnRealization().getActive()),
-				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-				s.getSubject().getClassesLeft(), 
-				s.getSubject().getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-						s.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-				new OutcomeDTO(s.getSubject().getOutcome().getId(),
-						s.getSubject().getOutcome().getDescription(), 
-						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-		s.getActive()), HttpStatus.CREATED);
+				evaluations,
+				teachersOnRealization,
+				announcements,
+				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(), s.getSubject().getEcts(),
+						s.getSubject().getActive()), 
+				s.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -469,131 +370,133 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 		ArrayList<Subject> subjectsOnYear = new ArrayList<Subject>();
 		ArrayList<SubjectDTO> subjectsOnYearDTO= new ArrayList<SubjectDTO>();
 		
+		ArrayList<Evaluation> evaluations = new ArrayList<Evaluation>();
+		HashSet<TeacherOnRealization> teachersOnRealization = new HashSet<TeacherOnRealization>();
+		ArrayList<Announcement> announcements = new ArrayList<Announcement>();
+		
+		
+		ArrayList<EvaluationDTO> evaluationDTOs = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teacherOnRealizationDTOs = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcementDTOs = new ArrayList<AnnouncementDTO>();
+		
 		
 		if(s == null) {
 			return new ResponseEntity<SubjectRealizationDTO>(HttpStatus.NOT_FOUND);
 		}
 		
-		s.setId(t.getId());
-		s.setEvaluation(new Evaluation(t.getEvaluation().getId(), 
-				t.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-				t.getEvaluation().getNumberOfPoints(),
-				new EvaluationType(t.getEvaluation().getEvaluationType().getId(),
-						t.getEvaluation().getEvaluationType().getName(), 
-						t.getEvaluation().getEvaluationType().getActive()),
-				new EvaluationInstrument(t.getEvaluation().getEvaluationInstrument().getId(),
-						t.getEvaluation().getEvaluationInstrument().getName(),null, null),
-				new Examination(t.getEvaluation().getExamination().getId(),
-						t.getEvaluation().getExamination().getNumberOfPoints(),
-						null, new StudentOnYear(t.getEvaluation().getExamination().getStudentOnYear().getId(),
-								t.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-								new Student(t.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-										null, t.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-										t.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-										null, null, null, null, null, t.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-								null, null, t.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-						t.getEvaluation().getExamination().getActive())));
+		for(Evaluation e : s.getEvaluations()) {
+			evaluationDTOs.add(new EvaluationDTO(e.getId(), 
+					e.getStartTime(),
+					e.getEndTime(), 
+					e.getNumberOfPoints(),
+					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+							new ArrayList<EvaluationDTO>(), 
+							e.getEvaluationType().getActive()),
+					new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
+							new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+									e.getEvaluationInstrument().getFile().getUrl(), 
+									e.getEvaluationInstrument().getFile().getDescription(),
+									null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+							e.getEvaluationInstrument().getActive()),
+					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
+							null, null, e.getExamination().getActive()), null, e.getActive()));
+		}
 		
-		s.setSubject(new Subject(t.getSubject().getId(), t.getSubject().getName(),t.getSubject().getEcts(), 
-				t.getSubject().isCompulsory(), t.getSubject().getNumberOfClasses(), t.getSubject().getNumberOfPractices(),
-				t.getSubject().getOtherTypesOfClasses(), t.getSubject().getResearchWork(),
-				t.getSubject().getClassesLeft(), 
+		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
+			teacherOnRealizationDTOs.add(new TeacherOnRealizationDTO(tor.getId(), tor.getNumberOfClasses(),
+					new TeacherDTO(tor.getTeacher().getId(), null,
+							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
+							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
+							tor.getTeacher().getActive()),
+					null, null, tor.getActive()));
+		}
+		
+		for(Announcement a : s.getAnnouncements()) {
+			ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+			
+			attachments = (ArrayList<FileDTO>) a.getAttachments()
+							.stream()
+							.map(f -> 
+							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+									null, null, null, f.getActive()))
+							.collect(Collectors.toList());
+			announcementDTOs.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+					null, a.getTitle(), attachments, a.getActive()));
+		}
+		
+		for(EvaluationDTO edto : evaluationDTOs) {
+			evaluations.add(new Evaluation(edto.getId(), 
+					edto.getStartTime(),
+					edto.getEndTime(), 
+					edto.getNumberOfPoints(),
+					new EvaluationType(edto.getEvaluationType().getId(), edto.getEvaluationType().getName(),
+							new ArrayList<Evaluation>(), 
+							edto.getEvaluationType().getActive()),
+					new EvaluationInstrument(edto.getEvaluationInstrument().getId(),
+							edto.getEvaluationInstrument().getName(),
+							new ArrayList<Evaluation>(),
+							new File(edto.getEvaluationInstrument().getFile().getId(),
+									edto.getEvaluationInstrument().getFile().getUrl(), 
+									edto.getEvaluationInstrument().getFile().getDescription(),
+									null, null, null, edto.getEvaluationInstrument().getFile().getActive()),
+							edto.getEvaluationInstrument().getActive()),
+					new Examination(edto.getExamination().getId(), edto.getExamination().getNumberOfPoints(),
+							null, null, edto.getExamination().getActive()), null, edto.getActive()));
+		}
+		
+		for(TeacherOnRealizationDTO tdto : teacherOnRealizationDTOs) {
+			teachersOnRealization.add(new TeacherOnRealization(tdto.getId(), tdto.getNumberOfClasses(),
+					new Teacher(tdto.getTeacher().getId(), null,
+							tdto.getTeacher().getFirstName(), tdto.getTeacher().getLastName(),
+							tdto.getTeacher().getUmcn(), tdto.getTeacher().getBiography(), null, null, null, null,
+							tdto.getTeacher().getActive()),
+					null, null, tdto.getActive()));
+		}
+		
+		for(AnnouncementDTO adto : announcementDTOs) {
+			ArrayList<File> attachments = new ArrayList<File>();
+			
+			attachments = (ArrayList<File>) adto.getAttachments()
+							.stream()
+							.map(f -> 
+							new File(f.getId(), f.getUrl(), f.getDescription(),
+									null, null, null, f.getActive()))
+							.collect(Collectors.toList());
+			announcements.add(new Announcement(adto.getId(), adto.getTimePublished(), adto.getContent(),
+					null, adto.getTitle(), attachments, adto.getActive()));
+		}
+		
+		s.setId(t.getId());
+		s.setEvaluations(evaluations);
+		s.setTeachersOnRealization(teachersOnRealization);
+		s.setAnnouncements(announcements);
+		s.setSubject(new Subject(t.getSubject().getId(),
+				t.getSubject().getName(), 
+				t.getSubject().getEcts(),
+				t.getSubject().isCompulsory(),
+				t.getSubject().getNumberOfClasses(),
+				t.getSubject().getNumberOfPractices(),
+				t.getSubject().getOtherTypesOfClasses(),
+				t.getSubject().getResearchWork(), 
+				t.getSubject().getClassesLeft(),
 				t.getSubject().getNumberOfSemesters(),
-				new YearOfStudy(t.getSubject().getYearOfStudy().getId(),
+				new YearOfStudy(t.getSubject().getYearOfStudy().getId(), 
 						t.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<Subject>(), 
+						new ArrayList<Subject>(),
 						t.getSubject().getYearOfStudy().getActive()),
-				new Outcome(t.getSubject().getOutcome().getId(),
-						t.getSubject().getOutcome().getDescription(), 
-						new EducationGoal(t.getSubject().getOutcome().getEducationGoal().getId(),
-								t.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								t.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						t.getSubject().getOutcome().getActive()), null, t.getSubject().getActive()));
-		t.setTeacherOnRealization(new TeacherOnRealization(t.getTeacherOnRealization().getId(), 
-				t.getTeacherOnRealization().getNumberOfClasses(), 
-				new Teacher(t.getTeacherOnRealization().getTeacher().getId(),
-						new RegisteredUser(t.getTeacherOnRealization().getTeacher().getUser().getId(),
-								t.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-								t.getTeacherOnRealization().getTeacher().getUser().getPassword(),
-								t.getTeacherOnRealization().getTeacher().getUser().getEmail(), null, null, null,
-								t.getTeacherOnRealization().getTeacher().getUser().getActive()),
-						t.getTeacherOnRealization().getTeacher().getFirstName(),
-						t.getTeacherOnRealization().getTeacher().getLastName(),
-						t.getTeacherOnRealization().getTeacher().getUmcn(),
-						t.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-						new Department(t.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-								t.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-								t.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-								t.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-						t.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-				t.getTeacherOnRealization().getActive()),
-		new Subject(t.getSubject().getId(), t.getSubject().getName(),t.getSubject().getEcts(), 
-		t.getSubject().isCompulsory(), t.getSubject().getNumberOfClasses(), t.getSubject().getNumberOfPractices(),
-		t.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-		t.getSubject().getClassesLeft(), 
-		t.getSubject().getNumberOfSemesters(),
-		new YearOfStudy(t.getSubject().getYearOfStudy().getId(),
-				t.getSubject().getYearOfStudy().getYearOfStudy(),
-				new ArrayList<Subject>(), t.getSubject().getYearOfStudy().getActive()),
-		new Outcome(t.getSubject().getOutcome().getId(),
-				t.getSubject().getOutcome().getDescription(), 
-				new EducationGoal(s.getSubject().getOutcome().getEducationGoal().getId(),
-						s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-						s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-				s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),s.getActive());
-		s.setActive(t.getActive());
+				new ArrayList<Outcome>(),
+				new ArrayList<SubjectRealization>(), null, true));
+		
 		
 		s = service.update(s);
 		
 		return new ResponseEntity<SubjectRealizationDTO>(new SubjectRealizationDTO(s.getId(),
-				new EvaluationDTO(s.getEvaluation().getId(), 
-	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-	    				s.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-	    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-	    						s.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						s.getEvaluation().getExamination().getActive()),
-	    				s.getActive()),
-				new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-						s.getTeacherOnRealization().getNumberOfClasses(), 
-						new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-								s.getTeacherOnRealization().getTeacher().getFirstName(),
-								s.getTeacherOnRealization().getTeacher().getLastName(),
-								s.getTeacherOnRealization().getTeacher().getUmcn(),
-								s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						s.getTeacherOnRealization().getActive()),
-				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-				s.getSubject().getClassesLeft(), 
-				s.getSubject().getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-						s.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-				new OutcomeDTO(s.getSubject().getOutcome().getId(),
-						s.getSubject().getOutcome().getDescription(), 
-						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-		s.getActive()), HttpStatus.OK);
+				evaluationDTOs,
+				teacherOnRealizationDTOs,
+				announcementDTOs,
+				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(), s.getSubject().getEcts(),
+						s.getSubject().getActive()), 
+				s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -615,55 +518,51 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 			return new ResponseEntity<SubjectRealizationDTO>(HttpStatus.NOT_FOUND);
 		}
 		
+		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+		HashSet<TeacherOnRealizationDTO> teachersOnRealization = new HashSet<TeacherOnRealizationDTO>();
+		ArrayList<AnnouncementDTO> announcements = new ArrayList<AnnouncementDTO>();
+		
+		for(Evaluation e : s.getEvaluations()) {
+			evaluations.add(new EvaluationDTO(e.getId(), 
+					e.getStartTime(),
+					e.getEndTime(), 
+					e.getNumberOfPoints(),
+					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+							new ArrayList<EvaluationDTO>(), 
+							e.getEvaluationType().getActive()),
+					new EvaluationInstrumentDTO(),
+					new ExaminationDTO(), null, e.getActive()));
+		}
+		
+		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
+			teachersOnRealization.add(new TeacherOnRealizationDTO(tor.getId(), tor.getNumberOfClasses(),
+					new TeacherDTO(tor.getTeacher().getId(), null,
+							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
+							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
+							tor.getTeacher().getActive()),
+					null, null, tor.getActive()));
+		}
+		
+		for(Announcement a : s.getAnnouncements()) {
+			ArrayList<FileDTO> attachments = new ArrayList<FileDTO>();
+			
+			attachments = (ArrayList<FileDTO>) a.getAttachments()
+							.stream()
+							.map(f -> 
+							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
+									null, null, null, f.getActive()))
+							.collect(Collectors.toList());
+			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
+					null, a.getTitle(), attachments, a.getActive()));
+		}
+		
 		service.softDelete(id);
 		return new ResponseEntity<SubjectRealizationDTO>(new SubjectRealizationDTO(s.getId(),
-				new EvaluationDTO(s.getEvaluation().getId(), 
-	    				s.getEvaluation().getStartTime(), s.getEvaluation().getEndTime(),
-	    				s.getEvaluation().getNumberOfPoints(),
-	    				new EvaluationTypeDTO(s.getEvaluation().getEvaluationType().getId(),
-	    						s.getEvaluation().getEvaluationType().getName(), s.getEvaluation().getEvaluationType().getActive()),
-	    				new EvaluationInstrumentDTO(s.getEvaluation().getEvaluationInstrument().getId(),
-	    						s.getEvaluation().getEvaluationInstrument().getName(),null, null),
-	    				new ExaminationDTO(s.getEvaluation().getExamination().getId(),
-	    						s.getEvaluation().getExamination().getNumberOfPoints(),
-	    						null, new StudentOnYearDTO(s.getEvaluation().getExamination().getStudentOnYear().getId(),
-	    								s.getEvaluation().getExamination().getStudentOnYear().getDateOfApplication(),
-	    								new StudentDTO(s.getEvaluation().getExamination().getStudentOnYear().getStudent().getId(),
-	    										null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getFirstName(),
-	    										s.getEvaluation().getExamination().getStudentOnYear().getStudent().getLastName(),
-	    										null, null, null, null, null, s.getEvaluation().getExamination().getStudentOnYear().getStudent().getActive()),
-	    								null, null, s.getEvaluation().getExamination().getStudentOnYear().getActive()), 
-	    						s.getEvaluation().getExamination().getActive()),
-	    				s.getActive()),
-				new TeacherOnRealizationDTO(s.getTeacherOnRealization().getId(), 
-						s.getTeacherOnRealization().getNumberOfClasses(), 
-						new TeacherDTO(s.getTeacherOnRealization().getTeacher().getId(),
-								new RegisteredUserDTO(s.getTeacherOnRealization().getTeacher().getUser().getUsername(),
-										null, s.getTeacherOnRealization().getTeacher().getUser().getEmail()),
-								s.getTeacherOnRealization().getTeacher().getFirstName(),
-								s.getTeacherOnRealization().getTeacher().getLastName(),
-								s.getTeacherOnRealization().getTeacher().getUmcn(),
-								s.getTeacherOnRealization().getTeacher().getBiography(), null, null,
-								new DepartmentDTO(s.getTeacherOnRealization().getTeacher().getDepartment().getId(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getName(),
-										s.getTeacherOnRealization().getTeacher().getDepartment().getDescription(), null, null, null, null,
-										s.getTeacherOnRealization().getTeacher().getDepartment().getActive()),
-								s.getTeacherOnRealization().getTeacher().getActive()), null, null, null,
-						s.getTeacherOnRealization().getActive()),
-				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(),s.getSubject().getEcts(), 
-				s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(), s.getSubject().getNumberOfPractices(),
-				s.getSubject().getOtherTypesOfClasses(), s.getSubject().getResearchWork(),
-				s.getSubject().getClassesLeft(), 
-				s.getSubject().getNumberOfSemesters(),
-				new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(),
-						s.getSubject().getYearOfStudy().getYearOfStudy(),
-						new ArrayList<SubjectDTO>(), s.getSubject().getYearOfStudy().getActive()),
-				new OutcomeDTO(s.getSubject().getOutcome().getId(),
-						s.getSubject().getOutcome().getDescription(), 
-						new EducationGoalDTO(s.getSubject().getOutcome().getEducationGoal().getId(),
-								s.getSubject().getOutcome().getEducationGoal().getDescription(), null,
-								s.getSubject().getOutcome().getEducationGoal().getActive()), null, null, 
-						s.getSubject().getOutcome().getActive()), null, s.getSubject().getActive()),
-		s.getActive()), HttpStatus.OK);
+				evaluations,
+				teachersOnRealization,
+				announcements,
+				new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(), s.getSubject().getEcts(),
+						s.getSubject().getActive()), 
+				s.getActive()), HttpStatus.OK);
 	}
 }
