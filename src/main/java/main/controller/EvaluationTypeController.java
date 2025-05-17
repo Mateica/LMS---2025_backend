@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.EvaluationTypeDTO;
+import main.model.Evaluation;
 import main.model.EvaluationType;
 import main.service.EvaluationTypeService;
 
@@ -40,7 +41,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 		ArrayList<EvaluationTypeDTO> evaluationTypes = new ArrayList<EvaluationTypeDTO>();
 		
 		for(EvaluationType et : service.findAll()) {
-			evaluationTypes.add(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()));
+			evaluationTypes.add(new EvaluationTypeDTO(et.getId(), et.getName(), null, et.getActive()));
 		}
 		
 		return new ResponseEntity<Iterable<EvaluationTypeDTO>>(evaluationTypes, HttpStatus.OK);
@@ -62,7 +63,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	    new EvaluationTypeDTO(
 	            et.getId(),
 	            et.getName(),
-	            et.getActive()
+	            null, et.getActive()
 	        )
 	    ).collect(Collectors.toList());
 
@@ -81,7 +82,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 		if(et == null) {
 			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), null, et.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -89,12 +90,12 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	@PostMapping
 	public ResponseEntity<EvaluationTypeDTO> create(EvaluationTypeDTO t) {
 		// TODO Auto-generated method stub
-		EvaluationType et = service.create(new EvaluationType(null, t.getName(), true));
+		EvaluationType et = service.create(new EvaluationType(null, t.getName(), new ArrayList<Evaluation>(), true));
 		
 		if(et == null) {
 			return new ResponseEntity<EvaluationTypeDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.CREATED);
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), null, et.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 		
 		et = service.update(et)
 ;
-		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), null, et.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -138,6 +139,6 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 		
 		service.softDelete(id);
 		
-		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), et.getActive()), HttpStatus.OK);
+		return new ResponseEntity<EvaluationTypeDTO>(new EvaluationTypeDTO(et.getId(), et.getName(), null, et.getActive()), HttpStatus.OK);
 	}
 }

@@ -98,7 +98,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	@PostMapping
 	public ResponseEntity<EvaluationInstrumentDTO> create(EvaluationInstrumentDTO t) {
 		// TODO Auto-generated method stub
-		EvaluationInstrument ei = service.create(new EvaluationInstrument(null, t.getName(),new File(t.getFile().getId(), t.getFile().getUrl(), t.getFile().getDescription(),
+		EvaluationInstrument ei = service.create(new EvaluationInstrument(null, t.getName(),null, new File(t.getFile().getId(), t.getFile().getUrl(), t.getFile().getDescription(),
 				null, null, null, t.getFile().getActive()), true));
 		
 		if(ei == null) {

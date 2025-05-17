@@ -53,22 +53,31 @@ import main.model.Outcome;
 import main.model.Place;
 import main.model.RegisteredUser;
 import main.model.Subject;
+import main.model.SubjectRealization;
 import main.model.Teacher;
 import main.model.TeachingMaterial;
 import main.model.Title;
 import main.model.University;
 import main.model.YearOfStudy;
+import main.service.EducationGoalService;
 import main.service.EvaluationTypeService;
 import main.service.OutcomeService;
+import main.service.SubjectService;
 
 @RestController
 @RequestMapping("/api/syllabi")
 public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	@Autowired
 	private OutcomeService service;
+	
+	@Autowired
+	private SubjectService subjectService;
+	
+	@Autowired
+	private EducationGoalService educationGoalService;
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN"})
 	@GetMapping
 	public ResponseEntity<Iterable<OutcomeDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -93,7 +102,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 								staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 								null, null,null,
-								t.getActive()));
+								null, t.getActive()));
 					}
 				}
 				
@@ -101,7 +110,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 						new RegisteredUserDTO(t.getUser().getUsername(), null, t.getUser().getEmail()),
 						t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(),
 						teacherTitles, null,
-						new DepartmentDTO(t.getDepartment().getId(), 
+						null, new DepartmentDTO(t.getDepartment().getId(), 
 								t.getDepartment().getName(),
 								t.getDepartment().getDescription(),
 								new FacultyDTO(t.getDepartment().getFaculty().getId(),
@@ -118,7 +127,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 												t.getDepartment().getFaculty().getHeadmaster().getLastName(),
 												t.getDepartment().getFaculty().getHeadmaster().getUmcn(),
 												t.getDepartment().getFaculty().getHeadmaster().getBiography(), new ArrayList<TitleDTO>(),
-												null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
+												null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
 										new UniversityDTO(t.getDepartment().getFaculty().getUniversity().getId(),
 												t.getDepartment().getFaculty().getUniversity().getName(),
 												t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -148,7 +157,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 										t.getDepartment().getChief().getLastName(),
 										t.getDepartment().getChief().getUmcn(),
 										t.getDepartment().getChief().getBiography(),
-										null, null, null, t.getDepartment().getChief().getActive()),
+										null, null, null, null, t.getDepartment().getChief().getActive()),
 								new HashSet<StudyProgrammeDTO>(), 
 								t.getDepartment().getActive()),
 						t.getActive()));
@@ -164,19 +173,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 									o.getTeachingMaterial().getFile().getActive()),
 							o.getTeachingMaterial().getActive()),
 					new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(),
-							o.getSubject().isCompulsory(), o.getSubject().getNumberOfClasses(),
-							o.getSubject().getNumberOfPractices(), o.getSubject().getOtherTypesOfClasses(),
-							o.getSubject().getResearchWork(),
-							o.getSubject().getClassesLeft(),
-							o.getSubject().getNumberOfSemesters(),
-							new YearOfStudyDTO(o.getSubject().getYearOfStudy().getId(), 
-									o.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-									o.getSubject().getYearOfStudy().getActive()),
-							new OutcomeDTO(o.getSubject().getOutcome().getId(),
-									o.getSubject().getOutcome().getDescription(), null, null, null, 
-									o.getSubject().getOutcome().getActive()), 
-							new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-							o.getSubject().getActive()),
+							o.getSubject().isCompulsory()),
 					o.getActive()));
 		}
 		
@@ -185,6 +182,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	
 	@Override
 	@GetMapping("/params")
+	@Secured("ADMIN")
 	public ResponseEntity<Page<OutcomeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -216,7 +214,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 								staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 								null, null,null,
-								t.getActive()));
+								null, t.getActive()));
 					}
 				}
 				
@@ -224,7 +222,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 						new RegisteredUserDTO(t.getUser().getUsername(), null, t.getUser().getEmail()),
 						t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(),
 						teacherTitles, null,
-						new DepartmentDTO(t.getDepartment().getId(), 
+						null, new DepartmentDTO(t.getDepartment().getId(), 
 								t.getDepartment().getName(),
 								t.getDepartment().getDescription(),
 								new FacultyDTO(t.getDepartment().getFaculty().getId(),
@@ -241,7 +239,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 												t.getDepartment().getFaculty().getHeadmaster().getLastName(),
 												t.getDepartment().getFaculty().getHeadmaster().getUmcn(),
 												t.getDepartment().getFaculty().getHeadmaster().getBiography(), new ArrayList<TitleDTO>(),
-												null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
+												null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
 										new UniversityDTO(t.getDepartment().getFaculty().getUniversity().getId(),
 												t.getDepartment().getFaculty().getUniversity().getName(),
 												t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -271,7 +269,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 										t.getDepartment().getChief().getLastName(),
 										t.getDepartment().getChief().getUmcn(),
 										t.getDepartment().getChief().getBiography(),
-										null, null, null, t.getDepartment().getChief().getActive()),
+										null, null, null, null, t.getDepartment().getChief().getActive()),
 								new HashSet<StudyProgrammeDTO>(), 
 								t.getDepartment().getActive()),
 						t.getActive()));
@@ -289,18 +287,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 										s.getTeachingMaterial().getFile().getActive()),
 								s.getTeachingMaterial().getActive()),
 						new SubjectDTO(s.getSubject().getId(), s.getSubject().getName(), s.getSubject().getEcts(),
-								s.getSubject().isCompulsory(), s.getSubject().getNumberOfClasses(),
-								s.getSubject().getNumberOfPractices(), s.getSubject().getOtherTypesOfClasses(),							o.getSubject().getResearchWork(),
-								s.getSubject().getClassesLeft(),
-								s.getSubject().getNumberOfSemesters(),
-								new YearOfStudyDTO(s.getSubject().getYearOfStudy().getId(), 
-										s.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-										s.getSubject().getYearOfStudy().getActive()),
-								new OutcomeDTO(s.getSubject().getOutcome().getId(),
-										s.getSubject().getOutcome().getDescription(), null, null, null, 
-										s.getSubject().getOutcome().getActive()), 
-								new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-								s.getSubject().getActive()),
+								s.getSubject().isCompulsory()),
 						s.getActive()));
 			}
 		    
@@ -316,7 +303,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 		
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN"})
 	@GetMapping("/{id}")
 	public ResponseEntity<OutcomeDTO> findById(Long id) {
 		// TODO Auto-generated method stub
@@ -345,7 +332,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							t.getActive()));
+							null, t.getActive()));
 					}
 				}
 			}
@@ -360,19 +347,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								o.getTeachingMaterial().getFile().getActive()),
 						o.getTeachingMaterial().getActive()),
 				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(),
-						o.getSubject().isCompulsory(), o.getSubject().getNumberOfClasses(),
-						o.getSubject().getNumberOfPractices(), o.getSubject().getOtherTypesOfClasses(),
-						o.getSubject().getResearchWork(),
-						o.getSubject().getClassesLeft(),
-						o.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(o.getSubject().getYearOfStudy().getId(), 
-								o.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-								o.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(o.getSubject().getOutcome().getId(),
-								o.getSubject().getOutcome().getDescription(), null, null, null, 
-								o.getSubject().getOutcome().getActive()), 
-						new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-						o.getSubject().getActive()),
+						o.getSubject().isCompulsory()),
 				o.getActive()), HttpStatus.OK);
 	}
 
@@ -392,22 +367,21 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								t.getTeachingMaterial().getFile().getActive()),
 						t.getTeachingMaterial().getActive()),
 				new Subject(t.getSubject().getId(), 
-						t.getSubject().getName(), 
+						t.getSubject().getName(),
 						t.getSubject().getEcts(),
-						t.getSubject().isCompulsory(), t.getSubject().getNumberOfClasses(),
+						t.getSubject().isCompulsory(),
+						t.getSubject().getNumberOfClasses(),
 						t.getSubject().getNumberOfPractices(),
 						t.getSubject().getOtherTypesOfClasses(),
 						t.getSubject().getResearchWork(),
 						t.getSubject().getClassesLeft(),
 						t.getSubject().getNumberOfSemesters(),
-						new YearOfStudy(t.getSubject().getYearOfStudy().getId(), 
-								t.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<Subject>(), 
-								t.getSubject().getYearOfStudy().getActive()),
-						new Outcome(t.getSubject().getOutcome().getId(),
-								t.getSubject().getOutcome().getDescription(), null, null, null, 
-								t.getSubject().getOutcome().getActive()), 
-						new Subject(),
-						t.getSubject().getActive()),
+						new YearOfStudy(t.getSubject().getYearOfStudy().getId(),
+								t.getSubject().getYearOfStudy().getYearOfStudy(),
+								new ArrayList<Subject>(), t.getSubject().getYearOfStudy().getActive()),
+						new ArrayList<Outcome>(),
+						new ArrayList<SubjectRealization>(),
+						null, true),
 				t.getActive()));
 		
 		if(o == null) {
@@ -432,7 +406,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							t.getActive()));
+							null, t.getActive()));
 					}
 				}
 			}
@@ -447,19 +421,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								o.getTeachingMaterial().getFile().getActive()),
 						o.getTeachingMaterial().getActive()),
 				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(),
-						o.getSubject().isCompulsory(), o.getSubject().getNumberOfClasses(),
-						o.getSubject().getNumberOfPractices(), o.getSubject().getOtherTypesOfClasses(),
-						o.getSubject().getResearchWork(),
-						o.getSubject().getClassesLeft(),
-						o.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(o.getSubject().getYearOfStudy().getId(), 
-								o.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-								o.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(o.getSubject().getOutcome().getId(),
-								o.getSubject().getOutcome().getDescription(), null, null, null, 
-								o.getSubject().getOutcome().getActive()), 
-						new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-						o.getSubject().getActive()),
+						o.getSubject().isCompulsory()),
 				o.getActive()), HttpStatus.CREATED);
 	}
 
@@ -478,47 +440,22 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 		ArrayList<TitleDTO> teacherTitles = new ArrayList<TitleDTO>();
 		HashSet<TeacherDTO> staffMembers = new HashSet<TeacherDTO>();
 		
-		for(Teacher tt : o.getTeachingMaterial().getAuthors()) {
-			for(Title title : tt.getTitles()) {
-				teacherTitles.add(new TitleDTO(title.getId(), title.getDateElected(), title.getDateAbolished(),
-						new ScientificFieldDTO(),
-						new TitleTypeDTO(title.getTitleType().getId(), 
-								title.getTitleType().getName(),
-								title.getTitleType().getActive()), title.getActive()));
-			}
-			
-			for(Teacher teacher : o.getTeachingMaterial().getAuthors()) {
-				for(Teacher staff : teacher.getDepartment().getStaff()) {
-					staffMembers.add(new TeacherDTO(staff.getId(), 
-							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
-							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
-							null, null,null,
-							t.getActive()));
-					}
-				}
-			}
-		
-		o.setId(t.getId());
 		o.setDescription(t.getDescription());
-		o.setEducationGoal(new EducationGoal(t.getEducationGoal().getId(), t.getEducationGoal().getDescription(),
-						null, t.getEducationGoal().getActive()));
-		o.setSubject(new Subject(t.getSubject().getId(), 
-				t.getSubject().getName(), 
-				t.getSubject().getEcts(),
-				t.getSubject().isCompulsory(), t.getSubject().getNumberOfClasses(),
-				t.getSubject().getNumberOfPractices(),
-				t.getSubject().getOtherTypesOfClasses(),
-				t.getSubject().getResearchWork(),
-				t.getSubject().getClassesLeft(),
-				t.getSubject().getNumberOfSemesters(),
-				new YearOfStudy(t.getSubject().getYearOfStudy().getId(), 
-						t.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<Subject>(), 
-						t.getSubject().getYearOfStudy().getActive()),
-				new Outcome(t.getSubject().getOutcome().getId(),
-						t.getSubject().getOutcome().getDescription(), null, null, null, 
-						t.getSubject().getOutcome().getActive()), 
-				new Subject(),
-				t.getSubject().getActive()));
+		
+		if(t.getSubject().getId() != null) {
+			Subject subject = subjectService.findById(t.getSubject().getId()).get();
+			
+			o.setSubject(subject);
+		}
+		
+		if(t.getEducationGoal().getId() != null) {
+			EducationGoal educationGoal = educationGoalService.findById(t.getEducationGoal().getId()).get();
+			
+			educationGoal.setDescription(t.getEducationGoal().getDescription());
+			
+			o.setEducationGoal(educationGoal);
+		}
+		
 		o.setActive(t.getActive());
 		
 		o = service.update(o)
@@ -533,20 +470,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								o.getTeachingMaterial().getFile().getDescription(), null, null, null,
 								o.getTeachingMaterial().getFile().getActive()),
 						o.getTeachingMaterial().getActive()),
-				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(),
-						o.getSubject().isCompulsory(), o.getSubject().getNumberOfClasses(),
-						o.getSubject().getNumberOfPractices(), o.getSubject().getOtherTypesOfClasses(),
-						o.getSubject().getResearchWork(),
-						o.getSubject().getClassesLeft(),
-						o.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(o.getSubject().getYearOfStudy().getId(), 
-								o.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-								o.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(o.getSubject().getOutcome().getId(),
-								o.getSubject().getOutcome().getDescription(), null, null, null, 
-								o.getSubject().getOutcome().getActive()), 
-						new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-						o.getSubject().getActive()),
+				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(), o.getSubject().getActive()),
 				o.getActive()), HttpStatus.OK);
 	}
 
@@ -588,7 +512,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							t.getActive()));
+							null, t.getActive()));
 					}
 				}
 			}
@@ -605,20 +529,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								o.getTeachingMaterial().getFile().getDescription(), null, null, null,
 								o.getTeachingMaterial().getFile().getActive()),
 						o.getTeachingMaterial().getActive()),
-				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(),
-						o.getSubject().isCompulsory(), o.getSubject().getNumberOfClasses(),
-						o.getSubject().getNumberOfPractices(), o.getSubject().getOtherTypesOfClasses(),
-						o.getSubject().getResearchWork(),
-						o.getSubject().getClassesLeft(),
-						o.getSubject().getNumberOfSemesters(),
-						new YearOfStudyDTO(o.getSubject().getYearOfStudy().getId(), 
-								o.getSubject().getYearOfStudy().getYearOfStudy(), new ArrayList<SubjectDTO>(), 
-								o.getSubject().getYearOfStudy().getActive()),
-						new OutcomeDTO(o.getSubject().getOutcome().getId(),
-								o.getSubject().getOutcome().getDescription(), null, null, null, 
-								o.getSubject().getOutcome().getActive()), 
-						new SubjectDTO(null, null, null, false, null, null, null, null, null, null, null, null, null, null),
-						o.getSubject().getActive()),
+				new SubjectDTO(o.getSubject().getId(), o.getSubject().getName(), o.getSubject().getEcts(), o.getSubject().getActive()),
 				o.getActive()), HttpStatus.OK);
 	}
 }
