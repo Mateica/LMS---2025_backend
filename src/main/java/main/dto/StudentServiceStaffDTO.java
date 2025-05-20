@@ -5,6 +5,10 @@ public class StudentServiceStaffDTO {
 
 	private RegisteredUserDTO registeredUser;
 	
+	private String firstName;
+		
+	private String lastName;
+	
 	private StudentAffairsOfficeDTO studentAffairsOffice;
 	
 	private Boolean active;
@@ -14,11 +18,13 @@ public class StudentServiceStaffDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentServiceStaffDTO(Long id, RegisteredUserDTO registeredUser,
+	public StudentServiceStaffDTO(Long id, RegisteredUserDTO registeredUser, String firstName, String lastName,
 			StudentAffairsOfficeDTO studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
@@ -39,6 +45,22 @@ public class StudentServiceStaffDTO {
 		this.registeredUser = registeredUser;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public StudentAffairsOfficeDTO getStudentAffairsOffice() {
 		return studentAffairsOffice;
 	}
@@ -54,4 +76,6 @@ public class StudentServiceStaffDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 }

@@ -17,6 +17,12 @@ public class StudentServiceStaff {
 	@OneToOne
 	private RegisteredUser registeredUser;
 	
+	@Column(nullable = false)
+	private String firstName;
+	
+	@Column(nullable = false)
+	private String lastName;
+	
 	@ManyToOne
 	private StudentAffairsOffice studentAffairsOffice;
 	
@@ -28,11 +34,13 @@ public class StudentServiceStaff {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentServiceStaff(Long id, RegisteredUser registeredUser, StudentAffairsOffice studentAffairsOffice,
-			Boolean active) {
+	public StudentServiceStaff(Long id, RegisteredUser registeredUser, String firstName, String lastName,
+			StudentAffairsOffice studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
@@ -53,6 +61,22 @@ public class StudentServiceStaff {
 		this.registeredUser = registeredUser;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public StudentAffairsOffice getStudentAffairsOffice() {
 		return studentAffairsOffice;
 	}
@@ -68,6 +92,8 @@ public class StudentServiceStaff {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 	
 	
