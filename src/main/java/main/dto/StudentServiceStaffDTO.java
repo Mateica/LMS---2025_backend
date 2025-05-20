@@ -1,21 +1,26 @@
 package main.dto;
 
-import main.model.RegisteredUser;
-
 public class StudentServiceStaffDTO {
-
 	private Long id;
-	private RegisteredUser registeredUser;
+
+	private RegisteredUserDTO registeredUser;
+	
+	private StudentAffairsOfficeDTO studentAffairsOffice;
+	
+	private Boolean active;
 
 	public StudentServiceStaffDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentServiceStaffDTO(Long id, RegisteredUser registeredUser) {
+	public StudentServiceStaffDTO(Long id, RegisteredUserDTO registeredUser,
+			StudentAffairsOfficeDTO studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
+		this.studentAffairsOffice = studentAffairsOffice;
+		this.active = active;
 	}
 
 	public Long getId() {
@@ -26,12 +31,27 @@ public class StudentServiceStaffDTO {
 		this.id = id;
 	}
 
-	public RegisteredUser getRegisteredUser() {
+	public RegisteredUserDTO getRegisteredUser() {
 		return registeredUser;
 	}
 
-	public void setRegisteredUser(RegisteredUser registeredUser) {
+	public void setRegisteredUser(RegisteredUserDTO registeredUser) {
 		this.registeredUser = registeredUser;
 	}
 
+	public StudentAffairsOfficeDTO getStudentAffairsOffice() {
+		return studentAffairsOffice;
+	}
+
+	public void setStudentAffairsOffice(StudentAffairsOfficeDTO studentAffairsOffice) {
+		this.studentAffairsOffice = studentAffairsOffice;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }
