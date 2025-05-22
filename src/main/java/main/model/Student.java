@@ -42,6 +42,9 @@ public class Student {
 	@OneToMany(mappedBy = "student")
 	private List<SubjectAttendance> subjectAttendances = new ArrayList<SubjectAttendance>();
 	
+	@OneToOne
+	private Faculty faculty;
+	
 	@Column(nullable = false)
 	private Boolean active;
 
@@ -51,7 +54,8 @@ public class Student {
 	}
 
 	public Student(Long id, RegisteredUser user, String firstName, String lastName, String umcn, Address address,
-			Set<StudentOnYear> studentsOnYear, List<SubjectAttendance> subjectAttendances, Boolean active) {
+			Set<StudentOnYear> studentsOnYear, List<SubjectAttendance> subjectAttendances, Faculty faculty,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -61,6 +65,7 @@ public class Student {
 		this.address = address;
 		this.studentsOnYear = studentsOnYear;
 		this.subjectAttendances = subjectAttendances;
+		this.faculty = faculty;
 		this.active = active;
 	}
 
@@ -128,6 +133,14 @@ public class Student {
 		this.subjectAttendances = subjectAttendances;
 	}
 
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -135,6 +148,4 @@ public class Student {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	
 }
