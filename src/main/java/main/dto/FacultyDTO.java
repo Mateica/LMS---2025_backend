@@ -21,17 +21,17 @@ public class FacultyDTO {
 	private String description;
 	private Set<DepartmentDTO> departments = new HashSet<DepartmentDTO>();
 	private List<StudyProgrammeDTO> studyProgrammes = new ArrayList<StudyProgrammeDTO>();
+	private List<StudentDTO> students = new ArrayList<StudentDTO>();
 	private StudentAffairsOfficeDTO studentAffairsOffice;
 	private Boolean active;
-	
 	public FacultyDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 	public FacultyDTO(Long id, String name, AddressDTO address, TeacherDTO headmaster, UniversityDTO university,
 			String contactDetails, String description, Set<DepartmentDTO> departments,
-			List<StudyProgrammeDTO> studyProgrammes, StudentAffairsOfficeDTO studentAffairsOffice, Boolean active) {
+			List<StudyProgrammeDTO> studyProgrammes, List<StudentDTO> students,
+			StudentAffairsOfficeDTO studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -42,94 +42,79 @@ public class FacultyDTO {
 		this.description = description;
 		this.departments = departments;
 		this.studyProgrammes = studyProgrammes;
+		this.students = students;
 		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
-
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public AddressDTO getAddress() {
 		return address;
 	}
-
 	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
-
 	public TeacherDTO getHeadmaster() {
 		return headmaster;
 	}
-
 	public void setHeadmaster(TeacherDTO headmaster) {
 		this.headmaster = headmaster;
 	}
-
 	public UniversityDTO getUniversity() {
 		return university;
 	}
-
 	public void setUniversity(UniversityDTO university) {
 		this.university = university;
 	}
-
 	public String getContactDetails() {
 		return contactDetails;
 	}
-
 	public void setContactDetails(String contactDetails) {
 		this.contactDetails = contactDetails;
 	}
-
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	public Set<DepartmentDTO> getDepartments() {
 		return departments;
 	}
-
 	public void setDepartments(Set<DepartmentDTO> departments) {
 		this.departments = departments;
 	}
-
 	public List<StudyProgrammeDTO> getStudyProgrammes() {
 		return studyProgrammes;
 	}
-
 	public void setStudyProgrammes(List<StudyProgrammeDTO> studyProgrammes) {
 		this.studyProgrammes = studyProgrammes;
 	}
-
+	public List<StudentDTO> getStudents() {
+		return students;
+	}
+	public void setStudents(List<StudentDTO> students) {
+		this.students = students;
+	}
 	public StudentAffairsOfficeDTO getStudentAffairsOffice() {
 		return studentAffairsOffice;
 	}
-
 	public void setStudentAffairsOffice(StudentAffairsOfficeDTO studentAffairsOffice) {
 		this.studentAffairsOffice = studentAffairsOffice;
 	}
-
 	public Boolean getActive() {
 		return active;
 	}
-
 	public void setActive(Boolean active) {
 		this.active = active;
 	}

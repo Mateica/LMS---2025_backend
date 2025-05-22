@@ -50,6 +50,9 @@ public class Faculty {
 	@OneToMany(mappedBy = "faculty")
 	private List<StudyProgramme> studyProgrammes = new ArrayList<StudyProgramme>();
 	
+	@OneToMany(mappedBy = "faculty")
+	private List<Student> students = new ArrayList<Student>();
+	
 	@OneToOne
 	private StudentAffairsOffice studentAffairsOffice;
 	
@@ -63,7 +66,8 @@ public class Faculty {
 
 	public Faculty(Long id, String name, Address address, Teacher headmaster, University university,
 			String contactDetails, String description, Set<Department> departments,
-			List<StudyProgramme> studyProgrammes, StudentAffairsOffice studentAffairsOffice, Boolean active) {
+			List<StudyProgramme> studyProgrammes, List<Student> students, StudentAffairsOffice studentAffairsOffice,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -74,6 +78,7 @@ public class Faculty {
 		this.description = description;
 		this.departments = departments;
 		this.studyProgrammes = studyProgrammes;
+		this.students = students;
 		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
@@ -148,6 +153,14 @@ public class Faculty {
 
 	public void setStudyProgrammes(List<StudyProgramme> studyProgrammes) {
 		this.studyProgrammes = studyProgrammes;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	public StudentAffairsOffice getStudentAffairsOffice() {
