@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class StudentAffairsOffice {
@@ -19,8 +20,11 @@ public class StudentAffairsOffice {
 	@OneToMany(mappedBy = "studentAffairsOffice")
 	private List<StudentServiceStaff> staff = new ArrayList<StudentServiceStaff>();
 	
-	@OneToMany(mappedBy = "studentAffairsOffice")
-	private List<StudentOnYear> studentsOnYear = new ArrayList<StudentOnYear>();
+	//@OneToMany(mappedBy = "studentAffairsOffice")
+	//private List<StudentOnYear> studentsOnYear = new ArrayList<StudentOnYear>();
+	
+	@OneToOne
+	private Faculty faculty;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -30,12 +34,11 @@ public class StudentAffairsOffice {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentAffairsOffice(Long id, List<StudentServiceStaff> staff, List<StudentOnYear> studentsOnYear,
-			Boolean active) {
+	public StudentAffairsOffice(Long id, List<StudentServiceStaff> staff, Faculty faculty, Boolean active) {
 		super();
 		this.id = id;
 		this.staff = staff;
-		this.studentsOnYear = studentsOnYear;
+		this.faculty = faculty;
 		this.active = active;
 	}
 
@@ -55,12 +58,12 @@ public class StudentAffairsOffice {
 		this.staff = staff;
 	}
 
-	public List<StudentOnYear> getStudentsOnYear() {
-		return studentsOnYear;
+	public Faculty getFaculty() {
+		return faculty;
 	}
 
-	public void setStudentsOnYear(List<StudentOnYear> studentsOnYear) {
-		this.studentsOnYear = studentsOnYear;
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
 	}
 
 	public Boolean getActive() {

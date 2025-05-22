@@ -14,6 +14,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import main.dto.StudentAffairsOfficeDTO;
 
 @Entity
 public class Faculty {
@@ -47,8 +48,10 @@ public class Faculty {
 	private Set<Department> departments = new HashSet<Department>();
 	
 	@OneToMany(mappedBy = "faculty")
-	@Column(nullable = false)
 	private List<StudyProgramme> studyProgrammes = new ArrayList<StudyProgramme>();
+	
+	@OneToOne
+	private StudentAffairsOffice studentAffairsOffice;
 	
 	@Column(nullable = false)
 	private Boolean active;
@@ -60,7 +63,7 @@ public class Faculty {
 
 	public Faculty(Long id, String name, Address address, Teacher headmaster, University university,
 			String contactDetails, String description, Set<Department> departments,
-			List<StudyProgramme> studyProgrammes, Boolean active) {
+			List<StudyProgramme> studyProgrammes, StudentAffairsOffice studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -71,9 +74,9 @@ public class Faculty {
 		this.description = description;
 		this.departments = departments;
 		this.studyProgrammes = studyProgrammes;
+		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -115,22 +118,6 @@ public class Faculty {
 		this.university = university;
 	}
 
-	public List<StudyProgramme> getStudyProgrammes() {
-		return studyProgrammes;
-	}
-
-	public void setStudyProgrammes(List<StudyProgramme> studyProgrammes) {
-		this.studyProgrammes = studyProgrammes;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
 	public String getContactDetails() {
 		return contactDetails;
 	}
@@ -153,5 +140,29 @@ public class Faculty {
 
 	public void setDepartments(Set<Department> departments) {
 		this.departments = departments;
+	}
+
+	public List<StudyProgramme> getStudyProgrammes() {
+		return studyProgrammes;
+	}
+
+	public void setStudyProgrammes(List<StudyProgramme> studyProgrammes) {
+		this.studyProgrammes = studyProgrammes;
+	}
+
+	public StudentAffairsOffice getStudentAffairsOffice() {
+		return studentAffairsOffice;
+	}
+
+	public void setStudentAffairsOffice(StudentAffairsOffice studentAffairsOffice) {
+		this.studentAffairsOffice = studentAffairsOffice;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 }

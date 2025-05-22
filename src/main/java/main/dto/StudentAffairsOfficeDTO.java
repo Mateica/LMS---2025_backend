@@ -8,21 +8,22 @@ public class StudentAffairsOfficeDTO {
 
 	private List<StudentServiceStaffDTO> staff = new ArrayList<StudentServiceStaffDTO>();
 
-	private List<StudentOnYearDTO> studentsOnYear = new ArrayList<StudentOnYearDTO>();
+//	private List<StudentOnYearDTO> studentsOnYear = new ArrayList<StudentOnYearDTO>();
+	
+	private FacultyDTO faculty;
 	
 	private Boolean active;
-
+	
 	public StudentAffairsOfficeDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudentAffairsOfficeDTO(Long id, List<StudentServiceStaffDTO> staff, List<StudentOnYearDTO> studentsOnYear,
-			Boolean active) {
+	public StudentAffairsOfficeDTO(Long id, List<StudentServiceStaffDTO> staff, FacultyDTO faculty, Boolean active) {
 		super();
 		this.id = id;
 		this.staff = staff;
-		this.studentsOnYear = studentsOnYear;
+		this.faculty = faculty;
 		this.active = active;
 	}
 
@@ -42,12 +43,12 @@ public class StudentAffairsOfficeDTO {
 		this.staff = staff;
 	}
 
-	public List<StudentOnYearDTO> getStudentsOnYear() {
-		return studentsOnYear;
+	public FacultyDTO getFaculty() {
+		return faculty;
 	}
 
-	public void setStudentsOnYear(List<StudentOnYearDTO> studentsOnYear) {
-		this.studentsOnYear = studentsOnYear;
+	public void setFaculty(FacultyDTO faculty) {
+		this.faculty = faculty;
 	}
 
 	public Boolean getActive() {

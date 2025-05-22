@@ -21,8 +21,9 @@ public class FacultyDTO {
 	private String description;
 	private Set<DepartmentDTO> departments = new HashSet<DepartmentDTO>();
 	private List<StudyProgrammeDTO> studyProgrammes = new ArrayList<StudyProgrammeDTO>();
+	private StudentAffairsOfficeDTO studentAffairsOffice;
 	private Boolean active;
-
+	
 	public FacultyDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -30,7 +31,7 @@ public class FacultyDTO {
 
 	public FacultyDTO(Long id, String name, AddressDTO address, TeacherDTO headmaster, UniversityDTO university,
 			String contactDetails, String description, Set<DepartmentDTO> departments,
-			List<StudyProgrammeDTO> studyProgrammes, Boolean active) {
+			List<StudyProgrammeDTO> studyProgrammes, StudentAffairsOfficeDTO studentAffairsOffice, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -41,6 +42,7 @@ public class FacultyDTO {
 		this.description = description;
 		this.departments = departments;
 		this.studyProgrammes = studyProgrammes;
+		this.studentAffairsOffice = studentAffairsOffice;
 		this.active = active;
 	}
 
@@ -116,6 +118,14 @@ public class FacultyDTO {
 		this.studyProgrammes = studyProgrammes;
 	}
 
+	public StudentAffairsOfficeDTO getStudentAffairsOffice() {
+		return studentAffairsOffice;
+	}
+
+	public void setStudentAffairsOffice(StudentAffairsOfficeDTO studentAffairsOffice) {
+		this.studentAffairsOffice = studentAffairsOffice;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -123,7 +133,4 @@ public class FacultyDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	
-
 }
