@@ -10,7 +10,7 @@ import main.model.Student;
 
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long>, PagingAndSortingRepository<Student, Long> {
-	@Query("UPDATE Studnet t SET t.active = false WHERE t.id = :id")
+	@Query("UPDATE Student t SET t.active = false WHERE t.id = :id")
 	public void softDelete(Long id);
 	
 	public Student findByUser(RegisteredUser user);

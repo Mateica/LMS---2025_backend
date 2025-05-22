@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.swing.border.TitledBorder;
 
-import org.apache.jena.tdb.store.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,7 +61,7 @@ import main.model.YearOfStudy;
 import main.service.TeacherOnRealizationService;
 
 @RestController
-@RequestMapping("/api/teacherOnRealization")
+@RequestMapping("/api/teachersOnRealization")
 public class TeacherOnRealizationController implements ControllerInterface<TeacherOnRealizationDTO> {
 	@Autowired
 	private TeacherOnRealizationService service;

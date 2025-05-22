@@ -26,7 +26,7 @@ public class SubjectRealization {
 	@OneToMany(mappedBy = "subjectRealization")
 	private Set<TeacherOnRealization> teachersOnRealization = new HashSet<TeacherOnRealization>();
 	
-	@OneToMany(mappedBy = "announcement")
+	@OneToMany(mappedBy = "subjectRealization")
 	private List<Announcement> announcements = new ArrayList<Announcement>();
 	
 	@ManyToOne

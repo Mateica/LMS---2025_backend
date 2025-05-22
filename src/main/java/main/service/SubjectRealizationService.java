@@ -5,12 +5,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import main.model.Subject;
 import main.model.SubjectRealization;
 import main.repository.SubjectRealizationRepository;
 import main.repository.SubjectRepository;
 
+@Service
 public class SubjectRealizationService implements ServiceInterface<SubjectRealization> {
 	@Autowired
 	private SubjectRealizationRepository repo;

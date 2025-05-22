@@ -50,7 +50,7 @@ public class Subject {
 	@ManyToOne
 	private YearOfStudy yearOfStudy;
 	
-	@OneToMany(mappedBy = "outcome")
+	@OneToMany(mappedBy = "subject")
 	private List<Outcome> syllabi = new ArrayList<Outcome>();
 	
 	@OneToMany(mappedBy = "subject")
