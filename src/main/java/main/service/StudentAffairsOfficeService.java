@@ -1,5 +1,6 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.management.RuntimeErrorException;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import main.model.Faculty;
 import main.model.StudentAffairsOffice;
 import main.repository.StudentAffairsOfficeRepository;
 
@@ -27,6 +29,14 @@ public class StudentAffairsOfficeService implements ServiceInterface<StudentAffa
 	public Page<StudentAffairsOffice> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<StudentAffairsOffice> findAllActive(){
+		return this.repo.findByActiveIsTrue();
+	}
+	
+	public StudentAffairsOffice findByFaculty(Faculty f) {
+		return this.repo.findByFaculty(f);
 	}
 
 	@Override

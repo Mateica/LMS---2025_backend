@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import main.model.EvaluationGrade;
 import main.model.Faculty;
+import main.model.StudentAffairsOffice;
 import main.model.University;
 import main.repository.EvaluationGradeRepository;
 import main.repository.FacultyRepository;
@@ -38,11 +39,19 @@ public class FacultyService implements ServiceInterface<Faculty> {
 	public List<Faculty> findByUniversity(University university) {
 		return this.repo.findByUniversity(university);
 	}
+	
+	public Faculty findByStudentAffairsOffice(StudentAffairsOffice office) {
+		return this.repo.findByStudentAffairsOffice(office);
+	}
 
 	@Override
 	public Optional<Faculty> findById(Long id) {
 		// TODO Auto-generated method stub
 		return this.repo.findById(id);
+	}
+	
+	public Faculty findByDepartmentId(Long id) {
+		return this.repo.findByDepartmentId(id);
 	}
 
 	@Override

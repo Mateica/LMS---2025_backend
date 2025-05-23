@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import main.model.Faculty;
 import main.model.RegisteredUser;
 import main.model.Student;
+import main.model.StudentAffairsOffice;
 import main.model.University;
 
 @Repository
@@ -19,4 +20,6 @@ public interface FacultyRepository extends CrudRepository<Faculty, Long>, Paging
 	
 	public List<Faculty> findByUniversity(University university);
 	public List<Faculty> findByActiveIsTrue();
+	public Faculty findByStudentAffairsOffice(StudentAffairsOffice office);
+	public Faculty findByDepartmentId(Long id);
 }

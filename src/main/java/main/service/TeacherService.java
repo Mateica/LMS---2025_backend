@@ -38,6 +38,10 @@ public class TeacherService implements ServiceInterface<Teacher> {
 		// TODO Auto-generated method stub
 		return this.repo.findById(id);
 	}
+	
+	public Teacher findByDepartmentId(Long id) {
+		return this.repo.findByDepartmentId(id);
+	}
 
 	@Override
 	public Teacher create(Teacher t) {

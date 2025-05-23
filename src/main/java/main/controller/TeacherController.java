@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,15 +40,19 @@ import main.model.EvaluationGrade;
 import main.model.Faculty;
 import main.model.File;
 import main.model.RegisteredUser;
+import main.model.ScientificField;
 import main.model.StudentAffairsOffice;
 import main.model.StudentServiceStaff;
+import main.model.StudyProgramme;
 import main.model.Teacher;
 import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.Title;
 import main.model.University;
 import main.service.EvaluationGradeService;
+import main.service.FacultyService;
 import main.service.RegisteredUserService;
+import main.service.StudentAffairsOfficeService;
 import main.service.TeacherOnRealizationService;
 import main.service.TeacherService;
 
@@ -65,6 +70,12 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	
 	@Autowired
 	private EvaluationGradeService gradeService;
+	
+	@Autowired
+	private StudentAffairsOfficeService officeService;
+	
+	@Autowired
+	private FacultyService facultyService;
 	
 	@Override
 	@GetMapping
@@ -224,19 +235,45 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 		}
 		
 		List<EvaluationGrade> grades = new ArrayList<EvaluationGrade>();
+		List<Title> titles = new ArrayList<Title>();
 		
-		s.getEvaluationGrades().stream().map(g -> new EvaluationGrade(g.getId(), null, null, null, g.getMark(), g.getActive()));
+		grades = (List<EvaluationGrade>) s.getEvaluationGrades().stream().map(g -> new EvaluationGrade(g.getId(),
+				null, null, g.getDateTimeEvaluated(), g.getMark(), g.getActive())).collect(Collectors.toList());
 		
+		titles = s.getTitles().stream().map(title -> 
+		new Title(title.getId(), title.getDateElected(), title.getDateAbolished(),
+				new ScientificField(title.getScientificField().getId(),
+						title.getScientificField().getName(), new ArrayList<Title>(),
+						title.getScientificField().getActive()), null,
+				title.getActive()))
+				.collect(Collectors.toList());
 		
 		s.setUser(userService.findById(t.getUser().getId()).get());
 		s.setFirstName(t.getFirstName());
 		s.setLastName(t.getLastName());
 		s.setUmcn(t.getUmcn());
 		s.setBiography(t.getBiography());
-//		s.setTitles();
+		s.setTitles(titles);
 		s.setTeachersOnRealization(teacherOnRealizationService.findByTeacherId(id));
 		s.setEvaluationGrades(grades);
-//		s.setStudentAffairsOffice(officeService.findById(t.getStudentAffairsOffice().getId()).get());
+		s.setTeachingMaterial(new TeachingMaterial(s.getTeachingMaterial().getId(), 
+				s.getTeachingMaterial().getName(),
+				new ArrayList<Teacher>(),
+				s.getTeachingMaterial().getYearOfPublication(),
+				new File(s.getTeachingMaterial().getFile().getId(),
+						s.getTeachingMaterial().getFile().getName(),
+						s.getTeachingMaterial().getFile().getUrl(),
+						s.getTeachingMaterial().getFile().getDescription(), null, null, null, null, null,
+						s.getTeachingMaterial().getFile().getDocument(), s.getTeachingMaterial().getFile().getActive()),
+				s.getTeachingMaterial().getActive()));
+		s.setDepartment(new Department(s.getDepartment().getId(),
+				s.getDepartment().getName(),
+				s.getDepartment().getDescription(), 
+				facultyService.findByDepartmentId(s.getDepartment().getId()),
+				new HashSet<Teacher>(), 
+				service.findByDepartmentId(s.getDepartment().getId()),
+				new HashSet<StudyProgramme>(),
+				s.getDepartment().getActive()));
 		s.setActive(t.getActive());
 		
 		s = service.update(s);
@@ -263,7 +300,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	@Secured({"ADMIN"})
 	public ResponseEntity<TeacherDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
-Teacher s = service.findById(id).orElse(null);
+		Teacher s = service.findById(id).orElse(null);
 		
 		ArrayList<TeacherOnRealizationDTO> teachersOnRealization = new ArrayList<TeacherOnRealizationDTO>();
 		

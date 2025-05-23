@@ -18,5 +18,7 @@ public interface TeacherRepository extends CrudRepository<Teacher,Long>, PagingA
 	
 	public Teacher findByUser(RegisteredUser user);
 	
+	public Teacher findByDepartmentId(Long id);
+	
 	public List<Teacher> findByActiveIsTrue();
 }
