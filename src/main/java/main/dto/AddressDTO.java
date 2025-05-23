@@ -7,14 +7,14 @@ public class AddressDTO {
 	private Long id;
 	private String street;
 	private int houseNumber;
-	private Place place;
+	private PlaceDTO place;
 	private Boolean active;
 	
 	public AddressDTO() {
 		super();		
 	}
-	
-	public AddressDTO(Long id, String street, int houseNumber, Place place, Boolean active) {
+
+	public AddressDTO(Long id, String street, int houseNumber, PlaceDTO place, Boolean active) {
 		super();
 		this.id = id;
 		this.street = street;
@@ -47,11 +47,11 @@ public class AddressDTO {
 		this.houseNumber = houseNumber;
 	}
 
-	public Place getPlace() {
+	public PlaceDTO getPlace() {
 		return place;
 	}
 
-	public void setPlace(Place place) {
+	public void setPlace(PlaceDTO place) {
 		this.place = place;
 	}
 
@@ -62,5 +62,7 @@ public class AddressDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
+	
 	
 }

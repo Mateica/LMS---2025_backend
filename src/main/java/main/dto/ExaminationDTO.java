@@ -9,8 +9,8 @@ public class ExaminationDTO {
 
 	private Long id;
 	private Double numberOfPoints;
-	private List<Note> notes = new ArrayList<Note>();
-	private StudentOnYear studentOnYear;
+	private List<NoteDTO> notes = new ArrayList<NoteDTO>();
+	private StudentOnYearDTO studentOnYear;
 	private Boolean active;
 
 	public ExaminationDTO() {
@@ -18,7 +18,7 @@ public class ExaminationDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ExaminationDTO(Long id, Double numberOfPoints, List<Note> notes, StudentOnYear studentOnYear,
+	public ExaminationDTO(Long id, Double numberOfPoints, List<NoteDTO> notes, StudentOnYearDTO studentOnYear,
 			Boolean active) {
 		super();
 		this.id = id;
@@ -44,19 +44,19 @@ public class ExaminationDTO {
 		this.numberOfPoints = numberOfPoints;
 	}
 
-	public List<Note> getNotes() {
+	public List<NoteDTO> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(List<Note> notes) {
+	public void setNotes(List<NoteDTO> notes) {
 		this.notes = notes;
 	}
 
-	public StudentOnYear getStudentOnYear() {
+	public StudentOnYearDTO getStudentOnYear() {
 		return studentOnYear;
 	}
 
-	public void setStudentOnYear(StudentOnYear studentOnYear) {
+	public void setStudentOnYear(StudentOnYearDTO studentOnYear) {
 		this.studentOnYear = studentOnYear;
 	}
 
@@ -67,5 +67,7 @@ public class ExaminationDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

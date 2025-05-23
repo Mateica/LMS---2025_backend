@@ -12,11 +12,11 @@ public class UniversityDTO {
 	private Long id;
 	private String name;
 	private LocalDate dateEstablished;
-	private Address address;
-	private Teacher rector;
+	private AddressDTO address;
+	private TeacherDTO rector;
 	private String contactDetails;
 	private String description;
-	private List<Faculty> faculties = new ArrayList<Faculty>();
+	private List<FacultyDTO> faculties = new ArrayList<FacultyDTO>();
 	private Boolean active;
 
 	public UniversityDTO() {
@@ -24,8 +24,8 @@ public class UniversityDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UniversityDTO(Long id, String name, LocalDate dateEstablished, Address address, Teacher rector,
-			String contactDetails, String description, List<Faculty> faculties, Boolean active) {
+	public UniversityDTO(Long id, String name, LocalDate dateEstablished, AddressDTO address, TeacherDTO rector,
+			String contactDetails, String description, List<FacultyDTO> faculties, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -62,19 +62,19 @@ public class UniversityDTO {
 		this.dateEstablished = dateEstablished;
 	}
 
-	public Address getAddress() {
+	public AddressDTO getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
 
-	public Teacher getRector() {
+	public TeacherDTO getRector() {
 		return rector;
 	}
 
-	public void setRector(Teacher rector) {
+	public void setRector(TeacherDTO rector) {
 		this.rector = rector;
 	}
 
@@ -94,11 +94,11 @@ public class UniversityDTO {
 		this.description = description;
 	}
 
-	public List<Faculty> getFaculties() {
+	public List<FacultyDTO> getFaculties() {
 		return faculties;
 	}
 
-	public void setFaculties(List<Faculty> faculties) {
+	public void setFaculties(List<FacultyDTO> faculties) {
 		this.faculties = faculties;
 	}
 
@@ -110,4 +110,5 @@ public class UniversityDTO {
 		this.active = active;
 	}
 
+	
 }

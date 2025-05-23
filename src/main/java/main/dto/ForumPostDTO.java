@@ -12,9 +12,9 @@ public class ForumPostDTO {
 	private Long id;
 	private LocalDateTime datePublished;
 	private String content;
-	private ForumUser author;
-	private List<File> attachments = new ArrayList<File>();
-	private Topic topic;
+	private ForumUserDTO author;
+	private List<FileDTO> attachments = new ArrayList<FileDTO>();
+	private TopicDTO topic;
 	private Boolean active;
 
 	public ForumPostDTO() {
@@ -22,8 +22,8 @@ public class ForumPostDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ForumPostDTO(Long id, LocalDateTime datePublished, String content, ForumUser author, List<File> attachments,
-			Topic topic, Boolean active) {
+	public ForumPostDTO(Long id, LocalDateTime datePublished, String content, ForumUserDTO author,
+			List<FileDTO> attachments, TopicDTO topic, Boolean active) {
 		super();
 		this.id = id;
 		this.datePublished = datePublished;
@@ -58,27 +58,27 @@ public class ForumPostDTO {
 		this.content = content;
 	}
 
-	public ForumUser getAuthor() {
+	public ForumUserDTO getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(ForumUser author) {
+	public void setAuthor(ForumUserDTO author) {
 		this.author = author;
 	}
 
-	public List<File> getAttachments() {
+	public List<FileDTO> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(List<File> attachments) {
+	public void setAttachments(List<FileDTO> attachments) {
 		this.attachments = attachments;
 	}
 
-	public Topic getTopic() {
+	public TopicDTO getTopic() {
 		return topic;
 	}
 
-	public void setTopic(Topic topic) {
+	public void setTopic(TopicDTO topic) {
 		this.topic = topic;
 	}
 
@@ -90,4 +90,5 @@ public class ForumPostDTO {
 		this.active = active;
 	}
 
+	
 }

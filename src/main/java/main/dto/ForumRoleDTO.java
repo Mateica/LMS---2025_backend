@@ -7,7 +7,7 @@ public class ForumRoleDTO {
 	private Long id;
 	// POSETILAC, MODERATOR ILI ADMINISTRATOR
 	private String name;
-	private ForumUser forumUser;
+	private ForumUserDTO forumUser;
 	private Boolean active;
 
 	public ForumRoleDTO() {
@@ -15,7 +15,7 @@ public class ForumRoleDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ForumRoleDTO(Long id, String name, ForumUser forumUser, Boolean active) {
+	public ForumRoleDTO(Long id, String name, ForumUserDTO forumUser, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -39,11 +39,11 @@ public class ForumRoleDTO {
 		this.name = name;
 	}
 
-	public ForumUser getForumUser() {
+	public ForumUserDTO getForumUser() {
 		return forumUser;
 	}
 
-	public void setForumUser(ForumUser forumUser) {
+	public void setForumUser(ForumUserDTO forumUser) {
 		this.forumUser = forumUser;
 	}
 
@@ -55,4 +55,5 @@ public class ForumRoleDTO {
 		this.active = active;
 	}
 
+	
 }

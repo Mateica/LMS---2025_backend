@@ -5,7 +5,7 @@ import main.model.RegisteredUser;
 public class AdministratorDTO {
 
 	private Long id;
-	private RegisteredUser user;
+	private RegisteredUserDTO user;
 	private Boolean active;
 
 	public AdministratorDTO() {
@@ -13,7 +13,7 @@ public class AdministratorDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AdministratorDTO(Long id, RegisteredUser user, Boolean active) {
+	public AdministratorDTO(Long id, RegisteredUserDTO user, Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -28,11 +28,11 @@ public class AdministratorDTO {
 		this.id = id;
 	}
 
-	public RegisteredUser getUser() {
+	public RegisteredUserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(RegisteredUser user) {
+	public void setUser(RegisteredUserDTO user) {
 		this.user = user;
 	}
 
@@ -44,4 +44,5 @@ public class AdministratorDTO {
 		this.active = active;
 	}
 
+	
 }

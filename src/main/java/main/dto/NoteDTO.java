@@ -6,7 +6,7 @@ public class NoteDTO {
 
 	private Long id;
 	private String content;
-	private Examination examination;
+	private ExaminationDTO examination;
 	private Boolean active;
 
 	public NoteDTO() {
@@ -14,7 +14,7 @@ public class NoteDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public NoteDTO(Long id, String content, Examination examination, Boolean active) {
+	public NoteDTO(Long id, String content, ExaminationDTO examination, Boolean active) {
 		super();
 		this.id = id;
 		this.content = content;
@@ -38,11 +38,11 @@ public class NoteDTO {
 		this.content = content;
 	}
 
-	public Examination getExamination() {
+	public ExaminationDTO getExamination() {
 		return examination;
 	}
 
-	public void setExamination(Examination examination) {
+	public void setExamination(ExaminationDTO examination) {
 		this.examination = examination;
 	}
 
@@ -53,5 +53,7 @@ public class NoteDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

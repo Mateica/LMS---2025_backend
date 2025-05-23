@@ -10,9 +10,9 @@ public class ClassTermDTO {
 	private Long id;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	private Outcome outcome;
-	private TeachingType teachingType;
-	private SubjectRealization subjectRealization;
+	private OutcomeDTO outcome;
+	private TeachingTypeDTO teachingType;
+	private SubjectRealizationDTO subjectRealization;
 	private Boolean active;
 
 	public ClassTermDTO() {
@@ -20,8 +20,8 @@ public class ClassTermDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ClassTermDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, Outcome outcome,
-			TeachingType teachingType, SubjectRealization subjectRealization, Boolean active) {
+	public ClassTermDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, OutcomeDTO outcome,
+			TeachingTypeDTO teachingType, SubjectRealizationDTO subjectRealization, Boolean active) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -56,27 +56,27 @@ public class ClassTermDTO {
 		this.endTime = endTime;
 	}
 
-	public Outcome getOutcome() {
+	public OutcomeDTO getOutcome() {
 		return outcome;
 	}
 
-	public void setOutcome(Outcome outcome) {
+	public void setOutcome(OutcomeDTO outcome) {
 		this.outcome = outcome;
 	}
 
-	public TeachingType getTeachingType() {
+	public TeachingTypeDTO getTeachingType() {
 		return teachingType;
 	}
 
-	public void setTeachingType(TeachingType teachingType) {
+	public void setTeachingType(TeachingTypeDTO teachingType) {
 		this.teachingType = teachingType;
 	}
 
-	public SubjectRealization getSubjectRealization() {
+	public SubjectRealizationDTO getSubjectRealization() {
 		return subjectRealization;
 	}
 
-	public void setSubjectRealization(SubjectRealization subjectRealization) {
+	public void setSubjectRealization(SubjectRealizationDTO subjectRealization) {
 		this.subjectRealization = subjectRealization;
 	}
 
@@ -88,4 +88,5 @@ public class ClassTermDTO {
 		this.active = active;
 	}
 
+	
 }

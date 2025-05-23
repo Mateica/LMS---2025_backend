@@ -13,11 +13,11 @@ import main.model.Topic;
 public class ForumUserDTO {
 
 	private Long id;
-	private RegisteredUser registeredUser;
-	private List<Topic> topics = new ArrayList<Topic>();
-	private Forum forum;
-	private Set<ForumRole> forumRoles = new HashSet<ForumRole>();
-	private List<ForumPost> posts = new ArrayList<ForumPost>();
+	private RegisteredUserDTO registeredUser;
+	private List<TopicDTO> topics = new ArrayList<TopicDTO>();
+	private ForumDTO forum;
+	private Set<ForumRoleDTO> forumRoles = new HashSet<ForumRoleDTO>();
+	private List<ForumPostDTO> posts = new ArrayList<ForumPostDTO>();
 	private Boolean active;
 
 	public ForumUserDTO() {
@@ -25,8 +25,8 @@ public class ForumUserDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ForumUserDTO(Long id, RegisteredUser registeredUser, List<Topic> topics, Forum forum,
-			Set<ForumRole> forumRoles, List<ForumPost> posts, Boolean active) {
+	public ForumUserDTO(Long id, RegisteredUserDTO registeredUser, List<TopicDTO> topics, ForumDTO forum,
+			Set<ForumRoleDTO> forumRoles, List<ForumPostDTO> posts, Boolean active) {
 		super();
 		this.id = id;
 		this.registeredUser = registeredUser;
@@ -45,43 +45,43 @@ public class ForumUserDTO {
 		this.id = id;
 	}
 
-	public RegisteredUser getRegisteredUser() {
+	public RegisteredUserDTO getRegisteredUser() {
 		return registeredUser;
 	}
 
-	public void setRegisteredUser(RegisteredUser registeredUser) {
+	public void setRegisteredUser(RegisteredUserDTO registeredUser) {
 		this.registeredUser = registeredUser;
 	}
 
-	public List<Topic> getTopics() {
+	public List<TopicDTO> getTopics() {
 		return topics;
 	}
 
-	public void setTopics(List<Topic> topics) {
+	public void setTopics(List<TopicDTO> topics) {
 		this.topics = topics;
 	}
 
-	public Forum getForum() {
+	public ForumDTO getForum() {
 		return forum;
 	}
 
-	public void setForum(Forum forum) {
+	public void setForum(ForumDTO forum) {
 		this.forum = forum;
 	}
 
-	public Set<ForumRole> getForumRoles() {
+	public Set<ForumRoleDTO> getForumRoles() {
 		return forumRoles;
 	}
 
-	public void setForumRoles(Set<ForumRole> forumRoles) {
+	public void setForumRoles(Set<ForumRoleDTO> forumRoles) {
 		this.forumRoles = forumRoles;
 	}
 
-	public List<ForumPost> getPosts() {
+	public List<ForumPostDTO> getPosts() {
 		return posts;
 	}
 
-	public void setPosts(List<ForumPost> posts) {
+	public void setPosts(List<ForumPostDTO> posts) {
 		this.posts = posts;
 	}
 
@@ -93,4 +93,5 @@ public class ForumUserDTO {
 		this.active = active;
 	}
 
+	
 }

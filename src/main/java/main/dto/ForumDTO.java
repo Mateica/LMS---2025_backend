@@ -9,8 +9,8 @@ public class ForumDTO {
 
 	private Long id;
 	private boolean visible;
-	private List<Topic> topics = new ArrayList<Topic>();
-	private List<ForumUser> forumUsers = new ArrayList<ForumUser>();
+	private List<TopicDTO> topics = new ArrayList<TopicDTO>();
+	private List<ForumUserDTO> forumUsers = new ArrayList<ForumUserDTO>();
 	private Boolean active;
 
 	public ForumDTO() {
@@ -18,7 +18,7 @@ public class ForumDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ForumDTO(Long id, boolean visible, List<Topic> topics, List<ForumUser> forumUsers, Boolean active) {
+	public ForumDTO(Long id, boolean visible, List<TopicDTO> topics, List<ForumUserDTO> forumUsers, Boolean active) {
 		super();
 		this.id = id;
 		this.visible = visible;
@@ -43,19 +43,19 @@ public class ForumDTO {
 		this.visible = visible;
 	}
 
-	public List<Topic> getTopics() {
+	public List<TopicDTO> getTopics() {
 		return topics;
 	}
 
-	public void setTopics(List<Topic> topics) {
+	public void setTopics(List<TopicDTO> topics) {
 		this.topics = topics;
 	}
 
-	public List<ForumUser> getForumUsers() {
+	public List<ForumUserDTO> getForumUsers() {
 		return forumUsers;
 	}
 
-	public void setForumUsers(List<ForumUser> forumUsers) {
+	public void setForumUsers(List<ForumUserDTO> forumUsers) {
 		this.forumUsers = forumUsers;
 	}
 
@@ -66,5 +66,7 @@ public class ForumDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

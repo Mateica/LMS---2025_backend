@@ -10,9 +10,9 @@ public class TopicDTO {
 
 	private Long id;
 	private String name;
-	private ForumUser author;
-	private List<ForumPost> posts = new ArrayList<ForumPost>();
-	private Forum forum;
+	private ForumUserDTO author;
+	private List<ForumPostDTO> posts = new ArrayList<ForumPostDTO>();
+	private ForumDTO forum;
 	private Boolean active;
 
 	public TopicDTO() {
@@ -20,7 +20,8 @@ public class TopicDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TopicDTO(Long id, String name, ForumUser author, List<ForumPost> posts, Forum forum, Boolean active) {
+	public TopicDTO(Long id, String name, ForumUserDTO author, List<ForumPostDTO> posts, ForumDTO forum,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -46,27 +47,27 @@ public class TopicDTO {
 		this.name = name;
 	}
 
-	public ForumUser getAuthor() {
+	public ForumUserDTO getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(ForumUser author) {
+	public void setAuthor(ForumUserDTO author) {
 		this.author = author;
 	}
 
-	public List<ForumPost> getPosts() {
+	public List<ForumPostDTO> getPosts() {
 		return posts;
 	}
 
-	public void setPosts(List<ForumPost> posts) {
+	public void setPosts(List<ForumPostDTO> posts) {
 		this.posts = posts;
 	}
 
-	public Forum getForum() {
+	public ForumDTO getForum() {
 		return forum;
 	}
 
-	public void setForum(Forum forum) {
+	public void setForum(ForumDTO forum) {
 		this.forum = forum;
 	}
 
@@ -77,5 +78,7 @@ public class TopicDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 
 }

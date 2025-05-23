@@ -1,10 +1,16 @@
 package main.dto;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
+import main.model.RegisteredUser;
+
 public class RoleDTO {
 	private Long id;
 	
 	// POSETILAC, MODERATOR ILI ADMINISTRATOR
 	private String name;
+	private RegisteredUser registeredUser;
 	private Boolean active;
 	
 	public RoleDTO() {
@@ -35,6 +41,14 @@ public class RoleDTO {
 		this.name = name;
 	}
 
+	public RegisteredUser getRegisteredUser() {
+		return registeredUser;
+	}
+
+	public void setRegisteredUser(RegisteredUser registeredUser) {
+		this.registeredUser = registeredUser;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -42,6 +56,8 @@ public class RoleDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
+	
 	
 	
 	
