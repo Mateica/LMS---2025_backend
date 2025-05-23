@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import main.model.Evaluation;
+import main.model.EvaluationGrade;
 import main.model.File;
 import main.model.Student;
 import main.repository.EvaluationRepository;
@@ -30,13 +31,13 @@ public class FileService implements ServiceInterface<File> {
 	@Override
 	public Iterable<File> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.fileRepo.findAll();
 	}
 
 	@Override
 	public Page<File> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.fileRepo.findAll(pageable);
 	}
 
 	@Override
@@ -48,25 +49,32 @@ public class FileService implements ServiceInterface<File> {
 	@Override
 	public File create(File t) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.fileRepo.save(t);
 	}
 
 	@Override
 	public File update(File t) {
 		// TODO Auto-generated method stub
+		if(fileRepo.findById(t.getId()).isPresent()) {
+			return this.fileRepo.save(t);
+		}
 		return null;
 	}
 
 	@Override
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void softDelete(Long id) {
 		// TODO Auto-generated method stub
+        File f = findById(id).orElse(null);
 		
+		if(f != null) {
+			f.setActive(false);
+			fileRepo.save(f);
+		}
 	}
 	
 	public File upload(MultipartFile mpf, Long studentId, Long evalId, String description, String url) {
