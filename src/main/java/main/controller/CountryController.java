@@ -41,7 +41,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@GetMapping
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<CountryDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<CountryDTO> countries = new ArrayList<CountryDTO>();
@@ -60,6 +60,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 	
 	@Override
 	@GetMapping("/params")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Page<CountryDTO>> findAll(
 			@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -91,7 +92,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<CountryDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		ArrayList<PlaceDTO> places = new ArrayList<PlaceDTO>();
@@ -111,7 +112,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@PostMapping
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<CountryDTO> create(@RequestBody CountryDTO t) {
 		// TODO Auto-generated method stub
 		Country c = service.create(new Country(null,t.getName(), new ArrayList<Place>(), true));
@@ -124,7 +125,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@PutMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<CountryDTO> update(@RequestBody CountryDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		ArrayList<PlaceDTO> placesDTO = new ArrayList<PlaceDTO>();
@@ -158,7 +159,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@DeleteMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<CountryDTO> delete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -166,7 +167,7 @@ public class CountryController implements ControllerInterface<CountryDTO> {
 
 	@Override
 	@PutMapping("/softDelete/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<CountryDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		ArrayList<PlaceDTO> places = new ArrayList<PlaceDTO>();

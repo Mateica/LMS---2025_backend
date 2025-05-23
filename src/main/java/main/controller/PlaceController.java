@@ -37,7 +37,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@GetMapping
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<PlaceDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<PlaceDTO> places = new ArrayList<PlaceDTO>();
@@ -53,7 +53,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 	
 	@Override
 	@GetMapping("/params")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Page<PlaceDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -84,7 +84,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<PlaceDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Place p = service.findById(id).orElse(null);
@@ -101,7 +101,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@PostMapping
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<PlaceDTO> create(@RequestBody PlaceDTO t) {
 		// TODO Auto-generated method stub
 		Place p = service.create(new Place(null,t.getName(), 
@@ -117,7 +117,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@PutMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<PlaceDTO> update(@RequestBody PlaceDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Place p = service.findById(id).orElse(null);
@@ -141,7 +141,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@DeleteMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<PlaceDTO> delete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -149,7 +149,7 @@ public class PlaceController implements ControllerInterface<PlaceDTO> {
 
 	@Override
 	@PutMapping("/softDelete/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<PlaceDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Place p = service.findById(id).orElse(null);

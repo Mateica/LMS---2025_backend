@@ -47,6 +47,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 	
 	@Override
 	@GetMapping("")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<RegisteredUserDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<RegisteredUserDTO> users = new ArrayList<RegisteredUserDTO>();
@@ -60,7 +61,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 	
 	@Override
 	@GetMapping("/params")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Page<RegisteredUserDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -86,6 +87,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 
 	@Override
 	@GetMapping("/{id}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RegisteredUserDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		RegisteredUser user = service.findById(id).orElse(null);
@@ -98,6 +100,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 
 	@Override
 	@PostMapping("")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RegisteredUserDTO> create(@RequestBody RegisteredUserDTO t) {
 		// TODO Auto-generated method stub
 		RegisteredUser user = service.create(new RegisteredUser(null, t.getUsername(), t.getPassword(), t.getEmail(),
@@ -111,6 +114,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 
 	@Override
 	@PutMapping("/{id}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RegisteredUserDTO> update(@RequestBody RegisteredUserDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		RegisteredUser user = service.findById(id).orElse(null);
@@ -130,6 +134,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 
 	@Override
 	@DeleteMapping("/{id}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RegisteredUserDTO> delete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -137,6 +142,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 
 	@Override
 	@PutMapping("/softDelete/{id}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RegisteredUserDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		RegisteredUser user = service.findById(id).orElse(null);
@@ -151,6 +157,7 @@ public class RegisteredUserController implements ControllerInterface<RegisteredU
 	}
 	
 	@PutMapping("/updateProfile")
+	@Secured({"USER"})
 	public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profile){
 		RegisteredUser user = service.findByUsername(profile.getUsername());
 		
