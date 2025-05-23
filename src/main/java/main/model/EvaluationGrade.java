@@ -31,6 +31,9 @@ public class EvaluationGrade implements Serializable {
 	
 	@Column(nullable = false)
 	private LocalDateTime dateTimeEvaluated;
+	
+	@Column(nullable = false)
+	private Integer mark;
 
 	@Column(nullable = false)
 	private Boolean active;
@@ -41,12 +44,13 @@ public class EvaluationGrade implements Serializable {
 	}
 
 	public EvaluationGrade(Long id, Evaluation evaluation, Teacher teacher, LocalDateTime dateTimeEvaluated,
-			Boolean active) {
+			Integer mark, Boolean active) {
 		super();
 		this.id = id;
 		this.evaluation = evaluation;
 		this.teacher = teacher;
 		this.dateTimeEvaluated = dateTimeEvaluated;
+		this.mark = mark;
 		this.active = active;
 	}
 
@@ -82,6 +86,14 @@ public class EvaluationGrade implements Serializable {
 		this.dateTimeEvaluated = dateTimeEvaluated;
 	}
 
+	public Integer getMark() {
+		return mark;
+	}
+
+	public void setMark(Integer mark) {
+		this.mark = mark;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -93,4 +105,6 @@ public class EvaluationGrade implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	
 }

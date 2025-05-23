@@ -41,7 +41,7 @@ import main.service.StudentAffairsOfficeService;
 import main.service.StudentServiceStaffService;
 
 @RestController
-@RequestMapping("/api/studentService/staff")
+@RequestMapping("/api/studentServiceStaff")
 public class StudentServiceStaffController implements ControllerInterface<StudentServiceStaffDTO> {
 	@Autowired
 	private StudentServiceStaffService service;

@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	private FileService service;
 	
 	@GetMapping("/download/{id}")
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
 	    Optional<File> optionalFile = service.findById(id);
 
@@ -48,6 +50,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 
 	
 	@PostMapping("/upload")
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<String> upload(@RequestParam("file") MultipartFile mpf, 
 			@RequestParam("studentId") Long studentId, @RequestParam("evalId") Long evalId, 
 			@RequestParam("description") String description, @RequestParam("url") String url) {
@@ -61,30 +64,35 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<Iterable<FileDTO>> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<Page<FileDTO>> findAll(int page, int size, String sortBy, boolean ascending) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<FileDTO> findById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<FileDTO> create(FileDTO t) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<FileDTO> update(FileDTO t, Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -97,6 +105,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<FileDTO> softDelete(Long id) {
 		// TODO Auto-generated method stub
 		return null;

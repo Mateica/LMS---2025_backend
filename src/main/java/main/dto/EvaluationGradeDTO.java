@@ -10,6 +10,8 @@ public class EvaluationGradeDTO {
 	private TeacherDTO teacher;
 	
 	private LocalDateTime dateTimeEvaluated;
+	
+	private Integer mark;
 
 	private Boolean active;
 
@@ -19,12 +21,13 @@ public class EvaluationGradeDTO {
 	}
 
 	public EvaluationGradeDTO(Long id, EvaluationDTO evaluation, TeacherDTO teacher, LocalDateTime dateTimeEvaluated,
-			Boolean active) {
+			Integer mark, Boolean active) {
 		super();
 		this.id = id;
 		this.evaluation = evaluation;
 		this.teacher = teacher;
 		this.dateTimeEvaluated = dateTimeEvaluated;
+		this.mark = mark;
 		this.active = active;
 	}
 
@@ -60,6 +63,14 @@ public class EvaluationGradeDTO {
 		this.dateTimeEvaluated = dateTimeEvaluated;
 	}
 
+	public Integer getMark() {
+		return mark;
+	}
+
+	public void setMark(Integer mark) {
+		this.mark = mark;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -67,6 +78,7 @@ public class EvaluationGradeDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
 	
 	
 }

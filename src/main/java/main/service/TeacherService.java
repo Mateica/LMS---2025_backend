@@ -1,6 +1,7 @@
 package main.service;
 
 import java.awt.color.ProfileDataException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class TeacherService implements ServiceInterface<Teacher> {
 	
 	public Page<Teacher> findAll(Pageable pageable){
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<Teacher> findAllActive(){
+		return this.repo.findByActiveIsTrue();
 	}
 
 	@Override
