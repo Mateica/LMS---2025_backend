@@ -3,6 +3,7 @@ package main.controller;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,17 +22,22 @@ import main.dto.TitleDTO;
 import main.model.Address;
 import main.model.Country;
 import main.model.Department;
+import main.model.Examination;
 import main.model.Faculty;
 import main.model.File;
 import main.model.Place;
 import main.model.RegisteredUser;
 import main.model.Student;
+import main.model.StudentAffairsOffice;
+import main.model.StudentOnYear;
 import main.model.StudyProgramme;
+import main.model.SubjectAttendance;
 import main.model.Teacher;
 import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.Title;
 import main.model.University;
+import main.model.YearOfStudy;
 import main.service.ExportService;
 import main.service.StudentService;
 import main.service.TeacherService;
@@ -55,11 +61,11 @@ public class ExportController {
 					new RegisteredUser(t.getUser().getId(), t.getUser().getUsername(), null, t.getUser().getEmail(), null, null, null, t.getActive()),
 					t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), new ArrayList<Title>(), 
 					new ArrayList<TeacherOnRealization>(), 
-					new TeachingMaterial(t.getTeachingMaterial().getId(),
+					null, new TeachingMaterial(t.getTeachingMaterial().getId(),
 							t.getTeachingMaterial().getName(), new ArrayList<Teacher>(), t.getTeachingMaterial().getYearOfPublication(),
 							new File(t.getTeachingMaterial().getFile().getId(), t.getTeachingMaterial().getFile().getUrl(),
 									t.getTeachingMaterial().getFile().getDescription(), null, null, null,
-									t.getTeachingMaterial().getFile().getActive()), t.getTeachingMaterial().getActive()),
+									null, null, null, null, t.getTeachingMaterial().getFile().getActive()), t.getTeachingMaterial().getActive()),
 					new Department(t.getDepartment().getId(), t.getDepartment().getName(),
 							t.getDepartment().getDescription(), 
 							new Faculty(t.getDepartment().getFaculty().getId(), t.getDepartment().getFaculty().getName(),
@@ -79,7 +85,7 @@ public class ExportController {
 													t.getDepartment().getFaculty().getHeadmaster().getUser().getUsername(), null, 
 													t.getDepartment().getFaculty().getHeadmaster().getUser().getEmail(), null, null, null,
 													t.getDepartment().getFaculty().getHeadmaster().getActive()),
-											t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null) ,
+											t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null, null) ,
 									new University(t.getDepartment().getFaculty().getUniversity().getId(),
 											t.getDepartment().getFaculty().getUniversity().getName(),
 											t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -103,19 +109,19 @@ public class ExportController {
 													t.getDepartment().getFaculty().getUniversity().getRector().getLastName(), 
 													t.getDepartment().getFaculty().getUniversity().getRector().getUmcn(),
 													t.getDepartment().getFaculty().getUniversity().getRector().getBiography(),
-													null, null, null, null, null),
+													null, null, null, null, null, null),
 											t.getDepartment().getFaculty().getUniversity().getContactDetails(),
 											t.getDepartment().getFaculty().getUniversity().getDescription(),
 											new ArrayList<Faculty>(), t.getDepartment().getFaculty().getUniversity().getActive()),
 									t.getDepartment().getFaculty().getContactDetails(), 
 									t.getDepartment().getFaculty().getDescription(), new HashSet<Department>(),
-									new ArrayList<StudyProgramme>(), t.getDepartment().getFaculty().getActive()),
+									new ArrayList<StudyProgramme>(), null, null, t.getDepartment().getFaculty().getActive()),
 							new HashSet<Teacher>(),
 							new Teacher(t.getDepartment().getChief().getId(), 
 									new RegisteredUser(t.getDepartment().getChief().getUser().getId(), 
 											t.getDepartment().getChief().getUser().getUsername(), null, 
 											t.getDepartment().getChief().getUser().getEmail(), null, null, null, t.getDepartment().getChief().getActive()),
-									t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null),
+									t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null, null),
 							new HashSet<StudyProgramme>(), t.getDepartment().getActive()), t.getActive()));
 			
 			return new ResponseEntity<String>(xml, HttpStatus.OK);
@@ -132,11 +138,11 @@ public class ExportController {
 					new RegisteredUser(t.getUser().getId(), t.getUser().getUsername(), null, t.getUser().getEmail(), null, null, null, t.getActive()),
 					t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), new ArrayList<Title>(), 
 					new ArrayList<TeacherOnRealization>(), 
-					new TeachingMaterial(t.getTeachingMaterial().getId(),
+					null, new TeachingMaterial(t.getTeachingMaterial().getId(),
 							t.getTeachingMaterial().getName(), new ArrayList<Teacher>(), t.getTeachingMaterial().getYearOfPublication(),
 							new File(t.getTeachingMaterial().getFile().getId(), t.getTeachingMaterial().getFile().getUrl(),
 									t.getTeachingMaterial().getFile().getDescription(), null, null, null,
-									t.getTeachingMaterial().getFile().getActive()), t.getTeachingMaterial().getActive()),
+									null, null, null, null, t.getTeachingMaterial().getFile().getActive()), t.getTeachingMaterial().getActive()),
 					new Department(t.getDepartment().getId(), t.getDepartment().getName(),
 							t.getDepartment().getDescription(), 
 							new Faculty(t.getDepartment().getFaculty().getId(), t.getDepartment().getFaculty().getName(),
@@ -156,7 +162,7 @@ public class ExportController {
 													t.getDepartment().getFaculty().getHeadmaster().getUser().getUsername(), null, 
 													t.getDepartment().getFaculty().getHeadmaster().getUser().getEmail(), null, null, null,
 													t.getDepartment().getFaculty().getHeadmaster().getActive()),
-											t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null) ,
+											t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null, null) ,
 									new University(t.getDepartment().getFaculty().getUniversity().getId(),
 											t.getDepartment().getFaculty().getUniversity().getName(),
 											t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -180,19 +186,19 @@ public class ExportController {
 													t.getDepartment().getFaculty().getUniversity().getRector().getLastName(), 
 													t.getDepartment().getFaculty().getUniversity().getRector().getUmcn(),
 													t.getDepartment().getFaculty().getUniversity().getRector().getBiography(),
-													null, null, null, null, null),
+													null, null, null, null, null, null),
 											t.getDepartment().getFaculty().getUniversity().getContactDetails(),
 											t.getDepartment().getFaculty().getUniversity().getDescription(),
 											new ArrayList<Faculty>(), t.getDepartment().getFaculty().getUniversity().getActive()),
 									t.getDepartment().getFaculty().getContactDetails(), 
 									t.getDepartment().getFaculty().getDescription(), new HashSet<Department>(),
-									new ArrayList<StudyProgramme>(), t.getDepartment().getFaculty().getActive()),
+									new ArrayList<StudyProgramme>(), null, null, t.getDepartment().getFaculty().getActive()),
 							new HashSet<Teacher>(),
 							new Teacher(t.getDepartment().getChief().getId(), 
 									new RegisteredUser(t.getDepartment().getChief().getUser().getId(), 
 											t.getDepartment().getChief().getUser().getUsername(), null, 
 											t.getDepartment().getChief().getUser().getEmail(), null, null, null, t.getDepartment().getChief().getActive()),
-									t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null),
+									t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(), null, null, null, null, null, null),
 							new HashSet<StudyProgramme>(), t.getDepartment().getActive()), t.getActive()));
 			
 			return new ResponseEntity<byte[]>(pdf,HttpStatus.OK);
@@ -231,6 +237,38 @@ public class ExportController {
 	
 	@PostMapping(path = "/xml", params = "type=student", produces = "application/xml")
 	public ResponseEntity<String> exportStudentToXML(@RequestBody StudentDTO s) {
+		try {
+			HashSet<StudentOnYear> studentOnYears = new HashSet<StudentOnYear>();
+			ArrayList<SubjectAttendance> attendedCourses = new ArrayList<SubjectAttendance>();
+			
+			studentOnYears = (HashSet<StudentOnYear>) s.getStudentsOnYear().stream().map(soy -> 
+			new StudentOnYear(soy.getId(), soy.getDateOfApplication(),
+					new Student(null,
+							new RegisteredUser(soy.getStudent().getUser().getId(),
+									soy.getStudent().getUser().getUsername(),
+									soy.getStudent().getUser().getPassword(), null, null, null, null, soy.getStudent().getUser().getActive()),
+							soy.getStudent().getFirstName(), soy.getStudent().getLastName(), soy.getStudent().getUmcn(), 
+							new Address(),
+							new HashSet<StudentOnYear>(), new ArrayList<SubjectAttendance>(), 
+							new Faculty(),
+							soy.getStudent().getActive()), soy.getIndexNumber(),
+					new YearOfStudy(),
+					new ArrayList<Examination>(),
+					new StudentAffairsOffice(null, null, null, null),
+					soy.getActive()))
+					.collect(Collectors.toSet());
+			attendedCourses = (ArrayList<SubjectAttendance>) s.getSubjectAttendances().stream().map(a ->
+			new SubjectAttendance(null, 0, null, null, null)).collect(Collectors.toList());
+			
+			String xml = service.exportStudentToXML(new Student(null,
+					new RegisteredUser(),
+					s.getFirstName(), s.getLastName(), s.getUmcn(), 
+					new Address(),
+					studentOnYears, attendedCourses, 
+					new Faculty(), s.getActive()));
+		}catch(Exception e) {
+			
+		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
@@ -252,13 +290,25 @@ public class ExportController {
 	
     @PostMapping(path = "/pdf", params = "type=student", produces = "application/pdf")
 	public ResponseEntity<byte[]> exportStudentToPDF(@RequestBody StudentDTO s) {
+		try {
+			
+		}catch(Exception e) {
+			
+		}
 		return new ResponseEntity<byte[]>(HttpStatus.OK);
 	}
 	
 	
     @PostMapping(path = "/pdf", params = "type=students", produces = "application/pdf")
 	public ResponseEntity<ArrayList<byte[]>> exportStudentsToPDF(){
-		ArrayList<byte[]> pdfValues = new ArrayList<byte[]>();
+    	ArrayList<byte[]> pdfValues = new ArrayList<byte[]>();
+		for (Student student : studentService.findAll()) {
+            try {
+                pdfValues.add(service.exportStudentToPDF(student));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 		
 		return new ResponseEntity<ArrayList<byte[]>>(pdfValues, HttpStatus.OK);
 	}

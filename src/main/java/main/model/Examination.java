@@ -24,6 +24,9 @@ public class Examination {
 	@OneToMany(mappedBy = "examination")
 	private List<Note> notes = new ArrayList<Note>();
 	
+	@OneToMany(mappedBy = "examination")
+	private List<Evaluation> evaluations = new ArrayList<Evaluation>();
+	
 	@ManyToOne
 	private StudentOnYear studentOnYear;
 	
@@ -35,11 +38,13 @@ public class Examination {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Examination(Long id, double numberOfPoints, List<Note> notes, StudentOnYear studentOnYear, Boolean active) {
+	public Examination(Long id, double numberOfPoints, List<Note> notes, List<Evaluation> evaluations,
+			StudentOnYear studentOnYear, Boolean active) {
 		super();
 		this.id = id;
 		this.numberOfPoints = numberOfPoints;
 		this.notes = notes;
+		this.evaluations = evaluations;
 		this.studentOnYear = studentOnYear;
 		this.active = active;
 	}
@@ -68,6 +73,14 @@ public class Examination {
 		this.notes = notes;
 	}
 
+	public List<Evaluation> getEvaluations() {
+		return evaluations;
+	}
+
+	public void setEvaluations(List<Evaluation> evaluations) {
+		this.evaluations = evaluations;
+	}
+
 	public StudentOnYear getStudentOnYear() {
 		return studentOnYear;
 	}
@@ -83,5 +96,9 @@ public class Examination {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
+	
+	
+
 }
 

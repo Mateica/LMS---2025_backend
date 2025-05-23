@@ -92,7 +92,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 								new FileDTO(e.getEvaluationInstrument().getFile().getId(),
 										e.getEvaluationInstrument().getFile().getUrl(), 
 										e.getEvaluationInstrument().getFile().getDescription(),
-										null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+										null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 								e.getEvaluationInstrument().getActive()),
 						new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
 								null, null, e.getExamination().getActive()),
@@ -115,7 +115,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 								.stream()
 								.map(f -> 
 								new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-										null, null, null, f.getActive()))
+										null, null, null, null, null, null, null, f.getActive()))
 								.collect(Collectors.toList());
 				announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 						null, a.getTitle(), attachments, a.getActive()));
@@ -190,7 +190,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 								.stream()
 								.map(f -> 
 								new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-										null, null, null, f.getActive()))
+										null, null, null, null, null, null, null, f.getActive()))
 								.collect(Collectors.toList());
 				announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 						null, a.getTitle(), attachments, a.getActive()));
@@ -243,7 +243,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new FileDTO(e.getEvaluationInstrument().getFile().getId(),
 									e.getEvaluationInstrument().getFile().getUrl(), 
 									e.getEvaluationInstrument().getFile().getDescription(),
-									null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+									null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 							e.getEvaluationInstrument().getActive()),
 					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
 							null, null, e.getExamination().getActive()), null, e.getActive()));
@@ -265,7 +265,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, f.getActive()))
+									null, null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 					null, a.getTitle(), attachments, a.getActive()));
@@ -344,7 +344,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, f.getActive()))
+									null, null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 					null, a.getTitle(), attachments, a.getActive()));
@@ -396,7 +396,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new FileDTO(e.getEvaluationInstrument().getFile().getId(),
 									e.getEvaluationInstrument().getFile().getUrl(), 
 									e.getEvaluationInstrument().getFile().getDescription(),
-									null, null, null, e.getEvaluationInstrument().getFile().getActive()),
+									null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 							e.getEvaluationInstrument().getActive()),
 					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
 							null, null, e.getExamination().getActive()), null, e.getActive()));
@@ -418,7 +418,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, f.getActive()))
+									null, null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcementDTOs.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 					null, a.getTitle(), attachments, a.getActive()));
@@ -438,10 +438,10 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new File(edto.getEvaluationInstrument().getFile().getId(),
 									edto.getEvaluationInstrument().getFile().getUrl(), 
 									edto.getEvaluationInstrument().getFile().getDescription(),
-									null, null, null, edto.getEvaluationInstrument().getFile().getActive()),
+									null, null, null, null, null, null, null, edto.getEvaluationInstrument().getFile().getActive()),
 							edto.getEvaluationInstrument().getActive()),
 					new Examination(edto.getExamination().getId(), edto.getExamination().getNumberOfPoints(),
-							null, null, edto.getExamination().getActive()), null, edto.getActive()));
+							null, null, null, edto.getExamination().getActive()), null, null, edto.getActive()));
 		}
 		
 		for(TeacherOnRealizationDTO tdto : teacherOnRealizationDTOs) {
@@ -449,7 +449,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 					new Teacher(tdto.getTeacher().getId(), null,
 							tdto.getTeacher().getFirstName(), tdto.getTeacher().getLastName(),
 							tdto.getTeacher().getUmcn(), tdto.getTeacher().getBiography(), null, null, null, null,
-							tdto.getTeacher().getActive()),
+							null, tdto.getTeacher().getActive()),
 					null, null, tdto.getActive()));
 		}
 		
@@ -460,7 +460,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new File(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, f.getActive()))
+									null, null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcements.add(new Announcement(adto.getId(), adto.getTimePublished(), adto.getContent(),
 					null, adto.getTitle(), attachments, adto.getActive()));
@@ -550,7 +550,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new FileDTO(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, f.getActive()))
+									null, null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcements.add(new AnnouncementDTO(a.getId(), a.getTimePublished(), a.getContent(),
 					null, a.getTitle(), attachments, a.getActive()));

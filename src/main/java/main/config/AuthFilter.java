@@ -32,7 +32,7 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 		// TODO Auto-generated method stub
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		System.out.println(httpRequest.getServletPath());
-		if(httpRequest.getServletPath().contains("/api/auth")) {
+		if(httpRequest.getServletPath().contains("/api/auth") || httpRequest.getServletPath().contains("/api/files")) {
 			System.out.println("TEST1");
 			super.doFilter(request, response, chain);
 		}else {

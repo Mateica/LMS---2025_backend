@@ -15,6 +15,9 @@ public class File {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false)
+	private String name;
+	
 	@Lob
 	@Column(nullable = false)
 	private String url;
@@ -34,44 +37,55 @@ public class File {
 	@ManyToOne
 	private Announcement announcement;
 	
+	@ManyToOne
+	private Evaluation evaluation;
+	
+	@ManyToOne
+	private Student student;
+	
+	@Lob
+	//@Column(nullable = false)
+	private byte[] document;
+	
 	@Column(nullable = false)
 	private Boolean active;
-	
+
 	public File() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	
-
-
-
-	public File(Long id, String url, String description, ForumPost post, Message message, Announcement announcement,
-			Boolean active) {
+	public File(Long id, String name, String url, String description, ForumPost post, Message message,
+			Announcement announcement, Evaluation evaluation, Student student, byte[] document, Boolean active) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.url = url;
 		this.description = description;
 		this.post = post;
 		this.message = message;
 		this.announcement = announcement;
+		this.evaluation = evaluation;
+		this.student = student;
+		this.document = document;
 		this.active = active;
 	}
-
-
-
-
 
 	public Long getId() {
 		return id;
 	}
 
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getUrl() {
 		return url;
@@ -105,6 +119,38 @@ public class File {
 		this.message = message;
 	}
 
+	public Announcement getAnnouncement() {
+		return announcement;
+	}
+
+	public void setAnnouncement(Announcement announcement) {
+		this.announcement = announcement;
+	}
+
+	public Evaluation getEvaluation() {
+		return evaluation;
+	}
+
+	public void setEvaluation(Evaluation evaluation) {
+		this.evaluation = evaluation;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	public byte[] getDocument() {
+		return document;
+	}
+
+	public void setDocument(byte[] document) {
+		this.document = document;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -114,5 +160,5 @@ public class File {
 	}
 	
 	
-	
+
 }

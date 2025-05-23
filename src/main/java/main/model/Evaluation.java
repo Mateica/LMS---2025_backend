@@ -1,6 +1,8 @@
 package main.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -37,16 +40,20 @@ public class Evaluation {
 	@ManyToOne
 	private SubjectRealization subjectRealization;
 	
+	@OneToMany(mappedBy = "evaluation")
+	private List<EvaluationGrade> evaluationGrades = new ArrayList<EvaluationGrade>();
+	
 	@Column(nullable = false)
 	private Boolean active;
 
 	public Evaluation() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Evaluation(Long id, LocalDateTime startTime, LocalDateTime endTime, int numberOfPoints,
 			EvaluationType evaluationType, EvaluationInstrument evaluationInstrument, Examination examination,
-			SubjectRealization subjectRealization, Boolean active) {
+			SubjectRealization subjectRealization, List<EvaluationGrade> evaluationGrades, Boolean active) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -56,6 +63,7 @@ public class Evaluation {
 		this.evaluationInstrument = evaluationInstrument;
 		this.examination = examination;
 		this.subjectRealization = subjectRealization;
+		this.evaluationGrades = evaluationGrades;
 		this.active = active;
 	}
 
@@ -123,6 +131,14 @@ public class Evaluation {
 		this.subjectRealization = subjectRealization;
 	}
 
+	public List<EvaluationGrade> getEvaluationGrades() {
+		return evaluationGrades;
+	}
+
+	public void setEvaluationGrades(List<EvaluationGrade> evaluationGrades) {
+		this.evaluationGrades = evaluationGrades;
+	}
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -131,5 +147,5 @@ public class Evaluation {
 		this.active = active;
 	}
 
-	
+		
 }

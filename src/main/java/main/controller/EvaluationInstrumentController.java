@@ -44,7 +44,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 		for(EvaluationInstrument ei : service.findAll()) {
 			evaluationInstruments.add(new EvaluationInstrumentDTO(ei.getId(),ei.getName(),
 					new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-							null, null, null, ei.getFile().getActive()),
+							null, null, null, null, null, null, null, ei.getFile().getActive()),
 					ei.getActive()));
 		}
 		
@@ -68,7 +68,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	            ei.getId(),
 	            ei.getName(),
 	            new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, ei.getFile().getActive()),
+						null, null, null, null, null, null, null, ei.getFile().getActive()),
 	            ei.getActive()
 	        )
 	    ).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 		}
 		return new ResponseEntity<EvaluationInstrumentDTO>(new EvaluationInstrumentDTO(ei.getId(), ei.getName(),
 				new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
+						null, null, null, null, null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -99,14 +99,14 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	public ResponseEntity<EvaluationInstrumentDTO> create(EvaluationInstrumentDTO t) {
 		// TODO Auto-generated method stub
 		EvaluationInstrument ei = service.create(new EvaluationInstrument(null, t.getName(),null, new File(t.getFile().getId(), t.getFile().getUrl(), t.getFile().getDescription(),
-				null, null, null, t.getFile().getActive()), true));
+				null, null, null, null, null, null, null, t.getFile().getActive()), true));
 		
 		if(ei == null) {
 			return new ResponseEntity<EvaluationInstrumentDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<EvaluationInstrumentDTO>(new EvaluationInstrumentDTO(ei.getId(), ei.getName(),
 				new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, ei.getFile().getActive()), ei.getActive()), HttpStatus.CREATED);
+						null, null, null, null, null, null, null, ei.getFile().getActive()), ei.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -124,13 +124,13 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 		ei.setName(t.getName());
 		ei.setActive(t.getActive());
 		ei.setFile(new File(t.getFile().getId(), t.getFile().getUrl(), t.getFile().getDescription(),
-				null, null, null, t.getFile().getActive()));
+				null, null, null, null, null, null, null, t.getFile().getActive()));
 		
 		ei = service.update(ei);
 		
 		return new ResponseEntity<EvaluationInstrumentDTO>(new EvaluationInstrumentDTO(ei.getId(), ei.getName(),
 				new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
+						null, null, null, null, null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -156,6 +156,6 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 		
 		return new ResponseEntity<EvaluationInstrumentDTO>(new EvaluationInstrumentDTO(ei.getId(), ei.getName(),
 				new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
+						null, null, null, null, null, null, null, ei.getFile().getActive()),ei.getActive()), HttpStatus.OK);
 	}
 }

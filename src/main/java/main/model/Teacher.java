@@ -46,6 +46,9 @@ public class Teacher {
 	@OneToMany(mappedBy = "teacher")
 	private List<TeacherOnRealization> teachersOnRealization = new ArrayList<TeacherOnRealization>();
 	
+	@OneToMany(mappedBy = "teacher")
+	private List<EvaluationGrade> evaluationGrades = new ArrayList<EvaluationGrade>();
+	
 	@ManyToOne
 	private TeachingMaterial teachingMaterial;
 	
@@ -60,8 +63,9 @@ public class Teacher {
 	}
 
 	public Teacher(Long id, RegisteredUser user, String firstName, String lastName, String umcn, String biography,
-			List<Title> titles, List<TeacherOnRealization> teachersOnRealization, TeachingMaterial teachingMaterial,
-			Department department, Boolean active) {
+			List<Title> titles, List<TeacherOnRealization> teachersOnRealization,
+			List<EvaluationGrade> evaluationGrades, TeachingMaterial teachingMaterial, Department department,
+			Boolean active) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -71,6 +75,7 @@ public class Teacher {
 		this.biography = biography;
 		this.titles = titles;
 		this.teachersOnRealization = teachersOnRealization;
+		this.evaluationGrades = evaluationGrades;
 		this.teachingMaterial = teachingMaterial;
 		this.department = department;
 		this.active = active;
@@ -140,6 +145,14 @@ public class Teacher {
 		this.teachersOnRealization = teachersOnRealization;
 	}
 
+	public List<EvaluationGrade> getEvaluationGrades() {
+		return evaluationGrades;
+	}
+
+	public void setEvaluationGrades(List<EvaluationGrade> evaluationGrades) {
+		this.evaluationGrades = evaluationGrades;
+	}
+
 	public TeachingMaterial getTeachingMaterial() {
 		return teachingMaterial;
 	}
@@ -163,8 +176,6 @@ public class Teacher {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	
 	
 }
 
