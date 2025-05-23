@@ -19,19 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 import main.dto.StudentDTO;
 import main.dto.TeacherDTO;
 import main.dto.TitleDTO;
+import main.model.Account;
 import main.model.Address;
 import main.model.Country;
 import main.model.Department;
+import main.model.Evaluation;
 import main.model.Examination;
 import main.model.Faculty;
 import main.model.File;
+import main.model.ForumUser;
+import main.model.Outcome;
 import main.model.Place;
 import main.model.RegisteredUser;
+import main.model.Role;
 import main.model.Student;
 import main.model.StudentAffairsOffice;
 import main.model.StudentOnYear;
+import main.model.StudentServiceStaff;
 import main.model.StudyProgramme;
+import main.model.Subject;
 import main.model.SubjectAttendance;
+import main.model.SubjectRealization;
 import main.model.Teacher;
 import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
@@ -246,28 +254,156 @@ public class ExportController {
 					new Student(null,
 							new RegisteredUser(soy.getStudent().getUser().getId(),
 									soy.getStudent().getUser().getUsername(),
-									soy.getStudent().getUser().getPassword(), null, null, null, null, soy.getStudent().getUser().getActive()),
+									soy.getStudent().getUser().getPassword(), s.getUser().getEmail(),
+									null, new ArrayList<Account>(),
+									new HashSet<Role>(), soy.getStudent().getUser().getActive()),
 							soy.getStudent().getFirstName(), soy.getStudent().getLastName(), soy.getStudent().getUmcn(), 
-							new Address(),
+							new Address(soy.getStudent().getAddress().getId(),
+									soy.getStudent().getAddress().getStreet(), 
+									soy.getStudent().getAddress().getHouseNumber(), 
+									new Place(soy.getStudent().getAddress().getPlace().getId(),
+											soy.getStudent().getAddress().getPlace().getName(),
+											new Country(soy.getStudent().getAddress().getPlace().getCountry().getId(),
+													soy.getStudent().getAddress().getPlace().getCountry().getName(),
+													new ArrayList<Place>(), 
+													soy.getStudent().getAddress().getPlace().getCountry().getActive()), 
+											soy.getStudent().getAddress().getPlace().getActive()),
+									soy.getStudent().getAddress().getActive()),
 							new HashSet<StudentOnYear>(), new ArrayList<SubjectAttendance>(), 
 							new Faculty(),
 							soy.getStudent().getActive()), soy.getIndexNumber(),
-					new YearOfStudy(),
+					new YearOfStudy(soy.getYearOfStudy().getId(), 
+							soy.getYearOfStudy().getYearOfStudy(),
+							new ArrayList<Subject>(), soy.getYearOfStudy().getActive()),
 					new ArrayList<Examination>(),
-					new StudentAffairsOffice(null, null, null, null),
+					null,
 					soy.getActive()))
 					.collect(Collectors.toSet());
 			attendedCourses = (ArrayList<SubjectAttendance>) s.getSubjectAttendances().stream().map(a ->
-			new SubjectAttendance(null, 0, null, null, null)).collect(Collectors.toList());
+			new SubjectAttendance(a.getId(), a.getFinalGrade(),
+					new SubjectRealization(a.getSubjectRealization().getId(), null,
+							null,
+							null,
+							new Subject(a.getSubjectRealization().getSubject().getId(),
+									a.getSubjectRealization().getSubject().getName(),
+									a.getSubjectRealization().getSubject().getEcts(),
+									a.getSubjectRealization().getSubject().isCompulsory(),
+									a.getSubjectRealization().getSubject().getNumberOfClasses(),
+									a.getSubjectRealization().getSubject().getNumberOfPractices(),
+									a.getSubjectRealization().getSubject().getOtherTypesOfClasses(),
+									a.getSubjectRealization().getSubject().getResearchWork(),
+									a.getSubjectRealization().getSubject().getClassesLeft(),
+									a.getSubjectRealization().getSubject().getNumberOfSemesters(),
+									new YearOfStudy(a.getSubjectRealization().getSubject().getYearOfStudy().getId(),
+											a.getSubjectRealization().getSubject().getYearOfStudy().getYearOfStudy(),
+											null, a.getSubjectRealization().getSubject().getYearOfStudy().getActive()),
+									new ArrayList<Outcome>(),
+									new ArrayList<SubjectRealization>(),
+									null, a.getSubjectRealization().getSubject().getActive()),
+							a.getSubjectRealization().getActive()),
+					new Student(a.getStudent().getId(), null,
+							a.getStudent().getFirstName(), 
+							a.getStudent().getLastName(),
+							a.getStudent().getUmcn(),
+							new Address(a.getStudent().getAddress().getId(), a.getStudent().getAddress().getStreet(),
+									a.getStudent().getAddress().getHouseNumber(), null, a.getStudent().getAddress().getActive()),
+							new HashSet<StudentOnYear>(), new ArrayList<SubjectAttendance>(), 
+							new Faculty(a.getStudent().getFaculty().getId(),
+									a.getStudent().getFaculty().getName(),
+									new Address(a.getStudent().getFaculty().getAddress().getId(),
+											a.getStudent().getFaculty().getAddress().getStreet(),
+											a.getStudent().getFaculty().getAddress().getHouseNumber(), null, 
+											a.getStudent().getFaculty().getAddress().getActive()),
+									new Teacher(a.getStudent().getFaculty().getHeadmaster().getId(), null,
+											a.getStudent().getFaculty().getHeadmaster().getFirstName(),
+											a.getStudent().getFaculty().getHeadmaster().getLastName(),
+											a.getStudent().getFaculty().getHeadmaster().getUmcn(),
+											a.getStudent().getFaculty().getHeadmaster().getBiography(),
+											null, null, null, null, null, a.getStudent().getFaculty().getHeadmaster().getActive()),
+									new University(a.getStudent().getFaculty().getUniversity().getId(),
+											a.getStudent().getFaculty().getName(), a.getStudent().getFaculty().getUniversity().getDateEstablished(),
+											new Address(a.getStudent().getFaculty().getUniversity().getAddress().getId(),
+													a.getStudent().getFaculty().getUniversity().getAddress().getStreet(),
+													a.getStudent().getFaculty().getUniversity().getAddress().getHouseNumber(), null, 
+													a.getStudent().getFaculty().getUniversity().getAddress().getActive()), 
+											new Teacher(a.getStudent().getFaculty().getUniversity().getRector().getId(), null,
+															a.getStudent().getFaculty().getUniversity().getRector().getFirstName(),
+															a.getStudent().getFaculty().getUniversity().getRector().getLastName(),
+															a.getStudent().getFaculty().getUniversity().getRector().getUmcn(),
+															a.getStudent().getFaculty().getUniversity().getRector().getBiography(),
+															null, null, null, null, null, 
+															a.getStudent().getFaculty().getUniversity().getRector().getActive()),
+											null, null, null,
+											a.getStudent().getFaculty().getUniversity().getRector().getActive()),
+									a.getStudent().getFaculty().getContactDetails(),
+									a.getStudent().getFaculty().getDescription(),
+									new HashSet<Department>(),
+									new ArrayList<StudyProgramme>(),
+									new ArrayList<Student>(),
+									new StudentAffairsOffice(a.getStudent().getFaculty().getStudentAffairsOffice().getId(),
+											new ArrayList<StudentServiceStaff>(), null, a.getStudent().getFaculty().getStudentAffairsOffice().getActive()),
+									a.getStudent().getFaculty().getActive()),
+							a.getStudent().getActive()),
+					a.getActive()))
+					.collect(Collectors.toList());
+			
+			
 			
 			String xml = service.exportStudentToXML(new Student(null,
-					new RegisteredUser(),
+					new RegisteredUser(null, s.getUser().getUsername(), s.getUser().getPassword(), s.getUser().getEmail(), null, 
+							new ArrayList<Account>(),
+							new HashSet<Role>(), s.getUser().getActive()),
 					s.getFirstName(), s.getLastName(), s.getUmcn(), 
-					new Address(),
+					new Address(s.getAddress().getId(),
+							s.getAddress().getStreet(),
+							s.getAddress().getHouseNumber(), 
+							new Place(s.getAddress().getPlace().getId(), s.getAddress().getPlace().getName(), 
+									new Country(s.getAddress().getPlace().getCountry().getId(),
+											s.getAddress().getPlace().getCountry().getName(),
+											new ArrayList<Place>(),
+											s.getAddress().getPlace().getCountry().getActive()), 
+									s.getAddress().getPlace().getCountry().getActive()), 
+							s.getAddress().getActive()),
 					studentOnYears, attendedCourses, 
-					new Faculty(), s.getActive()));
+					new Faculty(s.getFaculty().getId(),
+							s.getFaculty().getName(),
+							new Address(s.getFaculty().getAddress().getId(),
+									s.getFaculty().getAddress().getStreet(),
+									s.getFaculty().getAddress().getHouseNumber(), null, 
+									s.getFaculty().getAddress().getActive()),
+							new Teacher(s.getFaculty().getHeadmaster().getId(), null,
+									s.getFaculty().getHeadmaster().getFirstName(),
+									s.getFaculty().getHeadmaster().getLastName(),
+									s.getFaculty().getHeadmaster().getUmcn(),
+									s.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null,
+									s.getFaculty().getHeadmaster().getActive()),
+							new University(s.getFaculty().getUniversity().getId(),
+									s.getFaculty().getName(), s.getFaculty().getUniversity().getDateEstablished(),
+									new Address(s.getFaculty().getUniversity().getAddress().getId(),
+											s.getFaculty().getUniversity().getAddress().getStreet(),
+											s.getFaculty().getUniversity().getAddress().getHouseNumber(), null, 
+											s.getFaculty().getUniversity().getAddress().getActive()), 
+									new Teacher(s.getFaculty().getUniversity().getRector().getId(), null,
+											s.getFaculty().getUniversity().getRector().getFirstName(),
+											s.getFaculty().getUniversity().getRector().getLastName(),
+											s.getFaculty().getUniversity().getRector().getUmcn(),
+											s.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													s.getFaculty().getUniversity().getRector().getActive()),
+									null, null, null,
+									s.getFaculty().getUniversity().getRector().getActive()),
+							s.getFaculty().getContactDetails(),
+							s.getFaculty().getDescription(),
+							new HashSet<Department>(),
+							new ArrayList<StudyProgramme>(),
+							new ArrayList<Student>(),
+							new StudentAffairsOffice(s.getFaculty().getStudentAffairsOffice().getId(),
+									new ArrayList<StudentServiceStaff>(), null, s.getFaculty().getStudentAffairsOffice().getActive()),
+							s.getFaculty().getActive()), s.getActive()));
+			return new ResponseEntity<String>(xml,HttpStatus.OK);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
@@ -291,9 +427,65 @@ public class ExportController {
     @PostMapping(path = "/pdf", params = "type=student", produces = "application/pdf")
 	public ResponseEntity<byte[]> exportStudentToPDF(@RequestBody StudentDTO s) {
 		try {
+			HashSet<StudentOnYear> studentOnYears = new HashSet<StudentOnYear>();
+			ArrayList<SubjectAttendance> attendedCourses = new ArrayList<SubjectAttendance>();
 			
+			byte[] pdf = service.exportStudentToPDF(new Student(null,
+					new RegisteredUser(null, s.getUser().getUsername(), s.getUser().getPassword(), s.getUser().getEmail(), null, 
+							new ArrayList<Account>(),
+							new HashSet<Role>(), s.getUser().getActive()),
+					s.getFirstName(), s.getLastName(), s.getUmcn(), 
+					new Address(s.getAddress().getId(),
+							s.getAddress().getStreet(),
+							s.getAddress().getHouseNumber(), 
+							new Place(s.getAddress().getPlace().getId(), s.getAddress().getPlace().getName(), 
+									new Country(s.getAddress().getPlace().getCountry().getId(),
+											s.getAddress().getPlace().getCountry().getName(),
+											new ArrayList<Place>(),
+											s.getAddress().getPlace().getCountry().getActive()), 
+									s.getAddress().getPlace().getCountry().getActive()), 
+							s.getAddress().getActive()),
+					studentOnYears, attendedCourses, 
+					new Faculty(s.getFaculty().getId(),
+							s.getFaculty().getName(),
+							new Address(s.getFaculty().getAddress().getId(),
+									s.getFaculty().getAddress().getStreet(),
+									s.getFaculty().getAddress().getHouseNumber(), null, 
+									s.getFaculty().getAddress().getActive()),
+							new Teacher(s.getFaculty().getHeadmaster().getId(), null,
+									s.getFaculty().getHeadmaster().getFirstName(),
+									s.getFaculty().getHeadmaster().getLastName(),
+									s.getFaculty().getHeadmaster().getUmcn(),
+									s.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null,
+									s.getFaculty().getHeadmaster().getActive()),
+							new University(s.getFaculty().getUniversity().getId(),
+									s.getFaculty().getName(), s.getFaculty().getUniversity().getDateEstablished(),
+									new Address(s.getFaculty().getUniversity().getAddress().getId(),
+											s.getFaculty().getUniversity().getAddress().getStreet(),
+											s.getFaculty().getUniversity().getAddress().getHouseNumber(), null, 
+											s.getFaculty().getUniversity().getAddress().getActive()), 
+									new Teacher(s.getFaculty().getUniversity().getRector().getId(), null,
+											s.getFaculty().getUniversity().getRector().getFirstName(),
+											s.getFaculty().getUniversity().getRector().getLastName(),
+											s.getFaculty().getUniversity().getRector().getUmcn(),
+											s.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													s.getFaculty().getUniversity().getRector().getActive()),
+									null, null, null,
+									s.getFaculty().getUniversity().getRector().getActive()),
+							s.getFaculty().getContactDetails(),
+							s.getFaculty().getDescription(),
+							new HashSet<Department>(),
+							new ArrayList<StudyProgramme>(),
+							new ArrayList<Student>(),
+							new StudentAffairsOffice(s.getFaculty().getStudentAffairsOffice().getId(),
+									new ArrayList<StudentServiceStaff>(), null, s.getFaculty().getStudentAffairsOffice().getActive()),
+							s.getFaculty().getActive()), s.getActive()));
+			
+			return new ResponseEntity<byte[]>(pdf,HttpStatus.OK);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return new ResponseEntity<byte[]>(HttpStatus.OK);
 	}
