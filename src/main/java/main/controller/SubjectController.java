@@ -364,7 +364,7 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 	}
 
 	@Override
-	@PutMapping("/deleted/{id}")
+	@PutMapping("/softDelete/{id}")
 	@Secured({"ADMIN"})
 	public ResponseEntity<SubjectDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

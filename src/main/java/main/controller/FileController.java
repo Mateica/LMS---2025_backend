@@ -52,7 +52,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 			@RequestParam("studentId") Long studentId, @RequestParam("evalId") Long evalId, 
 			@RequestParam("description") String description, @RequestParam("url") String url) {
 		File file = service.upload(mpf, studentId, evalId, description, url);
-		System.out.println("sdsad");
+
 		if(file == null) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}

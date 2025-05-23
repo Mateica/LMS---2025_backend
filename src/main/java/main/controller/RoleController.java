@@ -43,7 +43,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@GetMapping("")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<RoleDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<RoleDTO> roles = new ArrayList<RoleDTO>();
@@ -57,7 +57,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 	
 	@Override
 	@GetMapping("/params")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<Page<RoleDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -77,7 +77,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RoleDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -90,7 +90,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@PostMapping("")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RoleDTO> create(@RequestBody RoleDTO t) {
 		// TODO Auto-generated method stub
 		Role r = service.create(new Role(t.getId(), t.getName(), t.getActive()));
@@ -103,7 +103,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@PutMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RoleDTO> update(@RequestBody RoleDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -122,7 +122,7 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@DeleteMapping("/{id}")
-	@Secured("{ADMIN}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RoleDTO> delete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);
@@ -136,8 +136,8 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 	}
 
 	@Override
-	@PutMapping("/deleted/{id}")
-	@Secured("{ADMIN}")
+	@PutMapping("/softDelete/{id}")
+	@Secured({"ADMIN"})
 	public ResponseEntity<RoleDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Role r = service.findById(id).orElse(null);

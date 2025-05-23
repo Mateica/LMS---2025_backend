@@ -1,5 +1,6 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ public class StudentServiceStaffService implements ServiceInterface<StudentServi
 	public Page<StudentServiceStaff> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<StudentServiceStaff> findAllActive(){
+		return this.repo.findByActiveIsTrue();
 	}
 
 	@Override
