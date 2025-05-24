@@ -171,7 +171,7 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 
 	    Page<StudentAffairsOfficeDTO> resultPage = new PageImpl<>(officeDTOs, pageable, officePage.getTotalElements());
 
-	    return new ResponseEntity<>(resultPage, HttpStatus.OK);
+	    return new ResponseEntity<Page<StudentAffairsOfficeDTO>>(resultPage, HttpStatus.OK);
 	}
 	
 	@GetMapping("/active")
@@ -418,6 +418,8 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 						n.getFirstName(),
 						n.getLastName(), null, n.getActive()))
 				.collect(Collectors.toList());
+		
+		service.softDelete(id);
 		
 		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(
 	            o.getId(),       

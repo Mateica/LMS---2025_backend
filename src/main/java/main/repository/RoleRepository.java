@@ -1,6 +1,9 @@
 package main.repository;
 
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,4 +17,8 @@ public interface RoleRepository extends CrudRepository<Role, Long>, PagingAndSor
 	public void softDelete(Long id);
 	
 	public Role findByName(String name);
+	
+	public Set<Role> findByUserId(Long id);
+	
+	public List<Role> findByActiveIsTrue();
 }

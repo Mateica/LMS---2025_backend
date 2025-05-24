@@ -36,6 +36,10 @@ public class UniversityService implements ServiceInterface<University> {
 	public University findByFaculty(Faculty faculty) {
 		return this.repo.findByFaculty(faculty);
 	}
+	
+	public University findByFacultyId(Long id) {
+		return this.repo.findByFacultyId(id);
+	}
 
 	@Override
 	public Optional<University> findById(Long id) {

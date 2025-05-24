@@ -1,6 +1,8 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,14 @@ public class RoleService implements ServiceInterface<Role> {
 	public Page<Role> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<Role> findAllActive(){
+		return this.repo.findByActiveIsTrue();
+	}
+	
+	public Set<Role> findByUserId(Long id){
+		return this.repo.findByUserId(id);
 	}
 
 	@Override

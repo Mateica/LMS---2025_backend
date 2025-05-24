@@ -1,5 +1,6 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ public class StudentOnYearService implements ServiceInterface<StudentOnYear> {
 	public Iterable<StudentOnYear> findAll() {
 		// TODO Auto-generated method stub
 		return this.repo.findAll();
+	}
+	
+	public List<StudentOnYear> findAllActive() {
+		// TODO Auto-generated method stub
+		return this.repo.findByActiveIsTrue();
 	}
 
 	@Override

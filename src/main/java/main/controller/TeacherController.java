@@ -321,6 +321,8 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 						 n.getActive()))
 				.collect(Collectors.toList());
 		
+		service.softDelete(id);
+		
 		return new ResponseEntity<TeacherDTO>(new TeacherDTO(s.getId(), 
 				new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),
 				s.getFirstName(), s.getLastName(),  s.getUmcn(), s.getBiography(),

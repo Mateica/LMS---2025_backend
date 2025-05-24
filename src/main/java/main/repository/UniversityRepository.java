@@ -16,5 +16,6 @@ public interface UniversityRepository extends CrudRepository<University, Long>, 
 	public void softDelete(Long id);
 	
 	public University findByFaculty(Faculty faculty);
-	public List<Faculty> findByActiveIsTrue();
+	public University findByFacultyId(Long id);
+	public List<University> findByActiveIsTrue();
 }

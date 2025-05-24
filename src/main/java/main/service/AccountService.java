@@ -1,5 +1,6 @@
 package main.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,14 @@ public class AccountService implements ServiceInterface<Account> {
 	public Page<Account> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
+	}
+	
+	public List<Account> findByUserId(Long id){
+		return this.repo.findByRegisteredUserId(id);
+	}
+	
+	public List<Account> findAllActive(){
+		return this.repo.findByActiveIsTrue();
 	}
 
 	@Override

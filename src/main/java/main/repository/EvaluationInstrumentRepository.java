@@ -1,5 +1,7 @@
 package main.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,4 +13,6 @@ import main.model.EvaluationInstrument;
 public interface EvaluationInstrumentRepository extends CrudRepository<EvaluationInstrument, Long>, PagingAndSortingRepository<EvaluationInstrument, Long> {
 	@Query("UPDATE EvaluationInstrument t SET t.active = false WHERE t.id = :id")
 	public void softDelete(Long id);
+	
+	public List<EvaluationInstrument> findByActiveIsTrue();
 }
