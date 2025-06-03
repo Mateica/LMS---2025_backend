@@ -1,5 +1,10 @@
 package main.model;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +36,18 @@ public class TitleType {
 		this.active = active;
 	}
 
-
+	
+	public Resource toRDF() {
+		Model model = (Model) ModelFactory.createDefaultModel();
+		Resource titleTypeResource = model.createResource("http://tt/titleTypes/titleType/"+id)
+				.addProperty(RDF.type, "http://tt/titleTypes/Doctor")
+				.addProperty(model.createProperty("http://tt/titleTypes/id"), String.valueOf(id))
+				.addProperty(model.createProperty("http://tt/titleTypes/name"), name)
+				.addProperty(model.createProperty("http://tt/titleTypes/active"), String.valueOf(active));
+		
+		
+		return titleTypeResource;
+	}
 
 	public Long getId() {
 		return id;

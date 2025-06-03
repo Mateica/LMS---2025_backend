@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import main.model.Examination;
 import main.repository.ExaminationRepository;
 
@@ -39,12 +40,14 @@ public class ExaminationService implements ServiceInterface<Examination> {
 	}
 
 	@Override
+	@Transactional
 	public Examination create(Examination t) {
 		// TODO Auto-generated method stub
 		return this.repo.save(t);
 	}
 
 	@Override
+	@Transactional
 	public Examination update(Examination t) {
 		// TODO Auto-generated method stub
 		if(repo.findById(t.getId()).isPresent()) {
@@ -60,6 +63,7 @@ public class ExaminationService implements ServiceInterface<Examination> {
 	}
 
 	@Override
+	@Transactional
 	public void softDelete(Long id) {
 		// TODO Auto-generated method stub
 		Examination e = repo.findById(id).orElse(null);

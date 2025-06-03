@@ -31,7 +31,9 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
 											.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-											.requestMatchers("/api/auth/**", "/api/accounts/**", "/api/files/**").permitAll()
+											.requestMatchers("/api/auth/**", "/api/accounts/**", 
+													"/api/files/**", "/api/roles/**",
+													"/api/evaluations/**").permitAll()
 											.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(this.getAuthenticationFilterBean(conf), UsernamePasswordAuthenticationFilter.class)

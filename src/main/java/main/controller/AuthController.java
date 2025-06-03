@@ -17,6 +17,7 @@ import main.dto.RegisteredUserDTO;
 import main.dto.TokenDTO;
 import main.dto.LoginDTO;
 import main.model.RegisteredUser;
+import main.model.Role;
 import main.service.AuthService;
 import main.service.RegisteredUserService;
 import main.util.TokenUtils;
@@ -70,6 +71,9 @@ public class AuthController {
 		
 		String jwt = tokenUtils.generateToken(userDetailsService.loadUserByUsername(user.getUsername()));
 		TokenDTO token = new TokenDTO(jwt);
+		for(Role role : user.getRoles()) {
+			token.getRoles().add(role.getName());
+		}
 		System.out.println(jwt);
 		return new ResponseEntity<TokenDTO>(token, HttpStatus.OK);
 	}

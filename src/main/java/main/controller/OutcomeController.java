@@ -102,7 +102,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 								staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 								null, null,null,
-								null, t.getActive()));
+								null, null, t.getActive()));
 					}
 				}
 				
@@ -110,7 +110,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 						new RegisteredUserDTO(t.getUser().getUsername(), null, t.getUser().getEmail()),
 						t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(),
 						teacherTitles, null,
-						null, new DepartmentDTO(t.getDepartment().getId(), 
+						null, null, new DepartmentDTO(t.getDepartment().getId(), 
 								t.getDepartment().getName(),
 								t.getDepartment().getDescription(),
 								new FacultyDTO(t.getDepartment().getFaculty().getId(),
@@ -132,7 +132,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 												t.getDepartment().getFaculty().getHeadmaster().getLastName(),
 												t.getDepartment().getFaculty().getHeadmaster().getUmcn(),
 												t.getDepartment().getFaculty().getHeadmaster().getBiography(), new ArrayList<TitleDTO>(),
-												null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
+												null, null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
 										new UniversityDTO(t.getDepartment().getFaculty().getUniversity().getId(),
 												t.getDepartment().getFaculty().getUniversity().getName(),
 												t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -162,7 +162,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 										t.getDepartment().getChief().getLastName(),
 										t.getDepartment().getChief().getUmcn(),
 										t.getDepartment().getChief().getBiography(),
-										null, null, null, null, t.getDepartment().getChief().getActive()),
+										null, null, null, null, null, t.getDepartment().getChief().getActive()),
 								new HashSet<StudyProgrammeDTO>(), 
 								t.getDepartment().getActive()),
 						t.getActive()));
@@ -219,7 +219,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 								new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 								staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 								null, null,null,
-								null, t.getActive()));
+								null, null, t.getActive()));
 					}
 				}
 				
@@ -227,7 +227,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 						new RegisteredUserDTO(t.getUser().getUsername(), null, t.getUser().getEmail()),
 						t.getFirstName(), t.getLastName(), t.getUmcn(), t.getBiography(),
 						teacherTitles, null,
-						null, new DepartmentDTO(t.getDepartment().getId(), 
+						null, null, new DepartmentDTO(t.getDepartment().getId(), 
 								t.getDepartment().getName(),
 								t.getDepartment().getDescription(),
 								new FacultyDTO(t.getDepartment().getFaculty().getId(),
@@ -249,7 +249,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 												t.getDepartment().getFaculty().getHeadmaster().getLastName(),
 												t.getDepartment().getFaculty().getHeadmaster().getUmcn(),
 												t.getDepartment().getFaculty().getHeadmaster().getBiography(), new ArrayList<TitleDTO>(),
-												null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
+												null, null, null, null, t.getDepartment().getFaculty().getHeadmaster().getActive()),
 										new UniversityDTO(t.getDepartment().getFaculty().getUniversity().getId(),
 												t.getDepartment().getFaculty().getUniversity().getName(),
 												t.getDepartment().getFaculty().getUniversity().getDateEstablished(),
@@ -279,7 +279,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 										t.getDepartment().getChief().getLastName(),
 										t.getDepartment().getChief().getUmcn(),
 										t.getDepartment().getChief().getBiography(),
-										null, null, null, null, t.getDepartment().getChief().getActive()),
+										null, null, null, null, null, t.getDepartment().getChief().getActive()),
 								new HashSet<StudyProgrammeDTO>(), 
 								t.getDepartment().getActive()),
 						t.getActive()));
@@ -342,7 +342,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							null, t.getActive()));
+							null, null, t.getActive()));
 					}
 				}
 			}
@@ -416,7 +416,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							null, t.getActive()));
+							null, null, t.getActive()));
 					}
 				}
 			}
@@ -522,7 +522,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 							new RegisteredUserDTO(staff.getUser().getUsername(), null, staff.getUser().getEmail()),
 							staff.getFirstName(), staff.getLastName(), staff.getUmcn(), staff.getBiography(),
 							null, null,null,
-							null, t.getActive()));
+							null, null, t.getActive()));
 					}
 				}
 			}

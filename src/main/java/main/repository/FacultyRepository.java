@@ -21,5 +21,5 @@ public interface FacultyRepository extends CrudRepository<Faculty, Long>, Paging
 	public List<Faculty> findByUniversity(University university);
 	public List<Faculty> findByActiveIsTrue();
 	public Faculty findByStudentAffairsOffice(StudentAffairsOffice office);
-	public Faculty findByDepartmentId(Long id);
+	
 }

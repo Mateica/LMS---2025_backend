@@ -8,51 +8,45 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import main.model.Faculty;
-import main.model.University;
-import main.repository.UniversityRepository;
+import main.model.Evaluation;
+import main.repository.EvaluationRepository;
 
 @Service
-public class UniversityService implements ServiceInterface<University> {
+public class EvaluationService implements ServiceInterface<Evaluation> {
 	@Autowired
-	private UniversityRepository repo;
-	
+	private EvaluationRepository repo;
+
 	@Override
-	public Iterable<University> findAll() {
+	public Iterable<Evaluation> findAll() {
 		// TODO Auto-generated method stub
 		return this.repo.findAll();
 	}
 
 	@Override
-	public Page<University> findAll(Pageable pageable) {
+	public Page<Evaluation> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
 	}
 	
-	public List<University> findAllActive(){
+	public List<Evaluation> findAllActive(){
 		return this.repo.findByActiveIsTrue();
 	}
-	
-	
 
 	@Override
-	public Optional<University> findById(Long id) {
+	public Optional<Evaluation> findById(Long id) {
 		// TODO Auto-generated method stub
-		return this.repo.findById(id);
+		return Optional.empty();
 	}
 
 	@Override
-	public University create(University t) {
+	public Evaluation create(Evaluation t) {
 		// TODO Auto-generated method stub
-		return this.repo.save(t);
+		return null;
 	}
 
 	@Override
-	public University update(University t) {
+	public Evaluation update(Evaluation t) {
 		// TODO Auto-generated method stub
-		if(repo.findById(t.getId()).isPresent()) {
-			this.repo.save(t);
-		}
 		return null;
 	}
 
@@ -65,11 +59,7 @@ public class UniversityService implements ServiceInterface<University> {
 	@Override
 	public void softDelete(Long id) {
 		// TODO Auto-generated method stub
-		University et = findById(id).orElse(null);
 		
-		if(et != null) {
-			et.setActive(false);
-			repo.save(et);
-		}
 	}
+	
 }

@@ -441,9 +441,9 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
 				.collect(Collectors.toList());
 		
 		s.setDateOfApplication(t.getDateOfApplication());
-		s.setStudent();
+//		s.setStudent();
 		s.setIndexNumber(t.getIndexNumber());
-		s.setYearOfStudy();
+//		s.setYearOfStudy();
 		s.setExaminations(exams);
 		
 		

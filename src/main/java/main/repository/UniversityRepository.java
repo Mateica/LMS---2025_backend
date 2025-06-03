@@ -15,7 +15,6 @@ public interface UniversityRepository extends CrudRepository<University, Long>, 
 	@Query("UPDATE Faculty t SET t.active = false WHERE t.id = :id")
 	public void softDelete(Long id);
 	
-	public University findByFaculty(Faculty faculty);
-	public University findByFacultyId(Long id);
+	
 	public List<University> findByActiveIsTrue();
 }

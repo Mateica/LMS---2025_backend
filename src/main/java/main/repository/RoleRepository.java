@@ -18,7 +18,7 @@ public interface RoleRepository extends CrudRepository<Role, Long>, PagingAndSor
 	
 	public Role findByName(String name);
 	
-	public Set<Role> findByUserId(Long id);
+	public Set<Role> findByRegisteredUsersId(Long id);
 	
 	public List<Role> findByActiveIsTrue();
 }

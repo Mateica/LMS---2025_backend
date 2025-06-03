@@ -43,7 +43,6 @@ public class RoleController implements ControllerInterface<RoleDTO> {
 
 	@Override
 	@GetMapping("")
-	@Secured({"ADMIN"})
 	public ResponseEntity<Iterable<RoleDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<RoleDTO> roles = new ArrayList<RoleDTO>();

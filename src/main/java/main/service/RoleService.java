@@ -42,7 +42,7 @@ public class RoleService implements ServiceInterface<Role> {
 	}
 	
 	public Set<Role> findByUserId(Long id){
-		return this.repo.findByUserId(id);
+		return this.repo.findByRegisteredUsersId(id);
 	}
 
 	@Override

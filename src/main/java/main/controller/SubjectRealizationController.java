@@ -95,8 +95,8 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 										null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 								e.getEvaluationInstrument().getActive()),
 						new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
-								null, null, e.getExamination().getActive()),
-						null, e.getActive()));
+								null, null, null, e.getExamination().getActive()),
+						null, null, e.getActive()));
 			}
 			
 			for(TeacherOnRealization t : s.getTeachersOnRealization()) {
@@ -104,7 +104,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 						new TeacherDTO(t.getTeacher().getId(), null,
 								t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
 								t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
-								t.getTeacher().getActive()),
+								null, t.getTeacher().getActive()),
 						null, null, t.getActive()));
 			}
 			
@@ -171,7 +171,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 								new ArrayList<EvaluationDTO>(), 
 								e.getEvaluationType().getActive()),
 						new EvaluationInstrumentDTO(),
-						new ExaminationDTO(), null, e.getActive()));
+						new ExaminationDTO(), null, null, e.getActive()));
 			}
 			
 			for(TeacherOnRealization t : s.getTeachersOnRealization()) {
@@ -179,7 +179,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 						new TeacherDTO(t.getTeacher().getId(), null,
 								t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
 								t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
-								t.getTeacher().getActive()),
+								null, t.getTeacher().getActive()),
 						null, null, t.getActive()));
 			}
 			
@@ -246,7 +246,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 									null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 							e.getEvaluationInstrument().getActive()),
 					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
-							null, null, e.getExamination().getActive()), null, e.getActive()));
+							null, null, null, e.getExamination().getActive()), null, null, e.getActive()));
 		}
 		
 		for(TeacherOnRealization t : s.getTeachersOnRealization()) {
@@ -254,7 +254,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 					new TeacherDTO(t.getTeacher().getId(), null,
 							t.getTeacher().getFirstName(), t.getTeacher().getLastName(),
 							t.getTeacher().getUmcn(), t.getTeacher().getBiography(), null, null, null, null,
-							t.getTeacher().getActive()),
+							null, t.getTeacher().getActive()),
 					null, null, t.getActive()));
 		}
 		
@@ -325,7 +325,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new ArrayList<EvaluationDTO>(), 
 							e.getEvaluationType().getActive()),
 					new EvaluationInstrumentDTO(),
-					new ExaminationDTO(), null, e.getActive()));
+					new ExaminationDTO(), null, null, e.getActive()));
 		}
 		
 		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
@@ -333,7 +333,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 					new TeacherDTO(tor.getTeacher().getId(), null,
 							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
 							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
-							tor.getTeacher().getActive()),
+							null, tor.getTeacher().getActive()),
 					null, null, tor.getActive()));
 		}
 		
@@ -399,7 +399,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 									null, null, null, null, null, null, null, e.getEvaluationInstrument().getFile().getActive()),
 							e.getEvaluationInstrument().getActive()),
 					new ExaminationDTO(e.getExamination().getId(), e.getExamination().getNumberOfPoints(),
-							null, null, e.getExamination().getActive()), null, e.getActive()));
+							null, null, null, e.getExamination().getActive()), null, null, e.getActive()));
 		}
 		
 		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
@@ -407,7 +407,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 					new TeacherDTO(tor.getTeacher().getId(), null,
 							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
 							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
-							tor.getTeacher().getActive()),
+							null, tor.getTeacher().getActive()),
 					null, null, tor.getActive()));
 		}
 		
@@ -531,7 +531,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new ArrayList<EvaluationDTO>(), 
 							e.getEvaluationType().getActive()),
 					new EvaluationInstrumentDTO(),
-					new ExaminationDTO(), null, e.getActive()));
+					new ExaminationDTO(), null, null, e.getActive()));
 		}
 		
 		for(TeacherOnRealization tor : s.getTeachersOnRealization()) {
@@ -539,7 +539,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 					new TeacherDTO(tor.getTeacher().getId(), null,
 							tor.getTeacher().getFirstName(), tor.getTeacher().getLastName(),
 							tor.getTeacher().getUmcn(), tor.getTeacher().getBiography(), null, null, null, null,
-							tor.getTeacher().getActive()),
+							null, tor.getTeacher().getActive()),
 					null, null, tor.getActive()));
 		}
 		

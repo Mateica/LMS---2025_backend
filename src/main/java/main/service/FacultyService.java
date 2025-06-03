@@ -50,9 +50,6 @@ public class FacultyService implements ServiceInterface<Faculty> {
 		return this.repo.findById(id);
 	}
 	
-	public Faculty findByDepartmentId(Long id) {
-		return this.repo.findByDepartmentId(id);
-	}
 
 	@Override
 	public Faculty create(Faculty t) {

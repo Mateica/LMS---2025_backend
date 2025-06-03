@@ -1178,7 +1178,7 @@ public class StudentController implements ControllerInterface<StudentDTO> {
 											new ArrayList<TeacherOnRealization>(), 
 											new ArrayList<EvaluationGrade>(), null, null,
 											dto.getStudent().getFaculty().getHeadmaster().getActive()),
-									universityService.findByFacultyId(dto.getStudent().getFaculty().getId()),
+									facultyService.findById(dto.getStudent().getFaculty().getId()).get().getUniversity(),
 									dto.getStudent().getFaculty().getContactDetails(),
 									dto.getStudent().getFaculty().getDescription(),
 									new HashSet<Department>(),

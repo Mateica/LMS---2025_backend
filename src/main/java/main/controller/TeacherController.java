@@ -269,7 +269,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 		s.setDepartment(new Department(s.getDepartment().getId(),
 				s.getDepartment().getName(),
 				s.getDepartment().getDescription(), 
-				facultyService.findByDepartmentId(s.getDepartment().getId()),
+				s.getDepartment().getFaculty(),
 				new HashSet<Teacher>(), 
 				service.findByDepartmentId(s.getDepartment().getId()),
 				new HashSet<StudyProgramme>(),
