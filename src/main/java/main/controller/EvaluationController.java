@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +63,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@GetMapping
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT"})
 	public ResponseEntity<Iterable<EvaluationDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
@@ -97,6 +99,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@GetMapping("/params")
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT"})
 	public ResponseEntity<Page<EvaluationDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -139,6 +142,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 	}
 	
 	@GetMapping("/active")
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT"})
 	public ResponseEntity<Iterable<EvaluationDTO>> findAllActive(){
 		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
 		
@@ -174,6 +178,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@GetMapping("/{id}")
+	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT"})
 	public ResponseEntity<EvaluationDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Evaluation e = service.findById(id).orElse(null);
@@ -210,6 +215,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@PostMapping
+	@Secured({"ADMIN","TEACHER"})
 	public ResponseEntity<EvaluationDTO> create(@RequestBody EvaluationDTO t) {
 		// TODO Auto-generated method stub
 		Evaluation e = service.create(new Evaluation(null, t.getStartTime(), t.getEndTime(), t.getNumberOfPoints(),
@@ -251,6 +257,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@PutMapping("/{id}")
+	@Secured({"ADMIN","TEACHER"})
 	public ResponseEntity<EvaluationDTO> update(@RequestBody EvaluationDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Evaluation e = service.findById(id).orElse(null);
@@ -307,6 +314,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 
 	@Override
 	@PutMapping("/softDelete/{id}")
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<EvaluationDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Evaluation e = service.findById(id).orElse(null);

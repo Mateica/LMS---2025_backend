@@ -8,6 +8,10 @@ import javax.security.auth.Subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -28,6 +32,7 @@ import main.dto.FacultyDTO;
 import main.dto.NoteDTO;
 import main.dto.PlaceDTO;
 import main.dto.RegisteredUserDTO;
+import main.dto.StudentAffairsOfficeDTO;
 import main.dto.StudentDTO;
 import main.dto.StudentOnYearDTO;
 import main.dto.SubjectDTO;
@@ -37,6 +42,7 @@ import main.model.Examination;
 import main.model.Note;
 import main.model.RegisteredUser;
 import main.model.Student;
+import main.model.StudentAffairsOffice;
 import main.model.StudentOnYear;
 import main.model.YearOfStudy;
 import main.service.StudentOnYearService;
@@ -212,7 +218,83 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 		// TODO Auto-generated method stub
-		return null;
+		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(page, size, sort);
+
+	    Page<StudentOnYear> studentPage = service.findAll(pageable);
+	    
+	    List<StudentOnYearDTO> studentDTOs = studentPage.stream().map(s ->{
+	    	List<ExaminationDTO> exams = (ArrayList<ExaminationDTO>) s.getExaminations()
+					.stream()
+					.map(e -> 
+					new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+							new ArrayList<NoteDTO>(),
+							new ArrayList<EvaluationDTO>(),
+							new StudentOnYearDTO(e.getStudentOnYear().getId(),
+									e.getStudentOnYear().getDateOfApplication(),
+									new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+											new RegisteredUserDTO(e.getStudentOnYear().getStudent().getUser().getUsername(),
+													null, e.getStudentOnYear().getStudent().getUser().getEmail()),
+											e.getStudentOnYear().getStudent().getFirstName(),
+											e.getStudentOnYear().getStudent().getLastName(),
+											e.getStudentOnYear().getStudent().getUmcn(),
+											null, null, null, null,
+											e.getStudentOnYear().getStudent().getActive()),
+									e.getStudentOnYear().getIndexNumber(),
+									new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+											e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
+											new ArrayList<SubjectDTO>(),
+											e.getStudentOnYear().getYearOfStudy().getActive()),
+									null, null,
+									e.getStudentOnYear().getActive()),
+							e.getActive()))
+					.collect(Collectors.toList());
+	    	
+	    	return new StudentOnYearDTO(s.getId(),
+					s.getDateOfApplication(),
+					new StudentDTO(s.getStudent().getId(),
+							new RegisteredUserDTO(s.getStudent().getUser().getUsername(),
+									null, s.getStudent().getUser().getEmail()),
+							s.getStudent().getFirstName(),
+							s.getStudent().getLastName(),
+							s.getStudent().getUmcn(),
+							new AddressDTO(s.getStudent().getAddress().getId(),
+									s.getStudent().getAddress().getStreet(),
+									s.getStudent().getAddress().getHouseNumber(),
+									new PlaceDTO(s.getStudent().getAddress().getPlace().getId(),
+											s.getStudent().getAddress().getPlace().getName(),
+											new CountryDTO(s.getStudent().getAddress().getPlace().getCountry().getId(),
+													s.getStudent().getAddress().getPlace().getCountry().getName(),
+													null, s.getStudent().getAddress().getPlace().getCountry().getActive()),
+											s.getStudent().getAddress().getPlace().getActive()),
+									s.getStudent().getAddress().getActive()),
+							null, null, 
+							new FacultyDTO(s.getStudent().getFaculty().getId(),
+									s.getStudent().getFaculty().getName(),
+									new AddressDTO(s.getStudent().getFaculty().getAddress().getId(),
+											s.getStudent().getFaculty().getAddress().getStreet(),
+											s.getStudent().getFaculty().getAddress().getHouseNumber(),
+											new PlaceDTO(s.getStudent().getFaculty().getAddress().getPlace().getId(),
+													s.getStudent().getFaculty().getAddress().getPlace().getName(),
+													new CountryDTO(s.getStudent().getFaculty().getAddress().getPlace().getCountry().getId(),
+															s.getStudent().getFaculty().getAddress().getPlace().getCountry().getName(),
+															null, s.getStudent().getFaculty().getAddress().getPlace().getCountry().getActive()),
+													s.getStudent().getFaculty().getAddress().getPlace().getActive()),
+											s.getStudent().getFaculty().getAddress().getActive()), null, null, null, null, null, null, null, null, null),
+							s.getStudent().getFaculty().getActive()),
+					s.getIndexNumber(),
+					new YearOfStudyDTO(s.getYearOfStudy().getId(),
+							s.getYearOfStudy().getYearOfStudy(),
+							new ArrayList<SubjectDTO>(),
+							s.getYearOfStudy().getActive()),
+					exams, null,
+					s.getActive());
+	    	
+	    }).collect(Collectors.toList());
+	    
+	    Page<StudentOnYearDTO> resultPage = new PageImpl<>(studentDTOs, pageable, studentPage.getTotalElements());
+		
+		return new ResponseEntity<Page<StudentOnYearDTO>>(resultPage, HttpStatus.OK);
 	}
 
 	@Override
@@ -299,10 +381,10 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
 	public ResponseEntity<StudentOnYearDTO> create(@RequestBody StudentOnYearDTO t) {
 		// TODO Auto-generated method stub
 		StudentOnYear s = service.create(new StudentOnYear(null, t.getDateOfApplication(),
-				new Student(null, null, null, null, null, null, null, null, null, null),
+				service.findById(t.getId()).get().getStudent(),
 				t.getIndexNumber(), 
-				new YearOfStudy(null, null, null, null),
-				new ArrayList<Examination>(), null, true));
+				service.findById(t.getId()).get().getYearOfStudy(),
+				service.findById(t.getId()).get().getExaminations(), null, true));
 		
 		if(s == null) {
 			return new ResponseEntity<StudentOnYearDTO>(HttpStatus.NOT_FOUND);
@@ -441,9 +523,9 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
 				.collect(Collectors.toList());
 		
 		s.setDateOfApplication(t.getDateOfApplication());
-//		s.setStudent();
+		s.setStudent(service.findById(t.getId()).get().getStudent());
 		s.setIndexNumber(t.getIndexNumber());
-//		s.setYearOfStudy();
+		s.setYearOfStudy(service.findById(t.getId()).get().getYearOfStudy());
 		s.setExaminations(exams);
 		
 		
