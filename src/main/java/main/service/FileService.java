@@ -39,6 +39,10 @@ public class FileService implements ServiceInterface<File> {
 		// TODO Auto-generated method stub
 		return this.fileRepo.findAll(pageable);
 	}
+	
+	public Iterable<File> findAllActive(){
+		return this.fileRepo.findByActiveIsTrue();
+	}
 
 	@Override
 	public Optional<File> findById(Long id) {
