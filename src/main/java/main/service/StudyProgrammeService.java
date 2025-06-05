@@ -27,6 +27,10 @@ public class StudyProgrammeService implements ServiceInterface<StudyProgramme> {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
 	}
+	
+	public Iterable<StudyProgramme> findAllActive(){
+		return this.repo.findByActiveIsTrue();
+	}
 
 	@Override
 	public Optional<StudyProgramme> findById(Long id) {

@@ -51,7 +51,7 @@ public class StudentService implements ServiceInterface<Student>{
 			return this.repo.save(t);
 		}
 		
-		throw new RuntimeException("No student with such ID!");
+		return null;
 	}
 
 	@Override
@@ -69,8 +69,6 @@ public class StudentService implements ServiceInterface<Student>{
 			s.setActive(false);
 			repo.save(s);
 		}
-		
-		throw new RuntimeException("No student with such ID!");
 	}
 	
 	
