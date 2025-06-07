@@ -18,8 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,6 +80,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@GetMapping
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<Iterable<FileDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -94,6 +97,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@GetMapping("/params")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<Page<FileDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -118,6 +122,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	    return new ResponseEntity<Page<FileDTO>>(resultPage, HttpStatus.OK);
 	}
 	
+	@GetMapping("/active")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<Iterable<FileDTO>> findAllActive() {
 		// TODO Auto-generated method stub
@@ -135,6 +140,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	
 
 	@Override
+	@GetMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<FileDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
@@ -151,6 +157,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@PostMapping
 	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<FileDTO> create(@RequestBody FileDTO t) {
 		// TODO Auto-generated method stub
@@ -172,6 +179,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@PutMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF", "STUDENT", "USER"})
 	public ResponseEntity<FileDTO> update(@RequestBody FileDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
@@ -208,6 +216,7 @@ public class FileController implements ControllerInterface<FileDTO> {
 	}
 
 	@Override
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<FileDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

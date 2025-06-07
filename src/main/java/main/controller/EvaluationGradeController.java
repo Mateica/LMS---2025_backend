@@ -14,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -146,6 +149,7 @@ public class EvaluationGradeController implements ControllerInterface<Evaluation
 	}
 
 	@Override
+	@PostMapping
 	@Secured({"ADMIN","TEACHER"})
 	public ResponseEntity<EvaluationGradeDTO> create(@RequestBody EvaluationGradeDTO t) {
 		// TODO Auto-generated method stub
@@ -172,6 +176,7 @@ public class EvaluationGradeController implements ControllerInterface<Evaluation
 	}
 
 	@Override
+	@PutMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<EvaluationGradeDTO> update(@RequestBody EvaluationGradeDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
@@ -208,6 +213,7 @@ public class EvaluationGradeController implements ControllerInterface<Evaluation
 	}
 
 	@Override
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<EvaluationGradeDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

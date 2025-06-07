@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,7 +57,7 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	@Override
 	@GetMapping("")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<Iterable<SubjectDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
@@ -126,10 +127,49 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	    return new ResponseEntity<Page<SubjectDTO>>(resultPage, HttpStatus.OK);
 	}
+	
+	@GetMapping("/active")
+	@Secured({"ADMIN","TEACHER","STAFF"})
+	public ResponseEntity<Iterable<SubjectDTO>> findAllActive() {
+		// TODO Auto-generated method stub
+		ArrayList<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
+		
+		for(Subject s : service.findAllActive()) {
+			if(s.getPrerequisite() != null) {
+				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
+						s.isCompulsory(),
+						s.getNumberOfClasses(), s.getNumberOfPractices(),
+						s.getOtherTypesOfClasses(), 
+						s.getResearchWork(),
+						s.getClassesLeft(),
+						s.getNumberOfSemesters(),
+						new YearOfStudyDTO(s.getYearOfStudy().getId(), s.getYearOfStudy().getYearOfStudy(),null, s.getYearOfStudy().getActive()),
+						new ArrayList<OutcomeDTO>(),
+						new ArrayList<SubjectRealizationDTO>(),
+						new SubjectDTO(s.getPrerequisite().getId(), s.getPrerequisite().getName(),s.getPrerequisite().getEcts(),
+								s.getPrerequisite().getActive()),
+						s.getActive()));
+			}else {
+				subjects.add(new SubjectDTO(s.getId(), s.getName(),s.getEcts(), 
+						s.isCompulsory(), s.getNumberOfClasses(), s.getNumberOfPractices(),
+						s.getOtherTypesOfClasses(), 
+						s.getResearchWork(),
+						s.getClassesLeft(),
+						s.getNumberOfSemesters(),
+						new YearOfStudyDTO(),
+						new ArrayList<OutcomeDTO>(),
+						new ArrayList<SubjectRealizationDTO>(),
+						new SubjectDTO(),
+						s.getActive()));
+			}
+		}
+		
+		return new ResponseEntity<Iterable<SubjectDTO>>(subjects, HttpStatus.OK);
+	}
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<SubjectDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Subject s = service.findById(id).orElse(null);
@@ -154,7 +194,7 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	@Override
 	@PostMapping("")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<SubjectDTO> create(@RequestBody SubjectDTO t) {
 		// TODO Auto-generated method stub
 		Subject s = service.create(new Subject(t.getId(), t.getName(),t.getEcts(), 
@@ -194,7 +234,7 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 
 	@Override
 	@PutMapping("/{id}")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Subject s = service.findById(id).orElse(null);
@@ -364,8 +404,8 @@ public class SubjectController implements ControllerInterface<SubjectDTO> {
 	}
 
 	@Override
-	@PutMapping("/softDelete/{id}")
-	@Secured({"ADMIN"})
+	@PatchMapping("/{id}")
+	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<SubjectDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Subject s = service.findById(id).orElse(null);

@@ -26,6 +26,11 @@ public class SubjectService implements ServiceInterface<Subject> {
 		// TODO Auto-generated method stub
 		return this.repo.findAll(pageable);
 	}
+	
+	public Iterable<Subject> findAllActive() {
+		// TODO Auto-generated method stub
+		return this.repo.findByActiveIsTrue();
+	}
 
 	@Override
 	public Optional<Subject> findById(Long id) {

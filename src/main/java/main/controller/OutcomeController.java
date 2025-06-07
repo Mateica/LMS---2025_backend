@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,7 +78,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	private EducationGoalService educationGoalService;
 
 	@Override
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","TEACHER"})
 	@GetMapping
 	public ResponseEntity<Iterable<OutcomeDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -187,7 +188,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	
 	@Override
 	@GetMapping("/params")
-	@Secured("ADMIN")
+	@Secured({"ADMIN","TEACHER"})
 	public ResponseEntity<Page<OutcomeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -313,7 +314,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 		
 
 	@Override
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","TEACHER"})
 	@GetMapping("/{id}")
 	public ResponseEntity<OutcomeDTO> findById(Long id) {
 		// TODO Auto-generated method stub
@@ -436,7 +437,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PutMapping("/{id}")
 	public ResponseEntity<OutcomeDTO> update(OutcomeDTO t, Long id) {
 		// TODO Auto-generated method stub
@@ -494,7 +495,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 
 	@Override
 	@Secured({"ADMIN"})
-	@PutMapping("/softDelete/{id}")
+	@PatchMapping("/{id}")
 	public ResponseEntity<OutcomeDTO> softDelete(Long id) {
 		// TODO Auto-generated method stub
 		Outcome o = service.findById(id).orElse(null);

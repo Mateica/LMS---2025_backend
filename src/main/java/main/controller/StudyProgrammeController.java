@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +48,7 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 
 	@Override
 	@GetMapping
+	@Secured({"USER","STAFF","STUDENT","TEACHER"})
 	public ResponseEntity<Iterable<StudyProgrammeDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<StudyProgrammeDTO> studyProgrammes = new ArrayList<StudyProgrammeDTO>();
@@ -99,6 +102,7 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 
 	@Override
 	@GetMapping("/params")
+	@Secured({"USER","STAFF","STUDENT","TEACHER"})
 	public ResponseEntity<Page<StudyProgrammeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -158,6 +162,7 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 	}
 	
 	@GetMapping("/active")
+	@Secured({"USER","STAFF","STUDENT","TEACHER"})
 	public ResponseEntity<Iterable<StudyProgrammeDTO>> findAllActive() {
 		// TODO Auto-generated method stub
 		ArrayList<StudyProgrammeDTO> studyProgrammes = new ArrayList<StudyProgrammeDTO>();
@@ -210,6 +215,8 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 	}
 
 	@Override
+	@GetMapping("/{id}")
+	@Secured({"USER","STAFF","STUDENT","TEACHER"})
 	public ResponseEntity<StudyProgrammeDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		StudyProgramme sp = service.findById(id).orElse(null);
@@ -320,6 +327,7 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 	}
 
 	@Override
+	@PutMapping("/{id}")
 	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<StudyProgrammeDTO> update(@RequestBody StudyProgrammeDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
@@ -390,6 +398,7 @@ public class StudyProgrammeController implements ControllerInterface<StudyProgra
 	}
 
 	@Override
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<StudyProgrammeDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

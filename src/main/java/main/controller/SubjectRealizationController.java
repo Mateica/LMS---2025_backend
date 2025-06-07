@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,7 +71,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 
 	@Override
 	@GetMapping("")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN", "TEACHER", "STUDENT", "STAFF"})
 	public ResponseEntity<Iterable<SubjectRealizationDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<SubjectRealizationDTO> subjectRealizations = new ArrayList<SubjectRealizationDTO>();
@@ -146,7 +147,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	
 	@Override
 	@GetMapping("/params")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN", "TEACHER", "STUDENT", "STAFF"})
 	public ResponseEntity<Page<SubjectRealizationDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -218,7 +219,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN", "TEACHER", "STUDENT", "STAFF"})
 	public ResponseEntity<SubjectRealizationDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		SubjectRealization s = service.findById(id).orElse(null);
@@ -283,7 +284,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 
 	@Override
 	@PostMapping("")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<SubjectRealizationDTO> create(@RequestBody SubjectRealizationDTO t) {
 		// TODO Auto-generated method stub
 		SubjectRealization s = service.create(new SubjectRealization(null,
@@ -362,7 +363,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 
 	@Override
 	@PutMapping("/{id}")
-	@Secured({"ADMIN"})
+	@Secured({"ADMIN","STAFF"})
 	public ResponseEntity<SubjectRealizationDTO> update(@RequestBody SubjectRealizationDTO t, @PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		SubjectRealization s = service.findById(id).orElse(null);
@@ -508,7 +509,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 	}
 
 	@Override
-	@PutMapping("/softDelete/{id}")
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN"})
 	public ResponseEntity<SubjectRealizationDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

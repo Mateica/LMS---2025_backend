@@ -87,12 +87,10 @@ public class RoleService implements ServiceInterface<Role> {
 		// TODO Auto-generated method stub
 		Role r = repo.findById(id).orElse(null);
 		
-		if(r == null) {
-			throw new RuntimeException("Uloga ne postoji!");
+		if(r != null) {
+			r.setActive(false);
+			repo.save(r);
 		}
-		
-		r.setActive(false);
-		repo.save(r);
 		
 	}
 	

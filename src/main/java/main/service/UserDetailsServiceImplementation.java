@@ -20,13 +20,17 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 	private RegisteredUserService service;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	
 		// TODO Auto-generated method stub
 		RegisteredUser user = service.findByUsername(username);
 		
+		
 		if(user != null) {
+			System.out.println("PROVERA " +user.getEmail());
 			ArrayList<GrantedAuthority> prava = new ArrayList<GrantedAuthority>();
 			
 			for(Role r : user.getRoles()) {
+				System.out.println(r.getName());
 				prava.add(new SimpleGrantedAuthority(r.getName()));
 			}
 			

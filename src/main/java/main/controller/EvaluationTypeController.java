@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.sound.midi.Patch;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +37,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	private EvaluationTypeService service;
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER", "STAFF"})
 	@GetMapping
 	public ResponseEntity<Iterable<EvaluationTypeDTO>> findAll() {
 		// TODO Auto-generated method stub
@@ -48,7 +51,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 	
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@GetMapping("/params")
 	public ResponseEntity<Page<EvaluationTypeDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -73,7 +76,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@GetMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> findById(Long id) {
 		// TODO Auto-generated method stub
@@ -86,7 +89,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PostMapping
 	public ResponseEntity<EvaluationTypeDTO> create(EvaluationTypeDTO t) {
 		// TODO Auto-generated method stub
@@ -99,7 +102,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@PutMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> update(EvaluationTypeDTO t, Long id) {
 		// TODO Auto-generated method stub
@@ -119,7 +122,7 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
+	@Secured({"ADMIN", "TEACHER"})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> delete(Long id) {
 		// TODO Auto-generated method stub
@@ -127,8 +130,8 @@ public class EvaluationTypeController implements ControllerInterface<EvaluationT
 	}
 
 	@Override
-	@Secured({"ADMIN, TEACHER"})
-	@PutMapping("/softDelete/{id}")
+	@Secured({"ADMIN", "TEACHER"})
+	@PatchMapping("/{id}")
 	public ResponseEntity<EvaluationTypeDTO> softDelete(Long id) {
 		// TODO Auto-generated method stub
 		EvaluationType et = service.findById(id).orElse(null);

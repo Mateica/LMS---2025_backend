@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -313,7 +314,7 @@ public class UniversityController implements ControllerInterface<UniversityDTO> 
 	}
 
 	@Override
-	@PutMapping("/{id}")
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN"})
 	public ResponseEntity<UniversityDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

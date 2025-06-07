@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -74,6 +75,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 							null, e.getEvaluationType().getActive()), 
 					new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
 							e.getEvaluationInstrument().getName(), 
+							e.getEvaluationInstrument().getFile() != null ?
 							new FileDTO(e.getEvaluationInstrument().getFile().getId(),
 									e.getEvaluationInstrument().getFile().getName(),
 									e.getEvaluationInstrument().getFile().getUrl(),
@@ -91,7 +93,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 											e.getEvaluationInstrument().getFile().getStudent().getLastName(),
 											e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
 									e.getEvaluationInstrument().getFile().getDocument(),
-									e.getEvaluationInstrument().getFile().getActive()), null),
+									e.getEvaluationInstrument().getFile().getActive()) : null, null),
 					null, null, null, null));
 		}
 		return new ResponseEntity<Iterable<EvaluationDTO>>(evaluations, HttpStatus.OK);
@@ -313,7 +315,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
 	}
 
 	@Override
-	@PutMapping("/softDelete/{id}")
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN","TEACHER","STAFF"})
 	public ResponseEntity<EvaluationDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

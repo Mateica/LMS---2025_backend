@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -79,7 +80,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	
 	@Override
 	@GetMapping
-	@Secured({"ADMIN", "STAFF"})
+	@Secured({"ADMIN", "STAFF", "TEACHER", "STUDENT"})
 	public ResponseEntity<Iterable<TeacherDTO>> findAll() {
 		// TODO Auto-generated method stub
 		ArrayList<TeacherDTO> teachers = new ArrayList<TeacherDTO>();
@@ -107,7 +108,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	}
 
 	@Override
-	@Secured({"ADMIN", "STAFF"})
+	@Secured({"ADMIN", "STAFF", "TEACHER", "STUDENT"})
 	@GetMapping("/params")
 	public ResponseEntity<Page<TeacherDTO>> findAll(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -135,7 +136,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	}
 	
 	@GetMapping("/active")
-	@Secured({"ADMIN", "STAFF"})
+	@Secured({"ADMIN", "STAFF", "TEACHER", "STUDENT"})
 	public ResponseEntity<Iterable<TeacherDTO>> findAllActive() {
 		// TODO Auto-generated method stub
 		ArrayList<TeacherDTO> teachers = new ArrayList<TeacherDTO>();
@@ -164,7 +165,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 
 	@Override
 	@GetMapping("/{id}")
-	@Secured({"ADMIN", "STAFF"})
+	@Secured({"ADMIN", "STAFF", "TEACHER", "STUDENT"})
 	public ResponseEntity<TeacherDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
 		Teacher s = service.findById(id).orElse(null);
@@ -296,7 +297,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 	}
 
 	@Override
-	@PutMapping("/softDelete/{id}")
+	@PatchMapping("/{id}")
 	@Secured({"ADMIN"})
 	public ResponseEntity<TeacherDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub

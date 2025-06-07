@@ -28,29 +28,32 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		System.out.println(httpRequest.getServletPath());
-		if(httpRequest.getServletPath().contains("/api/auth") || httpRequest.getServletPath().contains("/api/files")
-				|| httpRequest.getServletPath().contains("/api/roles") || httpRequest.getServletPath().contains("/api/evaluations")) {
-			System.out.println("TEST1");
-			super.doFilter(request, response, chain);
-		}else {
-			System.out.println("TEST2");
-		String token = ((HttpServletRequest) request).getHeader("Authorization");
-		
-		if(tokenUtils.isTokenExpired(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
-			String username = tokenUtils.getUsername(token);
-			UserDetails user = userDetailsService.loadUserByUsername(username);
-			ArrayList<GrantedAuthority> prava = new ArrayList<GrantedAuthority>();
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getUsername(),null, 
-					user.getAuthorities());
-			authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(((HttpServletRequest) request)));
-			SecurityContextHolder.getContext().setAuthentication(authToken);		
-		}
-		
-		super.doFilter(request, response, chain);
-		}
+	        throws IOException, ServletException {
+	    HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+	    String path = httpRequest.getServletPath();
+
+	    if(path.contains("/api/auth") || path.contains("/api/files") || path.contains("/api/roles") || path.contains("/api/evaluations")) {
+	        chain.doFilter(request, response);
+	        return;
+	    }
+
+	    String authHeader = httpRequest.getHeader("Authorization");
+	    if(authHeader != null && authHeader.startsWith("Bearer ")) {
+	        String token = authHeader.substring(7);
+	        if(tokenUtils.validateToken(token) && !tokenUtils.isTokenExpired(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
+	            String username = tokenUtils.getUsername(token);
+	            UserDetails user = userDetailsService.loadUserByUsername(username);
+
+	            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+	                user, null, user.getAuthorities()
+	            );
+	            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+
+	            SecurityContextHolder.getContext().setAuthentication(authToken);
+	        }
+	    }
+	    
+	    chain.doFilter(request, response);
 	}
 }
