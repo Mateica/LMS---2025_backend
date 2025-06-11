@@ -2,6 +2,7 @@ package main.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.EvaluationInstrumentDTO;
-import main.dto.EvaluationTypeDTO;
 import main.dto.FileDTO;
 import main.model.EvaluationInstrument;
 import main.service.EvaluationInstrumentService;
+import main.service.FileService;
 import main.model.File;
 
 @RestController
@@ -34,6 +36,9 @@ import main.model.File;
 public class EvaluationInstrumentController implements ControllerInterface<EvaluationInstrumentDTO> {
 	@Autowired
 	private EvaluationInstrumentService service;
+	
+	@Autowired
+	private FileService fileService;
 
 	@Override
 	@Secured({"ADMIN", "TEACHER"})
@@ -43,10 +48,21 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 		ArrayList<EvaluationInstrumentDTO> evaluationInstruments = new ArrayList<EvaluationInstrumentDTO>();
 		
 		for(EvaluationInstrument ei : service.findAll()) {
-			evaluationInstruments.add(new EvaluationInstrumentDTO(ei.getId(),ei.getName(),
-					new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-							null, null, null, null, null, null, null, ei.getFile().getActive()),
-					ei.getActive()));
+			FileDTO fileDTO = null;
+			if (ei.getFile() != null) {
+				fileDTO = new FileDTO(ei.getFile().getId(),
+						ei.getFile().getUrl(),
+						ei.getFile().getDescription(),
+						null, null, null, null, null, null, null,
+						ei.getFile().getActive());
+			}
+			
+			evaluationInstruments.add(new EvaluationInstrumentDTO(
+				ei.getId(),
+				ei.getName(),
+				fileDTO,
+				ei.getActive())
+			);
 		}
 		
 		return new ResponseEntity<Iterable<EvaluationInstrumentDTO>>(evaluationInstruments, HttpStatus.OK);
@@ -97,23 +113,51 @@ public class EvaluationInstrumentController implements ControllerInterface<Evalu
 	@Override
 	@Secured({"ADMIN", "TEACHER"})
 	@PostMapping
-	public ResponseEntity<EvaluationInstrumentDTO> create(EvaluationInstrumentDTO t) {
+	public ResponseEntity<EvaluationInstrumentDTO> create(@RequestBody EvaluationInstrumentDTO t) {
 		// TODO Auto-generated method stub
-		EvaluationInstrument ei = service.create(new EvaluationInstrument(null, t.getName(),null, new File(t.getFile().getId(), t.getFile().getUrl(), t.getFile().getDescription(),
-				null, null, null, null, null, null, null, t.getFile().getActive()), true));
+		File file = null;
+		if (t.getFile() != null) {
+			Optional<File> fileOption = this.fileService.findById(t.getFile().getId());
+			if (fileOption.isPresent()) {
+				file = fileOption.get();
+			}
+		}
+
+		EvaluationInstrument ei = service.create(
+			new EvaluationInstrument(
+			null,
+			t.getName(),
+			null,
+			file,
+			true
+		));
 		
 		if(ei == null) {
 			return new ResponseEntity<EvaluationInstrumentDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<EvaluationInstrumentDTO>(new EvaluationInstrumentDTO(ei.getId(), ei.getName(),
-				new FileDTO(ei.getFile().getId(), ei.getFile().getUrl(), ei.getFile().getDescription(),
-						null, null, null, null, null, null, null, ei.getFile().getActive()), ei.getActive()), HttpStatus.CREATED);
+		
+		FileDTO fileDTO = null;
+		if (ei.getFile() != null) {
+			fileDTO = new FileDTO(ei.getFile().getId(),
+					ei.getFile().getUrl(),
+					ei.getFile().getDescription(),
+					null, null, null, null, null, null, null,
+					ei.getFile().getActive());
+		}
+		
+		return new ResponseEntity<EvaluationInstrumentDTO>(
+				new EvaluationInstrumentDTO(
+						ei.getId(),
+						ei.getName(),
+						fileDTO,
+						ei.getActive()),
+				HttpStatus.CREATED);
 	}
 
 	@Override
 	@Secured({"ADMIN", "TEACHER"})
 	@PutMapping("/{id}")
-	public ResponseEntity<EvaluationInstrumentDTO> update(EvaluationInstrumentDTO t, Long id) {
+	public ResponseEntity<EvaluationInstrumentDTO> update(@RequestBody EvaluationInstrumentDTO t, Long id) {
 		// TODO Auto-generated method stub
 		EvaluationInstrument ei = service.findById(id).orElse(null);
 		

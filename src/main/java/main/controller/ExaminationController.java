@@ -77,7 +77,9 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 								.collect(Collectors.toList());
 			
 			
-			exams.add(new ExaminationDTO(e.getId(),e.getNumberOfPoints(),
+			exams.add(new ExaminationDTO(
+					e.getId(),
+					e.getNumberOfPoints(),
 					notes, evaluations, 
 					new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
 							new StudentDTO(e.getStudentOnYear().getStudent().getId(),

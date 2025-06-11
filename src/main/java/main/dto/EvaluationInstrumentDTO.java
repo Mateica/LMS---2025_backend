@@ -1,7 +1,5 @@
 package main.dto;
 
-import main.model.File;
-
 public class EvaluationInstrumentDTO {
 
 	private Long id;

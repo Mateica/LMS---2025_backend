@@ -44,7 +44,7 @@ import main.model.TitleType;
 
 @Component
 public class TitleTypeRepositoryImplementation implements TitleTypeRepository {
-	private static final String NS = "http://tt/titleTypes/";
+	private static final String NS = "http://tt/titleTypes#";
     private static final String QUERY_ENDPOINT = "http://localhost:3030/titleTypes/query";
     private static final String UPDATE_ENDPOINT = "http://localhost:3030/titleTypes/update";
     private static final String DATA_ENDPOINT = "http://localhost:3030/titleTypes/data";

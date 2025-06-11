@@ -29,7 +29,7 @@ public class TokenUtils {
 		return Jwts
 				.builder()
 				.addClaims(payload)
-				.setExpiration(new Date(System.currentTimeMillis()+100000))
+				.setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000 * 999999))
 				.signWith(this.getKey())
 				.compact();
 	}

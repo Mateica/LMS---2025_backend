@@ -35,31 +35,32 @@ public class EvaluationService implements ServiceInterface<Evaluation> {
 	@Override
 	public Optional<Evaluation> findById(Long id) {
 		// TODO Auto-generated method stub
-		return Optional.empty();
+		return this.findById(id);
 	}
 
 	@Override
 	public Evaluation create(Evaluation t) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.repo.save(t);
 	}
 
 	@Override
 	public Evaluation update(Evaluation t) {
 		// TODO Auto-generated method stub
+		if(repo.findById(t.getId()).isPresent()) {
+			return this.repo.save(t);
+		}
 		return null;
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	public void softDelete(Long id) {
 		// TODO Auto-generated method stub
-		
+		this.repo.softDelete(id);
 	}
 	
 }

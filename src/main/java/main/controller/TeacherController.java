@@ -45,6 +45,7 @@ import main.model.ScientificField;
 import main.model.StudentAffairsOffice;
 import main.model.StudentServiceStaff;
 import main.model.StudyProgramme;
+import main.model.SubjectRealization;
 import main.model.Teacher;
 import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
@@ -145,15 +146,19 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 		for(Teacher s : service.findAllActive()) {
 				teachersOnRealization = (ArrayList<TeacherOnRealizationDTO>) s.getTeachersOnRealization()
 						.stream()
-						.map(n -> new TeacherOnRealizationDTO(n.getId(), n.getNumberOfClasses(), null,
-								 new SubjectRealizationDTO(n.getSubjectRealization().getId(), null, null, null, 
-										 new SubjectDTO(n.getSubjectRealization().getSubject().getId(),
-												 n.getSubjectRealization().getSubject().getName(),
-												 n.getSubjectRealization().getSubject().getEcts(),
-												 n.getSubjectRealization().getSubject().getActive()),
-										 n.getSubjectRealization().getActive()),
+						.map(n -> {
+							SubjectRealization realization = n.getSubjectRealization();
+							
+							return new TeacherOnRealizationDTO(n.getId(), n.getNumberOfClasses(), null,
+								 new SubjectRealizationDTO((realization == null) ? null : realization.getId(), null, null, null, 
+										 new SubjectDTO((realization == null) ? null : realization.getSubject().getId(),
+												 (realization == null) ? null : realization.getSubject().getName(),
+												 (realization == null) ? null : realization.getSubject().getEcts(),
+												 (realization == null) ? null : realization.getSubject().getActive()),
+										 (realization == null) ? null : realization.getSubject().getActive()),
 								 new TeachingTypeDTO(n.getTeachingType().getId(), n.getTeachingType().getName(), n.getTeachingType().getActive()),
-								 n.getActive()))
+								 n.getActive());
+						})
 						.collect(Collectors.toList());
 				teachers.add(new TeacherDTO(s.getId(), 
 						new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),

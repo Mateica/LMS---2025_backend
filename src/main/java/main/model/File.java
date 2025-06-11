@@ -44,7 +44,7 @@ public class File {
 	private Student student;
 	
 	@Lob
-	//@Column(nullable = false)
+	@Column(nullable = false)
 	private byte[] document;
 	
 	@Column(nullable = false)
