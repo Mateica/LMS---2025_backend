@@ -8,13 +8,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import main.model.Examination;
 import main.model.Student;
+import main.model.StudentOnYear;
+import main.repository.ExaminationRepository;
+import main.repository.StudentOnYearRepository;
 import main.repository.StudentRepository;
 
 @Service
 public class StudentService implements ServiceInterface<Student>{
 	@Autowired
 	private StudentRepository repo;
+	
+	@Autowired
+	private ExaminationRepository examRepo;
+	
+	@Autowired
+	private StudentOnYearRepository studentOnYearRepo;
 
 	@Override
 	public Iterable<Student> findAll() {

@@ -86,6 +86,7 @@ import main.model.University;
 import main.model.YearOfStudy;
 import main.repository.RegisteredUserRepository;
 import main.service.AccountService;
+import main.service.ExaminationService;
 import main.service.FacultyService;
 import main.service.RegisteredUserService;
 import main.service.RoleService;
@@ -113,6 +114,9 @@ public class StudentController implements ControllerInterface<StudentDTO> {
 	
 	@Autowired
 	private UniversityService universityService;
+	
+	@Autowired
+	private ExaminationService examService;
 	
 	@Autowired
 	private FacultyService facultyService;
@@ -758,6 +762,34 @@ public class StudentController implements ControllerInterface<StudentDTO> {
 							null, s.getFaculty().getActive()),
 					s.getActive()), HttpStatus.OK);
 	}
+	
+	@GetMapping("/{id}/exams")
+	public ResponseEntity<Iterable<ExaminationDTO>> findAllExamsForStudent(@PathVariable("id") Long id, @PathVariable("studentOnYearId") Long studentOnYearId){
+		Student s = service.findById(id).orElse(null);
+		
+		StudentOnYear soy = studentOnYearService.findById(studentOnYearId).orElse(null);
+		
+		if(s == null || soy == null) {
+			return new ResponseEntity<Iterable<ExaminationDTO>>(HttpStatus.BAD_REQUEST);
+		}
+		
+		ArrayList<ExaminationDTO> exams = (ArrayList<ExaminationDTO>) soy.getExaminations()
+											.stream()
+											.map(e -> new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+													null, null, 
+													new StudentOnYearDTO(soy.getId(),
+															soy.getDateOfApplication(),
+															new StudentDTO(s.getId(), 
+																	new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),
+																	s.getFirstName(), s.getLastName(), s.getUmcn(), null, null, null, null, s.getActive()),
+															null, null, null, null, null),
+													e.getActive()))
+											.collect(Collectors.toList());
+		
+		return new ResponseEntity<Iterable<ExaminationDTO>>(exams, HttpStatus.OK);
+	}
+	
+
 
 	@Override
 	@PostMapping

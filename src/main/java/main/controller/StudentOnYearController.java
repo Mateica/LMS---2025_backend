@@ -46,6 +46,7 @@ import main.model.Student;
 import main.model.StudentAffairsOffice;
 import main.model.StudentOnYear;
 import main.model.YearOfStudy;
+import main.service.ExaminationService;
 import main.service.StudentOnYearService;
 import main.service.StudentService;
 
@@ -57,6 +58,9 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
 	
 	@Autowired
 	private StudentOnYearService service;
+	
+	@Autowired
+	private ExaminationService examService;
 
 	@Override
 	@GetMapping
@@ -374,6 +378,32 @@ public class StudentOnYearController implements ControllerInterface<StudentOnYea
 							s.getYearOfStudy().getActive()),
 					exams, null,
 					s.getActive()), HttpStatus.OK);
+	}
+	
+	@PostMapping("/{studentId}/register-exam")
+	public ResponseEntity<ExaminationDTO> registerExam(@RequestBody ExaminationDTO t, @PathVariable("id") Long id){
+		StudentOnYear s = service.findById(id).orElse(null);
+		
+		if(s == null) {
+			return new ResponseEntity<ExaminationDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		Examination e = examService.findById(t.getId()).get();
+		
+		if(e == null) {
+			return new ResponseEntity<ExaminationDTO>(HttpStatus.NOT_FOUND);
+		}
+		
+		service.registerStudentForExam(e, id);
+		
+		return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+													new ArrayList<NoteDTO>(),
+													null, 
+													new StudentOnYearDTO(s.getId(), s.getDateOfApplication(),
+															((s.getStudent() != null) ? 
+																	new StudentDTO(id, null, null, null, null, null, null, null, null, null) : null),
+															null, s.getIndexNumber(), null, null, null, s.getActive()),
+													e.getActive()), HttpStatus.OK);
 	}
 
 	@Override

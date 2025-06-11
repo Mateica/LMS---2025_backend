@@ -82,5 +82,9 @@ public class Role {
 	public void setRegisteredUsers(List<RegisteredUser> registeredUsers) {
 		this.registeredUsers = registeredUsers;
 	}
+	
+	public void addRegisteredUser(RegisteredUser registeredUser) {
+        this.registeredUsers.add(registeredUser);
+    }
 
 }

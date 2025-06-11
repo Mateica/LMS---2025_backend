@@ -2,8 +2,12 @@ package main.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import main.model.*;
+import main.service.EvaluationInstrumentService;
+import main.service.EvaluationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,382 +26,369 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.PutExchange;
-
-import com.fasterxml.jackson.databind.ser.std.FileSerializer;
 
 import main.dto.AnnouncementDTO;
-import main.dto.CountryDTO;
 import main.dto.EvaluationDTO;
 import main.dto.EvaluationInstrumentDTO;
 import main.dto.EvaluationTypeDTO;
 import main.dto.FileDTO;
-import main.dto.PlaceDTO;
 import main.dto.RegisteredUserDTO;
 import main.dto.StudentDTO;
-import main.model.Evaluation;
-import main.model.EvaluationType;
-import main.model.File;
-import main.model.EvaluationInstrument;
-import main.model.Place;
-import main.service.EvaluationInstrumentService;
 import main.service.EvaluationService;
-import main.service.EvaluationTypeService;
-import main.service.ExaminationService;
-import main.service.FileService;
 
 @RestController
 @RequestMapping("/api/evaluations")
 public class EvaluationController implements ControllerInterface<EvaluationDTO> {
-	@Autowired
-	private EvaluationService service;
+    @Autowired
+    private EvaluationService service;
 
-	@Autowired
-	private EvaluationTypeService evaluationTypeService;
+    @Autowired
+    private EvaluationTypeService evaluationTypeService;
 
-	@Autowired
-	private EvaluationInstrumentService evaluationInstrumentService;
+    @Autowired
+    private EvaluationInstrumentService evaluationInstrumentService;
 
-	@Autowired
-	private ExaminationService examService;
+    @Override
+    @GetMapping
+    @Secured({"ADMIN", "TEACHER", "STAFF", "STUDENT"})
+    public ResponseEntity<Iterable<EvaluationDTO>> findAll() {
+        ArrayList<EvaluationDTO> evaluations = new ArrayList<>();
 
-	@Autowired
-	private FileService fileService;
+        for (Evaluation e : service.findAll()) {
+            evaluations.add(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
+                    new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                            null, e.getEvaluationType().getActive()),
+                    new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                            e.getEvaluationInstrument().getName(),
+                            e.getEvaluationInstrument().getFile() != null ?
+                                    new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                            e.getEvaluationInstrument().getFile().getName(),
+                                            e.getEvaluationInstrument().getFile().getUrl(),
+                                            e.getEvaluationInstrument().getFile().getDescription(),
+                                            null, null,
+                                            new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                                    e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                                    e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                                    e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                                    e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                            null,
+                                            new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                                    new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                                    e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                                    e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                                    e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                            e.getEvaluationInstrument().getFile().getDocument(),
+                                            e.getEvaluationInstrument().getFile().getActive()) : null, null),
+                    null, null, null, null));
+        }
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
 
-	@Override
-	@GetMapping
-	@Secured({ "ADMIN", "TEACHER", "STAFF", "STUDENT" })
-	public ResponseEntity<Iterable<EvaluationDTO>> findAll() {
-		// TODO Auto-generated method stub
-		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
+    @Override
+    @GetMapping("/params")
+    @Secured({"ADMIN", "TEACHER", "STAFF", "STUDENT"})
+    public ResponseEntity<Page<EvaluationDTO>> findAll(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "5") int size,
+                                                       @RequestParam(defaultValue = "id") String sortBy,
+                                                       @RequestParam(defaultValue = "true") boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-		for (Evaluation e : service.findAll()) {
-			evaluations.add(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
-					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-							e.getEvaluationType().getActive()),
-					new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
-							e.getEvaluationInstrument().getName(),
-							e.getEvaluationInstrument().getFile() != null ? new FileDTO(
-									e.getEvaluationInstrument().getFile().getId(),
-									e.getEvaluationInstrument().getFile().getName(),
-									e.getEvaluationInstrument().getFile().getUrl(),
-									e.getEvaluationInstrument().getFile().getDescription(), null, null,
-									new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
-											e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
-											e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
-											e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
-											e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
-									null,
-									new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
-											new RegisteredUserDTO(
-													e.getEvaluationInstrument().getFile().getStudent().getUser()
-															.getUsername(),
-													null,
-													e.getEvaluationInstrument().getFile().getStudent().getUser()
-															.getEmail()),
-											e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
-											e.getEvaluationInstrument().getFile().getStudent().getLastName(),
-											e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null,
-											null, null, null),
-									e.getEvaluationInstrument().getFile().getDocument(),
-									e.getEvaluationInstrument().getFile().getActive()) : null,
-							null),
-					null, null, null, null));
-		}
-		return new ResponseEntity<Iterable<EvaluationDTO>>(evaluations, HttpStatus.OK);
-	}
+        Page<Evaluation> evaluationPage = service.findAll(pageable);
 
-	@Override
-	@GetMapping("/params")
-	@Secured({ "ADMIN", "TEACHER", "STAFF", "STUDENT" })
-	public ResponseEntity<Page<EvaluationDTO>> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "id") String sortBy,
-			@RequestParam(defaultValue = "true") boolean ascending) {
-		Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-		Pageable pageable = PageRequest.of(page, size, sort);
+        List<EvaluationDTO> evaluationDTOs = evaluationPage.stream().map(e ->
+                new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
+                        new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                                null, e.getEvaluationType().getActive()),
+                        new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                                e.getEvaluationInstrument().getName(),
+                                new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                        e.getEvaluationInstrument().getFile().getName(),
+                                        e.getEvaluationInstrument().getFile().getUrl(),
+                                        e.getEvaluationInstrument().getFile().getDescription(),
+                                        null, null,
+                                        new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                                e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                                e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                                e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                                e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                        null,
+                                        new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                                new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                                e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                                e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                                e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                        e.getEvaluationInstrument().getFile().getDocument(),
+                                        e.getEvaluationInstrument().getFile().getActive()), null),
+                        null, null, null, null)
+        ).collect(Collectors.toList());
 
-		Page<Evaluation> evaluationPage = service.findAll(pageable);
+        Page<EvaluationDTO> resultPage = new PageImpl<>(evaluationDTOs, pageable, evaluationPage.getTotalElements());
 
-		List<EvaluationDTO> evaluationDTOs = evaluationPage.stream().map(e -> new EvaluationDTO(e.getId(),
-				e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
-				new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-						e.getEvaluationType().getActive()),
-				new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
-						new FileDTO(e.getEvaluationInstrument().getFile().getId(),
-								e.getEvaluationInstrument().getFile().getName(),
-								e.getEvaluationInstrument().getFile().getUrl(),
-								e.getEvaluationInstrument().getFile().getDescription(), null, null,
-								new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
-										e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
-										e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
-										e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
-										e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
-								null,
-								new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
-										new RegisteredUserDTO(
-												e.getEvaluationInstrument().getFile().getStudent().getUser()
-														.getUsername(),
-												null,
-												e.getEvaluationInstrument().getFile().getStudent().getUser()
-														.getEmail()),
-										e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
-										e.getEvaluationInstrument().getFile().getStudent().getLastName(),
-										e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null,
-										null, null),
-								e.getEvaluationInstrument().getFile().getDocument(),
-								e.getEvaluationInstrument().getFile().getActive()),
-						null),
-				null, null, null, null)).collect(Collectors.toList());
+        return new ResponseEntity<>(resultPage, HttpStatus.OK);
+    }
 
-		Page<EvaluationDTO> resultPage = new PageImpl<>(evaluationDTOs, pageable, evaluationPage.getTotalElements());
+    @GetMapping("/active")
+    @Secured({"ADMIN", "TEACHER", "STAFF", "STUDENT"})
+    public ResponseEntity<Iterable<EvaluationDTO>> findAllActive() {
+        ArrayList<EvaluationDTO> evaluations = new ArrayList<>();
 
-		return new ResponseEntity<>(resultPage, HttpStatus.OK);
-	}
+        for (Evaluation e : service.findAllActive()) {
+            evaluations.add(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
+                    new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                            null, e.getEvaluationType().getActive()),
+                    new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                            e.getEvaluationInstrument().getName(),
+                            new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                    e.getEvaluationInstrument().getFile().getName(),
+                                    e.getEvaluationInstrument().getFile().getUrl(),
+                                    e.getEvaluationInstrument().getFile().getDescription(),
+                                    null, null,
+                                    new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                            e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                            e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                            e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                            e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                    null,
+                                    new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                            new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                            e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                            e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                            e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                    e.getEvaluationInstrument().getFile().getDocument(),
+                                    e.getEvaluationInstrument().getFile().getActive()), null),
+                    null, null, null, null));
+        }
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
 
-	@GetMapping("/active")
-	@Secured({ "ADMIN", "TEACHER", "STAFF", "STUDENT" })
-	public ResponseEntity<Iterable<EvaluationDTO>> findAllActive() {
-		ArrayList<EvaluationDTO> evaluations = new ArrayList<EvaluationDTO>();
 
-		for (Evaluation e : service.findAllActive()) {
+    @Override
+    @GetMapping("/{id}")
+    @Secured({"ADMIN", "TEACHER", "STAFF", "STUDENT"})
+    public ResponseEntity<EvaluationDTO> findById(@PathVariable("id") Long id) {
+        Evaluation e = service.findById(id).orElse(null);
 
-			File file = e.getEvaluationInstrument().getFile();
+        if (e == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-			evaluations.add(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
-					new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-							e.getEvaluationType().getActive()),
-					new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
-							e.getEvaluationInstrument().getName(),
-							file == null ? null
-									: new FileDTO(file.getId(), file.getName(), file.getUrl(), file.getDescription(),
-											null, null,
-											file.getAnnouncement() == null ? null
-													: new AnnouncementDTO(file.getAnnouncement().getId(),
-															file.getAnnouncement().getTimePublished(),
-															file.getAnnouncement().getContent(), null,
-															file.getAnnouncement().getTitle(), null,
-															file.getAnnouncement().getActive()),
-											null,
-											file.getStudent() == null ? null
-													: new StudentDTO(file.getStudent().getId(),
-															file.getStudent().getUser() == null ? null
-																	: new RegisteredUserDTO(
-																			file.getStudent().getUser().getUsername(),
-																			null,
-																			file.getStudent().getUser().getEmail()),
-															file.getStudent().getFirstName(),
-															file.getStudent().getLastName(),
-															file.getStudent().getUmcn(), null, null, null, null, null),
-											file.getDocument(), file.getActive()),
-							e.getActive()),
-					null, null, null, null));
-		}
-		return new ResponseEntity<Iterable<EvaluationDTO>>(evaluations, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
+                new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                        null, e.getEvaluationType().getActive()),
+                new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                        e.getEvaluationInstrument().getName(),
+                        new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                e.getEvaluationInstrument().getFile().getName(),
+                                e.getEvaluationInstrument().getFile().getUrl(),
+                                e.getEvaluationInstrument().getFile().getDescription(),
+                                null, null,
+                                new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                null,
+                                new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                        new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                        e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getEvaluationInstrument().getFile().getDocument(),
+                                e.getEvaluationInstrument().getFile().getActive()), null),
+                null, null, null, null), HttpStatus.OK);
+    }
 
-	@Override
-	@GetMapping("/{id}")
-	@Secured({ "ADMIN", "TEACHER", "STAFF", "STUDENT" })
-	public ResponseEntity<EvaluationDTO> findById(@PathVariable("id") Long id) {
-		// TODO Auto-generated method stub
-		Evaluation e = service.findById(id).orElse(null);
+    @Override
+    @PostMapping
+    @Secured({"ADMIN", "TEACHER"})
+    public ResponseEntity<EvaluationDTO> create(@RequestBody EvaluationDTO t) {
+		Optional<EvaluationType> evaluationTypeOptional = evaluationTypeService.findById(t.getEvaluationType().getId());
+        if (evaluationTypeOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-		if (e == null) {
-			return new ResponseEntity<EvaluationDTO>(HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity<EvaluationDTO>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(),
-				e.getNumberOfPoints(),
-				new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-						e.getEvaluationType().getActive()),
-				new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
-						new FileDTO(e.getEvaluationInstrument().getFile().getId(),
-								e.getEvaluationInstrument().getFile().getName(),
-								e.getEvaluationInstrument().getFile().getUrl(),
-								e.getEvaluationInstrument().getFile().getDescription(), null, null,
-								new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
-										e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
-										e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
-										e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
-										e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
-								null,
-								new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
-										new RegisteredUserDTO(
-												e.getEvaluationInstrument().getFile().getStudent().getUser()
-														.getUsername(),
-												null,
-												e.getEvaluationInstrument().getFile().getStudent().getUser()
-														.getEmail()),
-										e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
-										e.getEvaluationInstrument().getFile().getStudent().getLastName(),
-										e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null,
-										null, null),
-								e.getEvaluationInstrument().getFile().getDocument(),
-								e.getEvaluationInstrument().getFile().getActive()),
-						null),
-				null, null, null, null), HttpStatus.OK);
-	}
-
-	@Override
-	@PostMapping
-	@Secured({ "ADMIN", "TEACHER" })
-	public ResponseEntity<EvaluationDTO> create(@RequestBody EvaluationDTO t) {
-		EvaluationType type = evaluationTypeService.findById(t.getEvaluationType().getId())
-				.orElse(null);
-		EvaluationInstrument instrument = evaluationInstrumentService.findById(t.getEvaluationInstrument().getId())
-				.orElse(null);
-
-		if (type == null || instrument == null) {
-			return new ResponseEntity<EvaluationDTO>(HttpStatus.BAD_REQUEST);
+		Optional<EvaluationInstrument> evaluationInstrumentOptional = evaluationInstrumentService.findById(t.getEvaluationInstrument().getId());
+		if (evaluationInstrumentOptional.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Evaluation e = service.create(new Evaluation(null, t.getStartTime(), t.getEndTime(), t.getNumberOfPoints(),
-				type, instrument, null, null, null, true));
+        Evaluation e = service.create(new Evaluation(
+                null,
+                t.getStartTime(),
+                t.getEndTime(),
+                t.getNumberOfPoints(),
+                evaluationTypeOptional.get(),
+                evaluationInstrumentOptional.get(),
+                null,
+                null,
+                null,
+                true)
+        );
 
-		if (e == null) {
-			return new ResponseEntity<EvaluationDTO>(HttpStatus.BAD_REQUEST);
-		}
+        if (e == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
 		File file = e.getEvaluationInstrument().getFile();
-		return new ResponseEntity<EvaluationDTO>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(),
-				e.getNumberOfPoints(),
-				new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-						e.getEvaluationType().getActive()),
-				new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
-						new FileDTO((file == null) ? null : file.getId(),
-								(file == null) ? null : file.getName(),
-								(file == null) ? null : file.getUrl(),
-								(file == null) ? null : file.getDescription(), null, null,
-								new AnnouncementDTO((file == null) ? null : file.getAnnouncement().getId(),
-										(file == null) ? null : file.getAnnouncement().getTimePublished(),
-										(file == null) ? null : file.getAnnouncement().getContent(), null,
-										(file == null) ? null : file.getAnnouncement().getTitle(), null,
-										(file == null) ? null : file.getAnnouncement().getActive()),
-								null,
-								new StudentDTO((file == null) ? null : file.getStudent().getId(),
-										new RegisteredUserDTO(
-												(file == null) ? null : file.getStudent().getUser()
-														.getUsername(),
-												null,
-												(file == null) ? null : file.getStudent().getUser()
-														.getEmail()),
-										(file == null) ? null : file.getStudent().getFirstName(),
-										(file == null) ? null : file.getStudent().getLastName(),
-										(file == null) ? null : file.getStudent().getUmcn(), null, null, null,
-										null, null),
-								(file == null) ? null : file.getDocument(),
-								(file == null) ? null : file.getActive()),
-						null),
-				null, null, null, null), HttpStatus.CREATED);
-	}
-
-	@Override
-	@PutMapping("/{id}")
-	@Secured({ "ADMIN", "TEACHER" })
-	public ResponseEntity<EvaluationDTO> update(@RequestBody EvaluationDTO t, @PathVariable("id") Long id) {
-		// TODO Auto-generated method stub
-		Evaluation e = service.findById(id).orElse(null);
-
-		if (e == null) {
-			return new ResponseEntity<EvaluationDTO>(HttpStatus.NOT_FOUND);
+		Announcement announcement = null;
+		Student student = null;
+		if (file != null) {
+			announcement = file.getAnnouncement();
+			student = file.getStudent();
 		}
 
-		e.setId(t.getId());
-		e.setStartTime(t.getStartTime());
-		e.setEndTime(t.getEndTime());
-		e.setNumberOfPoints(t.getNumberOfPoints());
-		e.setEvaluationType(service.findById(t.getId()).get().getEvaluationType());
-		e.setEvaluationInstrument(service.findById(t.getId()).get().getEvaluationInstrument());
-		e.setExamination(service.findById(t.getId()).get().getExamination());
-		e.setSubjectRealization(service.findById(t.getId()).get().getSubjectRealization());
-		e.setEvaluationGrades(service.findById(t.getId()).get().getEvaluationGrades());
-		e.setActive(t.getActive());
 
-		e = service.update(e);
-
-		File file = e.getEvaluationInstrument().getFile();
-		return new ResponseEntity<EvaluationDTO>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(),
-				e.getNumberOfPoints(),
-				new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-						e.getEvaluationType().getActive()),
-				new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
-						new FileDTO((file == null) ? null : file.getId(),
+        return new ResponseEntity<>(
+				new EvaluationDTO(
+						e.getId(),
+						e.getStartTime(),
+						e.getEndTime(),
+						e.getNumberOfPoints(),
+                new EvaluationTypeDTO(
+						e.getEvaluationType().getId(),
+						e.getEvaluationType().getName(),
+                        null,
+						e.getEvaluationType().getActive()
+				),
+                new EvaluationInstrumentDTO(
+						e.getEvaluationInstrument().getId(),
+                        e.getEvaluationInstrument().getName(),
+                        new FileDTO(
+								(file == null) ? null : file.getId(),
 								(file == null) ? null : file.getName(),
 								(file == null) ? null : file.getUrl(),
-								(file == null) ? null : file.getDescription(), null, null,
-								new AnnouncementDTO((file == null) ? null : file.getAnnouncement().getId(),
-										(file == null) ? null : file.getAnnouncement().getTimePublished(),
-										(file == null) ? null : file.getAnnouncement().getContent(), null,
-										(file == null) ? null : file.getAnnouncement().getTitle(), null,
-										(file == null) ? null : file.getAnnouncement().getActive()),
+								(file == null) ? null : file.getDescription(),
+                                null,
 								null,
-								new StudentDTO((file == null) ? null : file.getStudent().getId(),
-										new RegisteredUserDTO(
-												(file == null) ? null : file.getStudent().getUser()
-														.getUsername(),
+                                new AnnouncementDTO(
+										(announcement == null) ? null : announcement.getId(),
+                                        (announcement == null) ? null : announcement.getTimePublished(),
+                                        (announcement == null) ? null : announcement.getContent(),
+										null,
+										(announcement == null) ? null : announcement.getTitle(),
+										null,
+										(announcement == null) ? null : announcement.getActive()
+								),
+                                null,
+                                new StudentDTO(
+                                        (student == null) ? null : student.getId(),
+                                        new RegisteredUserDTO(
+												(student == null) ? null : student.getUser().getUsername(),
 												null,
-												(file == null) ? null : file.getStudent().getUser()
-														.getEmail()),
-										(file == null) ? null : file.getStudent().getFirstName(),
-										(file == null) ? null : file.getStudent().getLastName(),
-										(file == null) ? null : file.getStudent().getUmcn(), null, null, null,
-										null, null),
+												(student == null) ? null : student.getUser().getEmail()
+										),
+										(student == null) ? null : student.getFirstName(),
+										(student == null) ? null : student.getLastName(),
+										(student == null) ? null : student.getUmcn(),
+										null,
+										null,
+										null,
+										null,
+										null
+								),
 								(file == null) ? null : file.getDocument(),
 								(file == null) ? null : file.getActive()),
-						null),
-				null, null, null, null), HttpStatus.OK);
-	}
+						null
+				),
+				null,
+				null,
+				null,
+				null),
+				HttpStatus.CREATED
+		);
+    }
 
-	@Override
-	public ResponseEntity<EvaluationDTO> delete(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    @PutMapping("/{id}")
+    @Secured({"ADMIN", "TEACHER"})
+    public ResponseEntity<EvaluationDTO> update(@RequestBody EvaluationDTO t, @PathVariable("id") Long id) {
+        Evaluation e = service.findById(id).orElse(null);
 
-	@Override
-	@PatchMapping("/{id}")
-	@Secured({ "ADMIN", "TEACHER", "STAFF" })
-	public ResponseEntity<EvaluationDTO> softDelete(@PathVariable("id") Long id) {
-		// TODO Auto-generated method stub
-		Evaluation e = service.findById(id).orElse(null);
+        if (e == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-		if (e == null) {
-			return new ResponseEntity<EvaluationDTO>(HttpStatus.NOT_FOUND);
-		}
-		
-		File file = e.getEvaluationInstrument().getFile();
+        e.setId(t.getId());
+        e.setStartTime(t.getStartTime());
+        e.setEndTime(t.getEndTime());
+        e.setNumberOfPoints(t.getNumberOfPoints());
+        e.setEvaluationType(service.findById(t.getId()).get().getEvaluationType());
+        e.setEvaluationInstrument(service.findById(t.getId()).get().getEvaluationInstrument());
+        e.setExamination(service.findById(t.getId()).get().getExamination());
+        e.setSubjectRealization(service.findById(t.getId()).get().getSubjectRealization());
+        e.setEvaluationGrades(service.findById(t.getId()).get().getEvaluationGrades());
+        e.setActive(t.getActive());
 
-		service.softDelete(id);
+        e = service.update(e);
 
-		return new ResponseEntity<EvaluationDTO>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(),
-				e.getNumberOfPoints(),
-				new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(), null,
-						e.getEvaluationType().getActive()),
-				new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(), e.getEvaluationInstrument().getName(),
-						new FileDTO((file == null) ? null : file.getId(),
-								(file == null) ? null : file.getName(),
-								(file == null) ? null : file.getUrl(),
-								(file == null) ? null : file.getDescription(), null, null,
-								new AnnouncementDTO((file == null) ? null : file.getAnnouncement().getId(),
-										(file == null) ? null : file.getAnnouncement().getTimePublished(),
-										(file == null) ? null : file.getAnnouncement().getContent(), null,
-										(file == null) ? null : file.getAnnouncement().getTitle(), null,
-										(file == null) ? null : file.getAnnouncement().getActive()),
-								null,
-								new StudentDTO((file == null) ? null : file.getStudent().getId(),
-										new RegisteredUserDTO(
-												(file == null) ? null : file.getStudent().getUser()
-														.getUsername(),
-												null,
-												(file == null) ? null : file.getStudent().getUser()
-														.getEmail()),
-										(file == null) ? null : file.getStudent().getFirstName(),
-										(file == null) ? null : file.getStudent().getLastName(),
-										(file == null) ? null : file.getStudent().getUmcn(), null, null, null,
-										null, null),
-								(file == null) ? null : file.getDocument(),
-								(file == null) ? null : file.getActive()),
-						null),
-				null, null, null, null), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(),
+                e.getNumberOfPoints(),
+                new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                        null, e.getEvaluationType().getActive()),
+                new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                        e.getEvaluationInstrument().getName(),
+                        new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                e.getEvaluationInstrument().getFile().getName(),
+                                e.getEvaluationInstrument().getFile().getUrl(),
+                                e.getEvaluationInstrument().getFile().getDescription(),
+                                null, null,
+                                new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                null,
+                                new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                        new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                        e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getEvaluationInstrument().getFile().getDocument(),
+                                e.getEvaluationInstrument().getFile().getActive()), null),
+                null, null, null, null), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<EvaluationDTO> delete(@PathVariable Long id) {
+        return null;
+    }
+
+    @Override
+    @PatchMapping("/{id}")
+    @Secured({"ADMIN", "TEACHER", "STAFF"})
+    public ResponseEntity<EvaluationDTO> softDelete(@PathVariable("id") Long id) {
+        Evaluation e = service.findById(id).orElse(null);
+
+        if (e == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        service.softDelete(id);
+
+        return new ResponseEntity<>(new EvaluationDTO(e.getId(), e.getStartTime(), e.getEndTime(), e.getNumberOfPoints(),
+                new EvaluationTypeDTO(e.getEvaluationType().getId(), e.getEvaluationType().getName(),
+                        null, e.getEvaluationType().getActive()),
+                new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
+                        e.getEvaluationInstrument().getName(),
+                        new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                                e.getEvaluationInstrument().getFile().getName(),
+                                e.getEvaluationInstrument().getFile().getUrl(),
+                                e.getEvaluationInstrument().getFile().getDescription(),
+                                null, null,
+                                new AnnouncementDTO(e.getEvaluationInstrument().getFile().getAnnouncement().getId(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTimePublished(),
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getContent(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getTitle(), null,
+                                        e.getEvaluationInstrument().getFile().getAnnouncement().getActive()),
+                                null,
+                                new StudentDTO(e.getEvaluationInstrument().getFile().getStudent().getId(),
+                                        new RegisteredUserDTO(e.getEvaluationInstrument().getFile().getStudent().getUser().getUsername(), null, e.getEvaluationInstrument().getFile().getStudent().getUser().getEmail()),
+                                        e.getEvaluationInstrument().getFile().getStudent().getFirstName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getLastName(),
+                                        e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getEvaluationInstrument().getFile().getDocument(),
+                                e.getEvaluationInstrument().getFile().getActive()), null),
+                null, null, null, null), HttpStatus.OK);
+    }
 }

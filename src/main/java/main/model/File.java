@@ -38,9 +38,6 @@ public class File {
 	private Announcement announcement;
 	
 	@ManyToOne
-	private Evaluation evaluation;
-	
-	@ManyToOne
 	private Student student;
 	
 	@Lob
@@ -56,7 +53,7 @@ public class File {
 	}
 
 	public File(Long id, String name, String url, String description, ForumPost post, Message message,
-			Announcement announcement, Evaluation evaluation, Student student, byte[] document, Boolean active) {
+			Announcement announcement, Student student, byte[] document, Boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -65,7 +62,6 @@ public class File {
 		this.post = post;
 		this.message = message;
 		this.announcement = announcement;
-		this.evaluation = evaluation;
 		this.student = student;
 		this.document = document;
 		this.active = active;
@@ -125,14 +121,6 @@ public class File {
 
 	public void setAnnouncement(Announcement announcement) {
 		this.announcement = announcement;
-	}
-
-	public Evaluation getEvaluation() {
-		return evaluation;
-	}
-
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
 	}
 
 	public Student getStudent() {

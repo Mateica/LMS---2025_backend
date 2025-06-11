@@ -165,7 +165,6 @@ public class FileController implements ControllerInterface<FileDTO> {
 											service.findById(t.getId()).get().getPost(),
 											service.findById(t.getId()).get().getMessage(),
 											service.findById(t.getId()).get().getAnnouncement(),
-											service.findById(t.getId()).get().getEvaluation(),
 											service.findById(t.getId()).get().getStudent(), t.getDocument(), true));
 		
 		if(f == null) {
@@ -196,7 +195,6 @@ public class FileController implements ControllerInterface<FileDTO> {
 		f.setPost(service.findById(t.getId()).get().getPost());
 		f.setMessage(service.findById(t.getId()).get().getMessage());
 		f.setAnnouncement(service.findById(t.getId()).get().getAnnouncement());
-		f.setEvaluation(service.findById(t.getId()).get().getEvaluation());
 		f.setStudent(service.findById(t.getId()).get().getStudent());
 		f.setDocument(t.getDocument());
 		f.setActive(t.getActive());

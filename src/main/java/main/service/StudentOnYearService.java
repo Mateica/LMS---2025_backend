@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import main.model.Examination;
+import main.model.Student;
 import main.model.StudentOnYear;
 import main.repository.StudentOnYearRepository;
 
@@ -37,6 +39,14 @@ public class StudentOnYearService implements ServiceInterface<StudentOnYear> {
 	public Optional<StudentOnYear> findById(Long id) {
 		// TODO Auto-generated method stub
 		return this.repo.findById(id);
+	}
+	
+	public void registerStudentForExam(Examination e, StudentOnYear s) {
+		
+	    if(s != null) {
+	    	s.getExaminations().add(e);
+	    	this.repo.save(s);
+	    }
 	}
 
 	@Override
