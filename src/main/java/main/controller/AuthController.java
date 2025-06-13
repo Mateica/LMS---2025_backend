@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import main.dto.RegisteredUserDTO;
 import main.dto.TokenDTO;
-import main.dto.LoginResponseDTO;
 import main.dto.LoginDTO;
-import main.dto.LoginRequestDTO;
 import main.model.RegisteredUser;
 import main.model.Role;
 import main.service.AuthService;

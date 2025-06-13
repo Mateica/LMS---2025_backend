@@ -439,7 +439,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							new File(edto.getEvaluationInstrument().getFile().getId(),
 									edto.getEvaluationInstrument().getFile().getUrl(), 
 									edto.getEvaluationInstrument().getFile().getDescription(),
-									null, null, null, null, null, null, null, edto.getEvaluationInstrument().getFile().getActive()),
+									null, null, null, null, null, null, edto.getEvaluationInstrument().getFile().getActive()),
 							edto.getEvaluationInstrument().getActive()),
 					new Examination(edto.getExamination().getId(), edto.getExamination().getNumberOfPoints(),
 							null, null, null, edto.getExamination().getActive()), null, null, edto.getActive()));
@@ -461,7 +461,7 @@ public class SubjectRealizationController implements ControllerInterface<Subject
 							.stream()
 							.map(f -> 
 							new File(f.getId(), f.getUrl(), f.getDescription(),
-									null, null, null, null, null, null, null, f.getActive()))
+									null, null, null, null, null, null, f.getActive()))
 							.collect(Collectors.toList());
 			announcements.add(new Announcement(adto.getId(), adto.getTimePublished(), adto.getContent(),
 					null, adto.getTitle(), attachments, adto.getActive()));

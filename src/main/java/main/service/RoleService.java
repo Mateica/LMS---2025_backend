@@ -44,6 +44,10 @@ public class RoleService implements ServiceInterface<Role> {
 	public Set<Role> findByUserId(Long id){
 		return this.repo.findByRegisteredUsersId(id);
 	}
+	
+	public Role findByName(String name) {
+		return this.repo.findByName(name);
+	}
 
 	@Override
 	public Optional<Role> findById(Long id) {

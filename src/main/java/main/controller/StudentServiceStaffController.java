@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -169,14 +170,38 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 									null, t.getStudentAffairsOffice().getFaculty().getAddress().getActive()),
 								new Teacher(t.getStudentAffairsOffice().getFaculty().getHeadmaster().getId(),
 										new RegisteredUser(t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getId(),
-												t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getUsername(), null, null, null, null, null, null),
+												t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getUsername(), t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getPassword(), t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getEmail(), null, null, 
+												new HashSet<Role>(),
+												t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getActive()),
 										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getFirstName(),
 										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getLastName(),
 										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUmcn(),
 										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getBiography(),
 										null, null, null, null, null,
 										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getActive()),
-								new University(null, null, null, null, null, null, null, null, null),
+								new University(t.getStudentAffairsOffice().getFaculty().getUniversity().getId(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getName(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getDateEstablished(),
+										new Address(t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getId(), 
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getStreet(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getHouseNumber(),
+									null, t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getActive()),
+										new Teacher(t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getId(),
+										new RegisteredUser(t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getId(),
+												t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getUsername(),
+												t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getPassword(),
+												t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getEmail(),
+												null, null, new HashSet<Role>(), 
+												t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getActive()),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getFirstName(),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getLastName(),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUmcn(),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getBiography(),
+										null, null, null, null, null,
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getActive()),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getContactDetails(),
+										t.getStudentAffairsOffice().getFaculty().getDescription(), null,
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getActive()),
 								t.getStudentAffairsOffice().getFaculty().getContactDetails(),
 								t.getStudentAffairsOffice().getFaculty().getDescription(),
 								null, null, null, null, t.getStudentAffairsOffice().getFaculty().getActive()),
@@ -207,12 +232,59 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 			return new ResponseEntity<StudentServiceStaffDTO>(HttpStatus.NOT_FOUND);
 		}
 		
-		
-		
-		s.setRegisteredUser(userService.findById(t.getRegisteredUser().getId()).get());
+		s.setRegisteredUser(new RegisteredUser(t.getRegisteredUser().getId(), t.getRegisteredUser().getUsername(),
+				t.getRegisteredUser().getPassword(),
+				t.getRegisteredUser().getEmail(),
+				null, null, null, 
+				t.getRegisteredUser().getActive()));
 		s.setFirstName(t.getFirstName());
 		s.setLastName(t.getLastName());
-		s.setStudentAffairsOffice(officeService.findById(t.getStudentAffairsOffice().getId()).get());
+		s.setStudentAffairsOffice(new StudentAffairsOffice(t.getStudentAffairsOffice().getId(), 
+				new ArrayList<StudentServiceStaff>(),
+				new Faculty(t.getStudentAffairsOffice().getFaculty().getId(),
+						t.getStudentAffairsOffice().getFaculty().getName(),
+						new Address(t.getStudentAffairsOffice().getFaculty().getAddress().getId(), 
+								t.getStudentAffairsOffice().getFaculty().getAddress().getStreet(),
+								t.getStudentAffairsOffice().getFaculty().getAddress().getHouseNumber(),
+							null, t.getStudentAffairsOffice().getFaculty().getAddress().getActive()),
+						new Teacher(t.getStudentAffairsOffice().getFaculty().getHeadmaster().getId(),
+								new RegisteredUser(t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getId(),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getUsername(), t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getPassword(), t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getEmail(), null, null, 
+										new HashSet<Role>(),
+										t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUser().getActive()),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getFirstName(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getLastName(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUmcn(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getBiography(),
+								null, null, null, null, null,
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getActive()),
+						new University(t.getStudentAffairsOffice().getFaculty().getUniversity().getId(),
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getName(),
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getDateEstablished(),
+								new Address(t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getId(), 
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getStreet(),
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getHouseNumber(),
+							null, t.getStudentAffairsOffice().getFaculty().getUniversity().getAddress().getActive()),
+								new Teacher(t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getId(),
+								new RegisteredUser(t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getId(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getUsername(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getPassword(),
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getEmail(),
+										null, null, new HashSet<Role>(), 
+										t.getStudentAffairsOffice().getFaculty().getUniversity().getRector().getUser().getActive()),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getFirstName(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getLastName(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getUmcn(),
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getBiography(),
+								null, null, null, null, null,
+								t.getStudentAffairsOffice().getFaculty().getHeadmaster().getActive()),
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getContactDetails(),
+								t.getStudentAffairsOffice().getFaculty().getDescription(), null,
+								t.getStudentAffairsOffice().getFaculty().getUniversity().getActive()),
+						t.getStudentAffairsOffice().getFaculty().getContactDetails(),
+						t.getStudentAffairsOffice().getFaculty().getDescription(),
+						null, null, null, null, t.getStudentAffairsOffice().getFaculty().getActive()),
+				t.getStudentAffairsOffice().getActive()));
 		s.setActive(t.getActive());
 		
 		s = service.update(s);

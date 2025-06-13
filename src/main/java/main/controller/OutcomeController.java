@@ -375,7 +375,7 @@ public class OutcomeController implements ControllerInterface<OutcomeDTO> {
 						new File(t.getTeachingMaterial().getFile().getId(), 
 								t.getTeachingMaterial().getFile().getUrl(),
 								t.getTeachingMaterial().getFile().getDescription(), null, null, null,
-								null, null, null, null, t.getTeachingMaterial().getFile().getActive()),
+								 null, null, null, t.getTeachingMaterial().getFile().getActive()),
 						t.getTeachingMaterial().getActive()),
 				new Subject(t.getSubject().getId(), 
 						t.getSubject().getName(),

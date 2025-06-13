@@ -1,9 +1,13 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import main.model.Role;
+
+import org.antlr.v4.runtime.misc.Array2DHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,14 +36,40 @@ import main.dto.NoteDTO;
 import main.dto.StudentDTO;
 import main.dto.StudentOnYearDTO;
 import main.dto.YearOfStudyDTO;
+import main.mappers.ExamMapper;
+import main.model.Account;
+import main.model.Address;
+import main.model.Country;
+import main.model.Department;
 import main.model.Examination;
+import main.model.Faculty;
+import main.model.ForumUser;
+import main.model.Place;
+import main.model.RegisteredUser;
+import main.model.Student;
+import main.model.StudentAffairsOffice;
+import main.model.StudentOnYear;
+import main.model.StudyProgramme;
+import main.model.SubjectAttendance;
+import main.model.Teacher;
+import main.model.University;
+import main.model.YearOfStudy;
+import main.repository.RoleRepository;
 import main.service.ExaminationService;
+import main.service.RoleService;
+import main.service.StudentOnYearService;
 
 @RestController
 @RequestMapping("/api/examinations")
 public class ExaminationController implements ControllerInterface<ExaminationDTO> {
     @Autowired
     private ExaminationService service;
+    
+    @Autowired
+    private StudentOnYearService studentOnYearService;
+    
+    @Autowired
+    private RoleService roleService;
 
     @Override
     @Secured({"ADMIN", "TEACHER", "STUDENT", "STAFF"})
@@ -50,37 +80,37 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
         ArrayList<EvaluationDTO> evaluations;
 
         for (Examination e : service.findAll()) {
-            notes = (ArrayList<NoteDTO>) e.getNotes()
+            notes = (ArrayList<NoteDTO>) (e.getNotes() != null ? e.getNotes()
                     .stream()
-                    .map(n -> new NoteDTO(n.getId(), n.getContent(), null, n.getActive()))
+                    .map(n -> new NoteDTO(n.getId(), n.getContent(), null, n.getActive())) : null)
                     .collect(Collectors.toList());
 
-            evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
+            evaluations = (ArrayList<EvaluationDTO>) (e.getEvaluations() != null ? e.getEvaluations().stream().map(ev ->
                             new EvaluationDTO(ev.getId(),
                                     ev.getStartTime(),
                                     ev.getEndTime(),
                                     ev.getNumberOfPoints(),
-                                    new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                            null, ev.getEvaluationType().getActive()),
-                                    new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                            null, ev.getEvaluationInstrument().getActive()),
+                                    (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+                                            null, ev.getEvaluationType().getActive()) : null),
+                                    (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+                                            null, ev.getEvaluationInstrument().getActive()) : null),
                                     null, null, null,
-                                    ev.getActive()))
+                                    ev.getActive())) : null)
                     .collect(Collectors.toList());
 
 
             exams.add(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
                     notes, evaluations,
-                    new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                            new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                    (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                            (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
                                     null, e.getStudentOnYear().getStudent().getFirstName(),
                                     e.getStudentOnYear().getStudent().getLastName(),
-                                    e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
+                                    e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                             e.getStudentOnYear().getIndexNumber(),
-                            new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                            (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                     e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                    null, null),
-                            null, null, null),
+                                    null, null) : null),
+                            null, null, null) : null),
                     e.getActive()));
         }
 
@@ -100,59 +130,36 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
         Page<Examination> examPage = service.findAll(pageable);
 
         List<ExaminationDTO> examDTOs = examPage.stream().map(e -> {
-            List<NoteDTO> notes = e.getNotes().stream().map(n ->
-                    new NoteDTO(n.getId(), n.getContent(), null, n.getActive())
-            ).collect(Collectors.toList());
+        	List<NoteDTO> notes = (ArrayList<NoteDTO>) e.getNotes()
+                    .stream()
+                    .map(n -> new NoteDTO(n.getId(), n.getContent(), null, n.getActive()))
+                    .collect(Collectors.toList());
 
-            List<EvaluationDTO> evaluations = e.getEvaluations().stream().map(ev ->
-                    new EvaluationDTO(
-                            ev.getId(),
-                            ev.getStartTime(),
-                            ev.getEndTime(),
-                            ev.getNumberOfPoints(),
-                            new EvaluationTypeDTO(
-                                    ev.getEvaluationType().getId(),
-                                    ev.getEvaluationType().getName(),
-                                    null,
-                                    ev.getEvaluationType().getActive()
-                            ),
-                            new EvaluationInstrumentDTO(
-                                    ev.getEvaluationInstrument().getId(),
-                                    ev.getEvaluationInstrument().getName(),
-                                    null,
-                                    ev.getEvaluationInstrument().getActive()
-                            ),
-                            null, null, null,
-                            ev.getActive()
-                    )
-            ).collect(Collectors.toList());
+            List<EvaluationDTO> evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
+                            new EvaluationDTO(ev.getId(),
+                                    ev.getStartTime(),
+                                    ev.getEndTime(),
+                                    ev.getNumberOfPoints(),
+                                    (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+                                            null, ev.getEvaluationType().getActive()) : null),
+                                    (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+                                            null, ev.getEvaluationInstrument().getActive()) : null),
+                                    null, null, null,
+                                    ev.getActive())).collect(Collectors.toList());
 
-            return new ExaminationDTO(
-                    e.getId(),
-                    e.getNumberOfPoints(),
-                    notes,
-                    evaluations,
-                    new StudentOnYearDTO(
-                            e.getStudentOnYear().getId(),
-                            e.getStudentOnYear().getDateOfApplication(),
-                            new StudentDTO(
-                                    e.getStudentOnYear().getStudent().getId(),
-                                    null,
-                                    e.getStudentOnYear().getStudent().getFirstName(),
+            return new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+                    notes, evaluations,
+                    (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                            (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                                    null, e.getStudentOnYear().getStudent().getFirstName(),
                                     e.getStudentOnYear().getStudent().getLastName(),
-                                    e.getStudentOnYear().getStudent().getUmcn(),
-                                    null, null, null, null, null
-                            ),
+                                    e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                             e.getStudentOnYear().getIndexNumber(),
-                            new YearOfStudyDTO(
-                                    e.getStudentOnYear().getYearOfStudy().getId(),
+                            (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                     e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                    null, null
-                            ),
-                            null, null, null
-                    ),
-                    e.getActive()
-            );
+                                    null, null) : null),
+                            null, null, null) : null),
+                    e.getActive());
         }).collect(Collectors.toList());
 
         Page<ExaminationDTO> resultPage = new PageImpl<>(examDTOs, pageable, examPage.getTotalElements());
@@ -163,7 +170,7 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     @Secured({"ADMIN", "TEACHER", "STUDENT", "STAFF"})
     @GetMapping("/active")
     public ResponseEntity<Iterable<ExaminationDTO>> findAllActive() {
-        ArrayList<ExaminationDTO> exams = new ArrayList<ExaminationDTO>();
+    	ArrayList<ExaminationDTO> exams = new ArrayList<>();
         ArrayList<NoteDTO> notes;
         ArrayList<EvaluationDTO> evaluations;
 
@@ -178,10 +185,10 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
                                     ev.getStartTime(),
                                     ev.getEndTime(),
                                     ev.getNumberOfPoints(),
-                                    new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                            null, ev.getEvaluationType().getActive()),
-                                    new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                            null, ev.getEvaluationInstrument().getActive()),
+                                    (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+                                            null, ev.getEvaluationType().getActive()) : null),
+                                    (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+                                            null, ev.getEvaluationInstrument().getActive()) : null),
                                     null, null, null,
                                     ev.getActive()))
                     .collect(Collectors.toList());
@@ -189,16 +196,16 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 
             exams.add(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
                     notes, evaluations,
-                    new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                            new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                    (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                            (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
                                     null, e.getStudentOnYear().getStudent().getFirstName(),
                                     e.getStudentOnYear().getStudent().getLastName(),
-                                    e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
+                                    e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                             e.getStudentOnYear().getIndexNumber(),
-                            new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                            (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                     e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                    null, null),
-                            null, null, null),
+                                    null, null) : null),
+                            null, null, null) : null),
                     e.getActive()));
         }
 
@@ -224,31 +231,30 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
                 .collect(Collectors.toList());
 
         evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
-                        new EvaluationDTO(ev.getId(),
-                                ev.getStartTime(),
-                                ev.getEndTime(),
-                                ev.getNumberOfPoints(),
-                                new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                        null, ev.getEvaluationType().getActive()),
-                                new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                        null, ev.getEvaluationInstrument().getActive()),
-                                null, null, null,
-                                ev.getActive()))
-                .collect(Collectors.toList());
+				        new EvaluationDTO(ev.getId(),
+				                ev.getStartTime(),
+				                ev.getEndTime(),
+				                ev.getNumberOfPoints(),
+				                (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+				                        null, ev.getEvaluationType().getActive()) : null),
+				                (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+				                        null, ev.getEvaluationInstrument().getActive()) : null),
+				                null, null, null,
+				                ev.getActive())).collect(Collectors.toList());
 
 
         return new ResponseEntity<>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
                 notes, evaluations,
-                new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                        new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
                                 null, e.getStudentOnYear().getStudent().getFirstName(),
                                 e.getStudentOnYear().getStudent().getLastName(),
-                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                         e.getStudentOnYear().getIndexNumber(),
-                        new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                 e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                null, null),
-                        null, null, null),
+                                null, null) : null),
+                        null, null, null) : null),
                 e.getActive()), HttpStatus.OK);
     }
 
@@ -256,10 +262,145 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     @Secured({"ADMIN", "TEACHER"})
     @PostMapping
     public ResponseEntity<ExaminationDTO> create(@RequestBody ExaminationDTO t) {
-        Examination e = service.create(new Examination(null, t.getNumberOfPoints(),
-                service.findById(t.getId()).get().getNotes(),
-                service.findById(t.getId()).get().getEvaluations(),
-                service.findById(t.getId()).get().getStudentOnYear(), true));
+    	HashSet<Role> studentRoles = new HashSet<Role>();
+    	HashSet<Role> headmasterRoles = new HashSet<Role>();
+    	HashSet<Role> rectorRoles = new HashSet<Role>();
+    	ArrayList<Place> places = new ArrayList<Place>();
+    	ArrayList<Faculty> faculties = new ArrayList<Faculty>();
+    	
+    	studentRoles = (HashSet<Role>) t.getStudentOnYear()
+    							.getStudent()
+    							.getUser()
+    							.getRoleNames()
+    							.stream().map(r -> roleService.findByName(r))
+    							.collect(Collectors.toSet());
+    	
+    	headmasterRoles = (HashSet<Role>) t.getStudentOnYear()
+				.getStudent()
+				.getFaculty()
+				.getHeadmaster()
+				.getUser()
+				.getRoleNames()
+				.stream().map(r -> roleService.findByName(r))
+				.collect(Collectors.toSet());
+    	
+    	rectorRoles = (HashSet<Role>) t.getStudentOnYear()
+				.getStudent()
+				.getFaculty()
+				.getUniversity()
+				.getRector()
+				.getUser()
+				.getRoleNames()
+				.stream().map(r -> roleService.findByName(r))
+				.collect(Collectors.toSet());
+    	
+    	faculties = (ArrayList<Faculty>) t.getStudentOnYear()
+											.getStudent()
+											.getFaculty()
+											.getUniversity()
+											.getFaculties()
+											.stream()
+											.map(f -> 
+											new Faculty(f.getId(), f.getName(), 
+													new Address(null, null, 0, null, null),
+													new Teacher(null, null, null, null, null, null, null, null, null, null, null, null),
+													new University(null, null, null, null, null, null, null, faculties, null),
+													f.getContactDetails(), f.getDescription(),
+													new HashSet<Department>(),
+													new ArrayList<StudyProgramme>(),
+													null, null, null))
+											.toList();
+    	
+    	
+    	StudentOnYear student = new StudentOnYear(t.getStudentOnYear().getId(), t.getStudentOnYear().getDateOfApplication(),
+    			new Student(t.getStudentOnYear().getStudent().getId(),
+    					new RegisteredUser(t.getStudentOnYear().getStudent().getUser().getId(), 
+    							t.getStudentOnYear().getStudent().getUser().getUsername(),
+    							t.getStudentOnYear().getStudent().getUser().getPassword(),
+    							t.getStudentOnYear().getStudent().getUser().getEmail(),
+    							null, null, studentRoles ,
+    							t.getStudentOnYear().getStudent().getUser().getActive()),
+    					t.getStudentOnYear().getStudent().getFirstName(),
+    					t.getStudentOnYear().getStudent().getLastName(),
+    					t.getStudentOnYear().getStudent().getUmcn(),
+    					new Address(t.getStudentOnYear().getStudent().getAddress().getId(),
+    							t.getStudentOnYear().getStudent().getAddress().getStreet(), 
+    							t.getStudentOnYear().getStudent().getAddress().getHouseNumber(),
+    							new Place(t.getStudentOnYear().getStudent().getAddress().getPlace().getId(),
+    									t.getStudentOnYear().getStudent().getAddress().getPlace().getName(),
+    									new Country(t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getId(),
+    											t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getName(),
+    											null, 
+    											t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getActive()), 
+    									t.getStudentOnYear().getStudent().getAddress().getPlace().getActive()), 
+    							t.getStudentOnYear().getStudent().getAddress().getActive()),
+    					new HashSet<StudentOnYear>(),
+    					new ArrayList<SubjectAttendance>(),
+    					new Faculty(t.getStudentOnYear().getStudent().getFaculty().getId(),
+    							t.getStudentOnYear().getStudent().getFaculty().getName(),
+    							new Address(t.getStudentOnYear().getStudent().getFaculty().getAddress().getId(),
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getStreet(),
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getHouseNumber(),
+    									new Place(t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getId(),
+    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getName(),
+    	    									new Country(t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getName(),
+    	    											null, 
+    	    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getActive()), 
+    	    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getActive()), 
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getActive()),
+    							new Teacher(null, null, null, null, null, null, null, null, null, null, null, null),
+    							new University(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getId(),
+    									null, null, new Address(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getId(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getStreet(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getHouseNumber(),
+    	    									new Place(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getName(),
+    	    	    									new Country(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
+    	    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(),
+    	    	    											null, 
+    	    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()), 
+    	    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getActive()), 
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getActive()), 
+    									new Teacher(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getId(),
+    											new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getId(),
+    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getUsername(),
+    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getPassword(),
+    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getEmail(),
+    													new ArrayList<ForumUser>(), new ArrayList<Account>(), rectorRoles, 
+    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
+    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getFirstName(),
+    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getLastName(),
+    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUmcn(),
+    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getBiography(),
+    											null, null, null, null, null, 
+    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getContactDetails(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getDescription(),
+    									null, 
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getActive()),
+    							t.getStudentOnYear().getStudent().getFaculty().getContactDetails(),
+    							t.getStudentOnYear().getStudent().getFaculty().getDescription(),
+    							new HashSet<Department>(),
+    							new ArrayList<StudyProgramme>(),
+    							new ArrayList<Student>(),
+    							new StudentAffairsOffice(null, null, null, null), 
+    							t.getStudentOnYear().getStudent().getFaculty().getActive()),
+    					t.getStudentOnYear().getStudent().getActive()),
+    			t.getStudentOnYear().getIndexNumber(), 
+    			new YearOfStudy(t.getStudentOnYear().getYearOfStudy().getId(), 
+    							t.getStudentOnYear().getYearOfStudy().getYearOfStudy(), null,
+    							t.getStudentOnYear().getYearOfStudy().getActive()),
+    			new ArrayList<Examination>(),
+    			null,
+    			t.getStudentOnYear().getActive());
+    	
+//        Examination e = service.create(new Examination(null, t.getNumberOfPoints(),
+//                service.findById(t.getId()).get().getNotes(),
+//                service.findById(t.getId()).get().getEvaluations(),
+//                student, true));
+    	
+    	Examination e = service.create(ExamMapper.toEntity(t));
 
         if (e == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -273,32 +414,32 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
                 .collect(Collectors.toList());
 
         evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
-                        new EvaluationDTO(ev.getId(),
-                                ev.getStartTime(),
-                                ev.getEndTime(),
-                                ev.getNumberOfPoints(),
-                                new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                        null, ev.getEvaluationType().getActive()),
-                                new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                        null, ev.getEvaluationInstrument().getActive()),
-                                null, null, null,
-                                ev.getActive()))
-                .collect(Collectors.toList());
+				        new EvaluationDTO(ev.getId(),
+				                ev.getStartTime(),
+				                ev.getEndTime(),
+				                ev.getNumberOfPoints(),
+				                (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+				                        null, ev.getEvaluationType().getActive()) : null),
+				                (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+				                        null, ev.getEvaluationInstrument().getActive()) : null),
+				                null, null, null,
+				                ev.getActive())).collect(Collectors.toList());
 
 
-        return new ResponseEntity<>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
-                notes, evaluations,
-                new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                        new StudentDTO(e.getStudentOnYear().getStudent().getId(),
-                                null, e.getStudentOnYear().getStudent().getFirstName(),
-                                e.getStudentOnYear().getStudent().getLastName(),
-                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
-                        e.getStudentOnYear().getIndexNumber(),
-                        new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
-                                e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                null, null),
-                        null, null, null),
-                e.getActive()), HttpStatus.CREATED);
+//        return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+//                notes, evaluations,
+//                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+//                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+//                                null, e.getStudentOnYear().getStudent().getFirstName(),
+//                                e.getStudentOnYear().getStudent().getLastName(),
+//                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
+//                        e.getStudentOnYear().getIndexNumber(),
+//                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+//                                e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
+//                                null, null) : null),
+//                        null, null, null) : null),
+//                e.getActive()), HttpStatus.CREATED);
+        return new ResponseEntity<ExaminationDTO>(ExamMapper.toDTO(e),HttpStatus.CREATED);
     }
 
     @Override
@@ -311,23 +452,23 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<NoteDTO> notes = e.getNotes()
+        List<NoteDTO> notes = (ArrayList<NoteDTO>) e.getNotes()
                 .stream()
                 .map(n -> new NoteDTO(n.getId(), n.getContent(), null, n.getActive()))
                 .collect(Collectors.toList());
 
-        List<EvaluationDTO> evaluations = e.getEvaluations().stream().map(ev ->
-                        new EvaluationDTO(ev.getId(),
-                                ev.getStartTime(),
-                                ev.getEndTime(),
-                                ev.getNumberOfPoints(),
-                                new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                        null, ev.getEvaluationType().getActive()),
-                                new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                        null, ev.getEvaluationInstrument().getActive()),
-                                null, null, null,
-                                ev.getActive()))
-                .collect(Collectors.toList());
+        List<EvaluationDTO> evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
+								        new EvaluationDTO(ev.getId(),
+								                ev.getStartTime(),
+								                ev.getEndTime(),
+								                ev.getNumberOfPoints(),
+								                (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+								                        null, ev.getEvaluationType().getActive()) : null),
+								                (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+								                        null, ev.getEvaluationInstrument().getActive()) : null),
+								                null, null, null,
+								                ev.getActive()))
+        		.collect(Collectors.toList());
 
         e.setId(t.getId());
         e.setNumberOfPoints(t.getNumberOfPoints());
@@ -338,18 +479,18 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 
         e = service.update(e);
 
-        return new ResponseEntity<>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+        return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
                 notes, evaluations,
-                new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                        new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
                                 null, e.getStudentOnYear().getStudent().getFirstName(),
                                 e.getStudentOnYear().getStudent().getLastName(),
-                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                         e.getStudentOnYear().getIndexNumber(),
-                        new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                 e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                null, null),
-                        null, null, null),
+                                null, null) : null),
+                        null, null, null) : null),
                 e.getActive()), HttpStatus.OK);
     }
 
@@ -379,32 +520,33 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
                 .collect(Collectors.toList());
 
         evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
-                        new EvaluationDTO(ev.getId(),
-                                ev.getStartTime(),
-                                ev.getEndTime(),
-                                ev.getNumberOfPoints(),
-                                new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
-                                        null, ev.getEvaluationType().getActive()),
-                                new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
-                                        null, ev.getEvaluationInstrument().getActive()),
-                                null, null, null,
-                                ev.getActive()))
-                .collect(Collectors.toList());
+					        new EvaluationDTO(ev.getId(),
+					                ev.getStartTime(),
+					                ev.getEndTime(),
+					                ev.getNumberOfPoints(),
+					                (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+					                        null, ev.getEvaluationType().getActive()) : null),
+					                (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
+					                        null, ev.getEvaluationInstrument().getActive()) : null),
+					                null, null, null,
+					                ev.getActive()))
+        		.collect(Collectors.toList());
+
 
         service.softDelete(id);
 
-        return new ResponseEntity<>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+        return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
                 notes, evaluations,
-                new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-                        new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
                                 null, e.getStudentOnYear().getStudent().getFirstName(),
                                 e.getStudentOnYear().getStudent().getLastName(),
-                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null),
+                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
                         e.getStudentOnYear().getIndexNumber(),
-                        new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
                                 e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-                                null, null),
-                        null, null, null),
+                                null, null) : null),
+                        null, null, null) : null),
                 e.getActive()), HttpStatus.OK);
     }
 }

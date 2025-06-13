@@ -101,7 +101,7 @@ public class FileService implements ServiceInterface<File> {
 		}
 		
 		file.setStudent(student);
-		file.setEvaluation(evaluation);
+//		file.setEvaluation(evaluation);
 		file.setActive(true);
 		
 		return fileRepo.save(file);

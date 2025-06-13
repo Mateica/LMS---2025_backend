@@ -139,7 +139,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
                             null, e.getEvaluationType().getActive()),
                     new EvaluationInstrumentDTO(e.getEvaluationInstrument().getId(),
                             e.getEvaluationInstrument().getName(),
-                            new FileDTO(e.getEvaluationInstrument().getFile().getId(),
+                            (e.getEvaluationInstrument().getFile() != null ? new FileDTO(e.getEvaluationInstrument().getFile().getId(),
                                     e.getEvaluationInstrument().getFile().getName(),
                                     e.getEvaluationInstrument().getFile().getUrl(),
                                     e.getEvaluationInstrument().getFile().getDescription(),
@@ -156,7 +156,7 @@ public class EvaluationController implements ControllerInterface<EvaluationDTO> 
                                             e.getEvaluationInstrument().getFile().getStudent().getLastName(),
                                             e.getEvaluationInstrument().getFile().getStudent().getUmcn(), null, null, null, null, null),
                                     e.getEvaluationInstrument().getFile().getDocument(),
-                                    e.getEvaluationInstrument().getFile().getActive()), null),
+                                    e.getEvaluationInstrument().getFile().getActive()) : null), null),
                     null, null, null, null));
         }
         return new ResponseEntity<>(evaluations, HttpStatus.OK);

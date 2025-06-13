@@ -1,6 +1,8 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,20 +39,26 @@ import main.dto.TeacherOnRealizationDTO;
 import main.dto.TeachingTypeDTO;
 import main.dto.TitleDTO;
 import main.dto.UniversityDTO;
+import main.model.Account;
+import main.model.Address;
 import main.model.Department;
 import main.model.EvaluationGrade;
 import main.model.Faculty;
 import main.model.File;
+import main.model.ForumUser;
 import main.model.RegisteredUser;
+import main.model.Role;
 import main.model.StudentAffairsOffice;
 import main.model.StudentServiceStaff;
 import main.model.Teacher;
 import main.model.TeacherOnRealization;
 import main.model.TeachingMaterial;
 import main.model.Title;
+import main.model.University;
 import main.service.EvaluationGradeService;
 import main.service.FacultyService;
 import main.service.RegisteredUserService;
+import main.service.RoleService;
 import main.service.ServiceInterface;
 import main.service.StudentAffairsOfficeService;
 import main.service.StudentServiceStaffService;
@@ -69,6 +77,9 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 	
 	@Autowired
 	private RegisteredUserService userService;
+	
+	@Autowired
+	private RoleService roleService;
 	
 	@Autowired
 	private FacultyService facultyService;
@@ -94,20 +105,47 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 			staff = (ArrayList<StudentServiceStaffDTO>) s.getStaff()
 					.stream()
 					.map(n -> new StudentServiceStaffDTO(n.getId(), 
-							new RegisteredUserDTO(n.getRegisteredUser().getUsername(), null, n.getRegisteredUser().getEmail()),
+							(n.getRegisteredUser() != null ? 
+									new RegisteredUserDTO(n.getRegisteredUser().getUsername(), null, n.getRegisteredUser().getEmail()) : null),
 							n.getFirstName(),
 							n.getLastName(), null, n.getActive()))
 					.collect(Collectors.toList());
+			
 			offices.add(new StudentAffairsOfficeDTO(s.getId(), staff, 
-					new FacultyDTO(s.getFaculty().getId(), s.getFaculty().getName(),
-							new AddressDTO(s.getFaculty().getAddress().getId(), 
+					(s.getFaculty() != null ? new FacultyDTO(s.getFaculty().getId(), s.getFaculty().getName(),
+							(s.getFaculty().getAddress() != null ? new AddressDTO(s.getFaculty().getAddress().getId(), 
 									s.getFaculty().getAddress().getStreet(),
 									s.getFaculty().getAddress().getHouseNumber(), null,
-									s.getFaculty().getAddress().getActive()),
-							new TeacherDTO(null, null, null, null, null, null, null, null, null, null, null, null),
-							new UniversityDTO(null, null, null, null, null, null, null, null, null), 
+									s.getFaculty().getAddress().getActive()) : null),
+							(s.getFaculty().getHeadmaster() != null ? new TeacherDTO(s.getFaculty().getHeadmaster().getId(),
+									null, s.getFaculty().getHeadmaster().getFirstName(),
+										s.getFaculty().getHeadmaster().getLastName(),
+										s.getFaculty().getHeadmaster().getUmcn(),
+										s.getFaculty().getHeadmaster().getBiography(),
+										null, null, null, null, null, 
+										s.getFaculty().getHeadmaster().getActive()) : null),
+							(s.getFaculty().getUniversity() != null ? 
+									new UniversityDTO(s.getFaculty().getUniversity().getId(),
+											s.getFaculty().getUniversity().getName(),
+											s.getFaculty().getUniversity().getDateEstablished(),
+											(s.getFaculty().getUniversity().getAddress() != null ? 
+													new AddressDTO(s.getFaculty().getUniversity().getAddress().getId(), 
+													s.getFaculty().getUniversity().getAddress().getStreet(),
+													s.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+													s.getFaculty().getUniversity().getAddress().getActive()) : null),
+											(s.getFaculty().getUniversity().getRector() != null ? 
+													new TeacherDTO(s.getFaculty().getUniversity().getRector().getId(),
+													null, s.getFaculty().getUniversity().getRector().getFirstName(),
+													s.getFaculty().getUniversity().getRector().getLastName(),
+													s.getFaculty().getUniversity().getRector().getUmcn(),
+													s.getFaculty().getUniversity().getRector().getBiography(),
+														null, null, null, null, null, 
+														s.getFaculty().getUniversity().getRector().getActive()) : null),
+											s.getFaculty().getUniversity().getContactDetails(),
+											s.getFaculty().getUniversity().getDescription(), null,
+											s.getFaculty().getUniversity().getActive()) : null), 
 							s.getFaculty().getContactDetails(), s.getFaculty().getDescription(),
-							null, null, null, null, s.getFaculty().getActive()),
+							null, null, null, null, s.getFaculty().getActive()) : null),
 					s.getActive()));
 		}
 		return new ResponseEntity<Iterable<StudentAffairsOfficeDTO>>(offices, HttpStatus.OK);
@@ -131,43 +169,48 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 	        List<StudentServiceStaffDTO> staff = o.getStaff().stream().map(s -> 
 	            new StudentServiceStaffDTO(
 	                s.getId(),         
-	                new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
+	                (s.getRegisteredUser() != null ?
+	                		new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
 	                s.getFirstName(), s.getLastName(), null, s.getActive()
 	            )
 	        ).collect(Collectors.toList());
 
-	        return new StudentAffairsOfficeDTO(
-	            o.getId(),       
-	            staff,
-	            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-						new AddressDTO(o.getFaculty().getAddress().getId(), 
-								o.getFaculty().getAddress().getStreet(),
-								o.getFaculty().getAddress().getHouseNumber(), null,
-								o.getFaculty().getAddress().getActive()),
-						new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
-								null, o.getFaculty().getHeadmaster().getFirstName(),
-								o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-								o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-								o.getFaculty().getHeadmaster().getActive()),
-						new UniversityDTO(o.getFaculty().getUniversity().getId(),
-								o.getFaculty().getUniversity().getName(),
-								o.getFaculty().getUniversity().getDateEstablished(),
-								new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-										o.getFaculty().getUniversity().getAddress().getStreet(),
-										o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-										new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-												o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-												new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-														o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-												o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-										o.getFaculty().getUniversity().getAddress().getActive()),
-								null, o.getFaculty().getUniversity().getContactDetails(),
-								o.getFaculty().getUniversity().getDescription(),
-								null, o.getFaculty().getUniversity().getActive()), 
-						o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-						null, null, null, null, o.getFaculty().getActive()),
-	            o.getActive()
-	        );
+	        return new StudentAffairsOfficeDTO(o.getId(), staff, 
+					(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+							(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
+									o.getFaculty().getAddress().getStreet(),
+									o.getFaculty().getAddress().getHouseNumber(), null,
+									o.getFaculty().getAddress().getActive()) : null),
+							(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+									null, o.getFaculty().getHeadmaster().getFirstName(),
+										o.getFaculty().getHeadmaster().getLastName(),
+										o.getFaculty().getHeadmaster().getUmcn(),
+										o.getFaculty().getHeadmaster().getBiography(),
+										null, null, null, null, null, 
+										o.getFaculty().getHeadmaster().getActive()) : null),
+							(o.getFaculty().getUniversity() != null ? 
+									new UniversityDTO(o.getFaculty().getUniversity().getId(),
+											o.getFaculty().getUniversity().getName(),
+											o.getFaculty().getUniversity().getDateEstablished(),
+											(o.getFaculty().getUniversity().getAddress() != null ? 
+													new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+													o.getFaculty().getUniversity().getAddress().getStreet(),
+													o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+													o.getFaculty().getUniversity().getAddress().getActive()) : null),
+											(o.getFaculty().getUniversity().getRector() != null ? 
+													new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+													null, o.getFaculty().getUniversity().getRector().getFirstName(),
+													o.getFaculty().getUniversity().getRector().getLastName(),
+													o.getFaculty().getUniversity().getRector().getUmcn(),
+													o.getFaculty().getUniversity().getRector().getBiography(),
+														null, null, null, null, null, 
+														o.getFaculty().getUniversity().getRector().getActive()) : null),
+											o.getFaculty().getUniversity().getContactDetails(),
+											o.getFaculty().getUniversity().getDescription(), null,
+											o.getFaculty().getUniversity().getActive()) : null), 
+							o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
+							null, null, null, null, o.getFaculty().getActive()) : null),
+					o.getActive());
 	    }).collect(Collectors.toList());
 
 	    Page<StudentAffairsOfficeDTO> resultPage = new PageImpl<>(officeDTOs, pageable, officePage.getTotalElements());
@@ -186,42 +229,48 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 			staff = (ArrayList<StudentServiceStaffDTO>) o.getStaff()
 					.stream()
 					.map(n -> new StudentServiceStaffDTO(n.getId(), 
-							new RegisteredUserDTO(n.getRegisteredUser().getUsername(), null, n.getRegisteredUser().getEmail()),
+							(n.getRegisteredUser() != null ?
+									new RegisteredUserDTO(n.getRegisteredUser().getUsername(), null, n.getRegisteredUser().getEmail()) : null),
 							n.getFirstName(),
 							n.getLastName(), null, n.getActive()))
 					.collect(Collectors.toList());
-			offices.add(new StudentAffairsOfficeDTO(
-		            o.getId(),       
-		            staff,
-		            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-							new AddressDTO(o.getFaculty().getAddress().getId(), 
+			
+			offices.add(new StudentAffairsOfficeDTO(o.getId(), staff, 
+					(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+							(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
 									o.getFaculty().getAddress().getStreet(),
 									o.getFaculty().getAddress().getHouseNumber(), null,
-									o.getFaculty().getAddress().getActive()),
-							new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+									o.getFaculty().getAddress().getActive()) : null),
+							(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
 									null, o.getFaculty().getHeadmaster().getFirstName(),
-									o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-									o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-									o.getFaculty().getHeadmaster().getActive()),
-							new UniversityDTO(o.getFaculty().getUniversity().getId(),
-									o.getFaculty().getUniversity().getName(),
-									o.getFaculty().getUniversity().getDateEstablished(),
-									new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-											o.getFaculty().getUniversity().getAddress().getStreet(),
-											o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-											new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-													o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-													new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-															o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-													o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-											o.getFaculty().getUniversity().getAddress().getActive()),
-									null, o.getFaculty().getUniversity().getContactDetails(),
-									o.getFaculty().getUniversity().getDescription(),
-									null, o.getFaculty().getUniversity().getActive()), 
+										o.getFaculty().getHeadmaster().getLastName(),
+										o.getFaculty().getHeadmaster().getUmcn(),
+										o.getFaculty().getHeadmaster().getBiography(),
+										null, null, null, null, null, 
+										o.getFaculty().getHeadmaster().getActive()) : null),
+							(o.getFaculty().getUniversity() != null ? 
+									new UniversityDTO(o.getFaculty().getUniversity().getId(),
+											o.getFaculty().getUniversity().getName(),
+											o.getFaculty().getUniversity().getDateEstablished(),
+											(o.getFaculty().getUniversity().getAddress() != null ? 
+													new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+													o.getFaculty().getUniversity().getAddress().getStreet(),
+													o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+													o.getFaculty().getUniversity().getAddress().getActive()) : null),
+											(o.getFaculty().getUniversity().getRector() != null ? 
+													new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+													null, o.getFaculty().getUniversity().getRector().getFirstName(),
+													o.getFaculty().getUniversity().getRector().getLastName(),
+													o.getFaculty().getUniversity().getRector().getUmcn(),
+													o.getFaculty().getUniversity().getRector().getBiography(),
+														null, null, null, null, null, 
+														o.getFaculty().getUniversity().getRector().getActive()) : null),
+											o.getFaculty().getUniversity().getContactDetails(),
+											o.getFaculty().getUniversity().getDescription(), null,
+											o.getFaculty().getUniversity().getActive()) : null), 
 							o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-							null, null, null, null, o.getFaculty().getActive()),
-		            o.getActive()
-		        ));
+							null, null, null, null, o.getFaculty().getActive()) : null),
+					o.getActive()));
 		}
 		
 		return new ResponseEntity<Iterable<StudentAffairsOfficeDTO>>(offices, HttpStatus.OK);
@@ -248,38 +297,42 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 						n.getLastName(), null, n.getActive()))
 				.collect(Collectors.toList());
 		
-		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(
-	            o.getId(),       
-	            staff,
-	            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-						new AddressDTO(o.getFaculty().getAddress().getId(), 
+		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(o.getId(), staff, 
+				(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+						(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
 								o.getFaculty().getAddress().getStreet(),
 								o.getFaculty().getAddress().getHouseNumber(), null,
-								o.getFaculty().getAddress().getActive()),
-						new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+								o.getFaculty().getAddress().getActive()) : null),
+						(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
 								null, o.getFaculty().getHeadmaster().getFirstName(),
-								o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-								o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-								o.getFaculty().getHeadmaster().getActive()),
-						new UniversityDTO(o.getFaculty().getUniversity().getId(),
-								o.getFaculty().getUniversity().getName(),
-								o.getFaculty().getUniversity().getDateEstablished(),
-								new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-										o.getFaculty().getUniversity().getAddress().getStreet(),
-										o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-										new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-												o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-												new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-														o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-												o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-										o.getFaculty().getUniversity().getAddress().getActive()),
-								null, o.getFaculty().getUniversity().getContactDetails(),
-								o.getFaculty().getUniversity().getDescription(),
-								null, o.getFaculty().getUniversity().getActive()), 
+									o.getFaculty().getHeadmaster().getLastName(),
+									o.getFaculty().getHeadmaster().getUmcn(),
+									o.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null, 
+									o.getFaculty().getHeadmaster().getActive()) : null),
+						(o.getFaculty().getUniversity() != null ? 
+								new UniversityDTO(o.getFaculty().getUniversity().getId(),
+										o.getFaculty().getUniversity().getName(),
+										o.getFaculty().getUniversity().getDateEstablished(),
+										(o.getFaculty().getUniversity().getAddress() != null ? 
+												new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+												o.getFaculty().getUniversity().getAddress().getStreet(),
+												o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+												o.getFaculty().getUniversity().getAddress().getActive()) : null),
+										(o.getFaculty().getUniversity().getRector() != null ? 
+												new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+												null, o.getFaculty().getUniversity().getRector().getFirstName(),
+												o.getFaculty().getUniversity().getRector().getLastName(),
+												o.getFaculty().getUniversity().getRector().getUmcn(),
+												o.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													o.getFaculty().getUniversity().getRector().getActive()) : null),
+										o.getFaculty().getUniversity().getContactDetails(),
+										o.getFaculty().getUniversity().getDescription(), null,
+										o.getFaculty().getUniversity().getActive()) : null), 
 						o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-						null, null, null, null, o.getFaculty().getActive()),
-	            o.getActive()
-	        ), HttpStatus.OK);
+						null, null, null, null, o.getFaculty().getActive()) : null),
+				o.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -287,44 +340,138 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 	@Secured({"ADMIN"})
 	public ResponseEntity<StudentAffairsOfficeDTO> create(@RequestBody StudentAffairsOfficeDTO t) {
 		// TODO Auto-generated method stub
-		StudentAffairsOffice o = service.create(new StudentAffairsOffice(null,new ArrayList<StudentServiceStaff>(),
-				facultyService.findById(t.getFaculty().getId()).get(), true));
+		HashSet<Role> staffRoles = null;
+		HashSet<Role> headmasterRoles = null;
+		HashSet<Role> rectorRoles = null;
+
+		ArrayList<StudentServiceStaff> staff = (ArrayList<StudentServiceStaff>) t.getStaff().stream()
+												.map(s -> {
+													staffRoles = (HashSet<Role>) s.getRegisteredUser().getRoleNames()
+															.stream()
+															.map(r -> new Role(roleService.findByName(r).getId(),
+																	roleService.findByName(r).getName(), 
+																	roleService.findByName(r).getActive()))
+															.collect(Collectors.toSet());
+													
+													return new StudentServiceStaff(s.getId(),
+															(s.getRegisteredUser() != null ? 
+																	new RegisteredUser(s.getRegisteredUser().getId(),
+																			s.getRegisteredUser().getUsername(),
+																			s.getRegisteredUser().getPassword(),
+																			s.getRegisteredUser().getEmail(),
+																			null, null, staffRoles,
+																			s.getRegisteredUser().getActive()) : null),
+															s.getFirstName(), s.getLastName(),
+															null,
+															s.getActive());
+												})
+												.collect(Collectors.toList());
+		
+		headmasterRoles = (HashSet<Role>) t.getFaculty().getHeadmaster().getUser().getRoleNames()
+				.stream()
+				.map(r -> new Role(roleService.findByName(r).getId(),
+						roleService.findByName(r).getName(), 
+						roleService.findByName(r).getActive()))
+				.collect(Collectors.toSet());
+		
+		rectorRoles = (HashSet<Role>) t.getFaculty().getUniversity().getRector().getUser().getRoleNames()
+				.stream()
+				.map(r -> new Role(roleService.findByName(r).getId(),
+						roleService.findByName(r).getName(), 
+						roleService.findByName(r).getActive()))
+				.collect(Collectors.toSet());
+		
+		StudentAffairsOffice o = service.create(new StudentAffairsOffice(null,
+				staff, 
+				new Faculty(t.getFaculty().getId(),
+						t.getFaculty().getName(),
+						(t.getFaculty().getAddress() != null ? new Address(t.getFaculty().getAddress().getId(),
+								t.getFaculty().getAddress().getStreet(),
+								t.getFaculty().getAddress().getHouseNumber(),
+								null, 
+								t.getFaculty().getAddress().getActive()) : null),
+						(t.getFaculty().getHeadmaster() != null ? new Teacher(t.getFaculty().getHeadmaster().getId(),
+								(t.getFaculty().getHeadmaster().getUser() != null ? 
+										new RegisteredUser(t.getFaculty().getHeadmaster().getUser().getId(),
+												t.getFaculty().getHeadmaster().getUser().getUsername(),
+												t.getFaculty().getHeadmaster().getUser().getPassword(),
+												t.getFaculty().getHeadmaster().getUser().getEmail(),
+												new ArrayList<ForumUser>(), 
+												new ArrayList<Account>(), headmasterRoles,
+												t.getFaculty().getHeadmaster().getUser().getActive()) : null),
+								t.getFaculty().getHeadmaster().getFirstName(),
+								t.getFaculty().getHeadmaster().getLastName(),
+								t.getFaculty().getHeadmaster().getUmcn(),
+								t.getFaculty().getHeadmaster().getBiography(),
+								null, null, null, null, null,
+								t.getFaculty().getHeadmaster().getActive()) : null),
+						(t.getFaculty().getUniversity() != null ? 
+								new University(t.getFaculty().getUniversity().getId(),
+										t.getFaculty().getUniversity().getName(),
+										t.getFaculty().getUniversity().getDateEstablished(),
+										(t.getFaculty().getUniversity().getAddress() != null ? 
+												new Address(t.getFaculty().getUniversity().getAddress().getId(),
+														t.getFaculty().getUniversity().getAddress().getStreet(),
+														t.getFaculty().getUniversity().getAddress().getHouseNumber(),
+														null, 
+														t.getFaculty().getAddress().getActive()) : null),
+										(t.getFaculty().getHeadmaster() != null ? 
+												new Teacher(null, null, null, null, null, null, null, null, null, null, null, null) : null),
+										t.getFaculty().getUniversity().getContactDetails(),
+										t.getFaculty().getUniversity().getDescription(), null, 
+										t.getFaculty().getUniversity().getActive()) : null),
+						t.getFaculty().getContactDetails(),
+						t.getFaculty().getDescription(), null, null, null, null, 
+						t.getFaculty().getActive()),
+				true));
 		
 		if(o == null) {
 			return new ResponseEntity<StudentAffairsOfficeDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(
-	            o.getId(),       
-	            null,
-	            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-						new AddressDTO(o.getFaculty().getAddress().getId(), 
+		
+		ArrayList<StudentServiceStaffDTO> staffDTO = (ArrayList<StudentServiceStaffDTO>) o.getStaff().stream().map(s -> 
+											new StudentServiceStaffDTO(s.getId(),
+													(s.getRegisteredUser() != null ? 
+															new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+													s.getFirstName(), s.getLastName(), t, s.getActive()))
+				.collect(Collectors.toList());
+		
+		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(o.getId(), staffDTO, 
+				(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+						(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
 								o.getFaculty().getAddress().getStreet(),
 								o.getFaculty().getAddress().getHouseNumber(), null,
-								o.getFaculty().getAddress().getActive()),
-						new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+								o.getFaculty().getAddress().getActive()) : null),
+						(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
 								null, o.getFaculty().getHeadmaster().getFirstName(),
-								o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-								o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-								o.getFaculty().getHeadmaster().getActive()),
-						new UniversityDTO(o.getFaculty().getUniversity().getId(),
-								o.getFaculty().getUniversity().getName(),
-								o.getFaculty().getUniversity().getDateEstablished(),
-								new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-										o.getFaculty().getUniversity().getAddress().getStreet(),
-										o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-										new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-												o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-												new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-														o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-												o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-										o.getFaculty().getUniversity().getAddress().getActive()),
-								null, o.getFaculty().getUniversity().getContactDetails(),
-								o.getFaculty().getUniversity().getDescription(),
-								null, o.getFaculty().getUniversity().getActive()), 
+									o.getFaculty().getHeadmaster().getLastName(),
+									o.getFaculty().getHeadmaster().getUmcn(),
+									o.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null, 
+									o.getFaculty().getHeadmaster().getActive()) : null),
+						(o.getFaculty().getUniversity() != null ? 
+								new UniversityDTO(o.getFaculty().getUniversity().getId(),
+										o.getFaculty().getUniversity().getName(),
+										o.getFaculty().getUniversity().getDateEstablished(),
+										(o.getFaculty().getUniversity().getAddress() != null ? 
+												new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+												o.getFaculty().getUniversity().getAddress().getStreet(),
+												o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+												o.getFaculty().getUniversity().getAddress().getActive()) : null),
+										(o.getFaculty().getUniversity().getRector() != null ? 
+												new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+												null, o.getFaculty().getUniversity().getRector().getFirstName(),
+												o.getFaculty().getUniversity().getRector().getLastName(),
+												o.getFaculty().getUniversity().getRector().getUmcn(),
+												o.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													o.getFaculty().getUniversity().getRector().getActive()) : null),
+										o.getFaculty().getUniversity().getContactDetails(),
+										o.getFaculty().getUniversity().getDescription(), null,
+										o.getFaculty().getUniversity().getActive()) : null), 
 						o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-						null, null, null, null, o.getFaculty().getActive()),
-	            o.getActive()
-	        ), HttpStatus.CREATED);
+						null, null, null, null, o.getFaculty().getActive()) : null),
+				o.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -358,39 +505,50 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 			return new ResponseEntity<StudentAffairsOfficeDTO>(HttpStatus.OK);
 		}
 		
+		ArrayList<StudentServiceStaffDTO> staffDTO = (ArrayList<StudentServiceStaffDTO>) o.getStaff().stream().map(s -> 
+		new StudentServiceStaffDTO(s.getId(),
+				(s.getRegisteredUser() != null ? 
+						new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+				s.getFirstName(), s.getLastName(), t, s.getActive()))
+					.collect(Collectors.toList());
 		
-		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(
-	            o.getId(),       
-	            null,
-	            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-						new AddressDTO(o.getFaculty().getAddress().getId(), 
+		
+		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(o.getId(), staffDTO, 
+				(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+						(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
 								o.getFaculty().getAddress().getStreet(),
 								o.getFaculty().getAddress().getHouseNumber(), null,
-								o.getFaculty().getAddress().getActive()),
-						new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+								o.getFaculty().getAddress().getActive()) : null),
+						(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
 								null, o.getFaculty().getHeadmaster().getFirstName(),
-								o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-								o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-								o.getFaculty().getHeadmaster().getActive()),
-						new UniversityDTO(o.getFaculty().getUniversity().getId(),
-								o.getFaculty().getUniversity().getName(),
-								o.getFaculty().getUniversity().getDateEstablished(),
-								new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-										o.getFaculty().getUniversity().getAddress().getStreet(),
-										o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-										new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-												o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-												new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-														o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-												o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-										o.getFaculty().getUniversity().getAddress().getActive()),
-								null, o.getFaculty().getUniversity().getContactDetails(),
-								o.getFaculty().getUniversity().getDescription(),
-								null, o.getFaculty().getUniversity().getActive()), 
+									o.getFaculty().getHeadmaster().getLastName(),
+									o.getFaculty().getHeadmaster().getUmcn(),
+									o.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null, 
+									o.getFaculty().getHeadmaster().getActive()) : null),
+						(o.getFaculty().getUniversity() != null ? 
+								new UniversityDTO(o.getFaculty().getUniversity().getId(),
+										o.getFaculty().getUniversity().getName(),
+										o.getFaculty().getUniversity().getDateEstablished(),
+										(o.getFaculty().getUniversity().getAddress() != null ? 
+												new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+												o.getFaculty().getUniversity().getAddress().getStreet(),
+												o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+												o.getFaculty().getUniversity().getAddress().getActive()) : null),
+										(o.getFaculty().getUniversity().getRector() != null ? 
+												new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+												null, o.getFaculty().getUniversity().getRector().getFirstName(),
+												o.getFaculty().getUniversity().getRector().getLastName(),
+												o.getFaculty().getUniversity().getRector().getUmcn(),
+												o.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													o.getFaculty().getUniversity().getRector().getActive()) : null),
+										o.getFaculty().getUniversity().getContactDetails(),
+										o.getFaculty().getUniversity().getDescription(), null,
+										o.getFaculty().getUniversity().getActive()) : null), 
 						o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-						null, null, null, null, o.getFaculty().getActive()),
-	            o.getActive()
-	        ), HttpStatus.OK);
+						null, null, null, null, o.getFaculty().getActive()) : null),
+				o.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -420,39 +578,50 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 						n.getLastName(), null, n.getActive()))
 				.collect(Collectors.toList());
 		
+		ArrayList<StudentServiceStaffDTO> staffDTO = (ArrayList<StudentServiceStaffDTO>) o.getStaff().stream().map(s -> 
+		new StudentServiceStaffDTO(s.getId(),
+				(s.getRegisteredUser() != null ? 
+						new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+				s.getFirstName(), s.getLastName(), t, s.getActive()))
+					.collect(Collectors.toList());
+		
 		service.softDelete(id);
 		
-		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(
-	            o.getId(),       
-	            staff,
-	            new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
-						new AddressDTO(o.getFaculty().getAddress().getId(), 
+		return new ResponseEntity<StudentAffairsOfficeDTO>(new StudentAffairsOfficeDTO(o.getId(), staffDTO, 
+				(o.getFaculty() != null ? new FacultyDTO(o.getFaculty().getId(), o.getFaculty().getName(),
+						(o.getFaculty().getAddress() != null ? new AddressDTO(o.getFaculty().getAddress().getId(), 
 								o.getFaculty().getAddress().getStreet(),
 								o.getFaculty().getAddress().getHouseNumber(), null,
-								o.getFaculty().getAddress().getActive()),
-						new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
+								o.getFaculty().getAddress().getActive()) : null),
+						(o.getFaculty().getHeadmaster() != null ? new TeacherDTO(o.getFaculty().getHeadmaster().getId(),
 								null, o.getFaculty().getHeadmaster().getFirstName(),
-								o.getFaculty().getHeadmaster().getLastName(), o.getFaculty().getHeadmaster().getUmcn(),
-								o.getFaculty().getHeadmaster().getBiography(), null, null, null, null, null,
-								o.getFaculty().getHeadmaster().getActive()),
-						new UniversityDTO(o.getFaculty().getUniversity().getId(),
-								o.getFaculty().getUniversity().getName(),
-								o.getFaculty().getUniversity().getDateEstablished(),
-								new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(),
-										o.getFaculty().getUniversity().getAddress().getStreet(),
-										o.getFaculty().getUniversity().getAddress().getHouseNumber(),
-										new PlaceDTO(o.getFaculty().getUniversity().getAddress().getPlace().getId(),
-												o.getFaculty().getUniversity().getAddress().getPlace().getName(),
-												new CountryDTO(o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
-														o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(), null, o.getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()),
-												o.getFaculty().getUniversity().getAddress().getPlace().getActive()),
-										o.getFaculty().getUniversity().getAddress().getActive()),
-								null, o.getFaculty().getUniversity().getContactDetails(),
-								o.getFaculty().getUniversity().getDescription(),
-								null, o.getFaculty().getUniversity().getActive()), 
+									o.getFaculty().getHeadmaster().getLastName(),
+									o.getFaculty().getHeadmaster().getUmcn(),
+									o.getFaculty().getHeadmaster().getBiography(),
+									null, null, null, null, null, 
+									o.getFaculty().getHeadmaster().getActive()) : null),
+						(o.getFaculty().getUniversity() != null ? 
+								new UniversityDTO(o.getFaculty().getUniversity().getId(),
+										o.getFaculty().getUniversity().getName(),
+										o.getFaculty().getUniversity().getDateEstablished(),
+										(o.getFaculty().getUniversity().getAddress() != null ? 
+												new AddressDTO(o.getFaculty().getUniversity().getAddress().getId(), 
+												o.getFaculty().getUniversity().getAddress().getStreet(),
+												o.getFaculty().getUniversity().getAddress().getHouseNumber(), null,
+												o.getFaculty().getUniversity().getAddress().getActive()) : null),
+										(o.getFaculty().getUniversity().getRector() != null ? 
+												new TeacherDTO(o.getFaculty().getUniversity().getRector().getId(),
+												null, o.getFaculty().getUniversity().getRector().getFirstName(),
+												o.getFaculty().getUniversity().getRector().getLastName(),
+												o.getFaculty().getUniversity().getRector().getUmcn(),
+												o.getFaculty().getUniversity().getRector().getBiography(),
+													null, null, null, null, null, 
+													o.getFaculty().getUniversity().getRector().getActive()) : null),
+										o.getFaculty().getUniversity().getContactDetails(),
+										o.getFaculty().getUniversity().getDescription(), null,
+										o.getFaculty().getUniversity().getActive()) : null), 
 						o.getFaculty().getContactDetails(), o.getFaculty().getDescription(),
-						null, null, null, null, o.getFaculty().getActive()),
-	            o.getActive()
-	        ), HttpStatus.OK);
+						null, null, null, null, o.getFaculty().getActive()) : null),
+				o.getActive()), HttpStatus.OK);
 		}
 }
