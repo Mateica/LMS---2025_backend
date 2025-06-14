@@ -389,7 +389,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 			return new ResponseEntity<TeacherDTO>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<TeacherDTO>(new TeacherDTO(s.getId(), 
-				new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),
+				(s.getUser() != null ? new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()) : null),
 				s.getFirstName(), s.getLastName(),  s.getUmcn(), s.getBiography(),
 				new ArrayList<TitleDTO>(), new ArrayList<TeacherOnRealizationDTO>(), null, null, null, s.getActive()), HttpStatus.CREATED);
 	}
@@ -455,7 +455,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 		
 		
 		return new ResponseEntity<TeacherDTO>(new TeacherDTO(s.getId(), 
-				new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),
+				(s.getUser() != null ? new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()) : null),
 				s.getFirstName(), s.getLastName(),  s.getUmcn(), s.getBiography(),
 				new ArrayList<TitleDTO>(), new ArrayList<TeacherOnRealizationDTO>(), null, null, null, s.getActive()), HttpStatus.OK);
 	}
@@ -495,7 +495,7 @@ public class TeacherController implements ControllerInterface<TeacherDTO> {
 		service.softDelete(id);
 		
 		return new ResponseEntity<TeacherDTO>(new TeacherDTO(s.getId(), 
-				new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()),
+				(s.getUser() != null ? new RegisteredUserDTO(s.getUser().getUsername(), null, s.getUser().getEmail()) : null),
 				s.getFirstName(), s.getLastName(),  s.getUmcn(), s.getBiography(),
 				new ArrayList<TitleDTO>(), teachersOnRealization, null, null, null, s.getActive()), HttpStatus.OK);
 	}

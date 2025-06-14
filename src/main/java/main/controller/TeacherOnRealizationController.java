@@ -77,24 +77,24 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 		for(TeacherOnRealization p : service.findAll()) {
 			teachersOnRealization.add(new TeacherOnRealizationDTO(p.getId(),
 						p.getNumberOfClasses(), 
-						new TeacherDTO(p.getTeacher().getId(),
-								new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
+						(p.getTeacher() != null ? new TeacherDTO(p.getTeacher().getId(),
+								(p.getTeacher().getUser() != null ? new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
 										null,
-										p.getTeacher().getUser().getEmail()),
+										p.getTeacher().getUser().getEmail()) : null),
 								p.getTeacher().getFirstName(),
 								p.getTeacher().getLastName(),
 								p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
 								null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-								null, p.getTeacher().getActive()),
-						new SubjectRealizationDTO(p.getSubjectRealization().getId(),
+								null, p.getTeacher().getActive()) : null),
+						(p.getSubjectRealization() != null ? new SubjectRealizationDTO(p.getSubjectRealization().getId(),
 								null, null, null,
-								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
+								(p.getSubjectRealization().getSubject() != null ? 								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
 										p.getSubjectRealization().getSubject().getName(),
 										p.getSubjectRealization().getSubject().getEcts(), 
-										p.getSubjectRealization().getSubject().isCompulsory()), 
-								p.getSubjectRealization().getActive()),
-						new TeachingTypeDTO(p.getTeachingType().getId(),
-								p.getTeachingType().getName(), p.getTeachingType().getActive()),
+										p.getSubjectRealization().getSubject().isCompulsory()) : null), 
+								p.getSubjectRealization().getActive()) : null),
+						(p.getTeachingType() != null ? new TeachingTypeDTO(p.getTeachingType().getId(),
+								p.getTeachingType().getName(), p.getTeachingType().getActive()) : null),
 						p.getActive()));
 		}
 		
@@ -119,24 +119,24 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 	    for(TeacherOnRealization t : teacherOnRealizationPage) {
 	    	new TeacherOnRealizationDTO(t.getId(),
 					t.getNumberOfClasses(), 
-					new TeacherDTO(t.getTeacher().getId(),
-							new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
+					(t.getTeacher() != null ? new TeacherDTO(t.getTeacher().getId(),
+							(t.getTeacher().getUser() != null ? new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
 									null,
-									t.getTeacher().getUser().getEmail()),
+									t.getTeacher().getUser().getEmail()) : null),
 							t.getTeacher().getFirstName(),
 							t.getTeacher().getLastName(),
 							t.getTeacher().getUmcn(), t.getTeacher().getBiography(),
 							null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-							null, t.getTeacher().getActive()),
-					new SubjectRealizationDTO(t.getSubjectRealization().getId(),
+							null, t.getTeacher().getActive()) : null),
+					(t.getSubjectRealization() != null ? new SubjectRealizationDTO(t.getSubjectRealization().getId(),
 							null, null, null,
-							new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
+							(t.getSubjectRealization().getSubject() != null ? new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
 									t.getSubjectRealization().getSubject().getName(),
 									t.getSubjectRealization().getSubject().getEcts(), 
-									t.getSubjectRealization().getSubject().isCompulsory()), 
-							t.getSubjectRealization().getActive()),
-					new TeachingTypeDTO(t.getTeachingType().getId(),
-						t.getTeachingType().getName(), t.getTeachingType().getActive()),
+									t.getSubjectRealization().getSubject().isCompulsory()) : null), 
+							t.getSubjectRealization().getActive()) : null),
+					(t.getTeachingType() != null ? new TeachingTypeDTO(t.getTeachingType().getId(),
+							t.getTeachingType().getName(), t.getTeachingType().getActive()) : null),
 					t.getActive());
 	    }
 
@@ -152,28 +152,28 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 		
 		teachersOnRealization = (ArrayList<TeacherOnRealizationDTO>) service.findByTeacherId(id)
 				.stream()
-				.map(p -> 
-				new TeacherOnRealizationDTO(p.getId(),
-						p.getNumberOfClasses(), 
-						new TeacherDTO(p.getTeacher().getId(),
-								new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
+				.map(t -> 
+				new TeacherOnRealizationDTO(t.getId(),
+						t.getNumberOfClasses(), 
+						(t.getTeacher() != null ? new TeacherDTO(t.getTeacher().getId(),
+								(t.getTeacher().getUser() != null ? new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
 										null,
-										p.getTeacher().getUser().getEmail()),
-								p.getTeacher().getFirstName(),
-								p.getTeacher().getLastName(),
-								p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
+										t.getTeacher().getUser().getEmail()) : null),
+								t.getTeacher().getFirstName(),
+								t.getTeacher().getLastName(),
+								t.getTeacher().getUmcn(), t.getTeacher().getBiography(),
 								null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-								null, p.getTeacher().getActive()),
-						new SubjectRealizationDTO(p.getSubjectRealization().getId(),
+								null, t.getTeacher().getActive()) : null),
+						(t.getSubjectRealization() != null ? new SubjectRealizationDTO(t.getSubjectRealization().getId(),
 								null, null, null,
-								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
-										p.getSubjectRealization().getSubject().getName(),
-										p.getSubjectRealization().getSubject().getEcts(), 
-										p.getSubjectRealization().getSubject().isCompulsory()), 
-								p.getSubjectRealization().getActive()),
-						new TeachingTypeDTO(p.getTeachingType().getId(),
-								p.getTeachingType().getName(), p.getTeachingType().getActive()),
-						p.getActive()))
+								(t.getSubjectRealization().getSubject() != null ? new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
+										t.getSubjectRealization().getSubject().getName(),
+										t.getSubjectRealization().getSubject().getEcts(), 
+										t.getSubjectRealization().getSubject().isCompulsory()) : null), 
+								t.getSubjectRealization().getActive()) : null),
+						(t.getTeachingType() != null ? new TeachingTypeDTO(t.getTeachingType().getId(),
+								t.getTeachingType().getName(), t.getTeachingType().getActive()) : null),
+						t.getActive()))
 				.collect(Collectors.toList());
 		
 		return new ResponseEntity<Iterable<TeacherOnRealizationDTO>>(teachersOnRealization, HttpStatus.OK);
@@ -184,32 +184,32 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 	@Secured({"ADMIN", "STAFF", "TEACHER", "STUDENT"})
 	public ResponseEntity<TeacherOnRealizationDTO> findById(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
-		TeacherOnRealization p = service.findById(id).orElse(null);
+		TeacherOnRealization t = service.findById(id).orElse(null);
 		
-		if(p == null) {
+		if(t == null) {
 			return new ResponseEntity<TeacherOnRealizationDTO>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(p.getId(),
-						p.getNumberOfClasses(), 
-						new TeacherDTO(p.getTeacher().getId(),
-								new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
-										null,
-										p.getTeacher().getUser().getEmail()),
-								p.getTeacher().getFirstName(),
-								p.getTeacher().getLastName(),
-								p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
-								null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-								null, p.getTeacher().getActive()),
-						new SubjectRealizationDTO(p.getSubjectRealization().getId(),
-								null, null, null,
-								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
-										p.getSubjectRealization().getSubject().getName(),
-										p.getSubjectRealization().getSubject().getEcts(), 
-										p.getSubjectRealization().getSubject().isCompulsory()), 
-								p.getSubjectRealization().getActive()),
-						new TeachingTypeDTO(p.getTeachingType().getId(),
-								p.getTeachingType().getName(), p.getTeachingType().getActive()),
-						p.getActive()), HttpStatus.OK);
+		return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(t.getId(),
+				t.getNumberOfClasses(), 
+				(t.getTeacher() != null ? new TeacherDTO(t.getTeacher().getId(),
+						(t.getTeacher().getUser() != null ? new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
+								null,
+								t.getTeacher().getUser().getEmail()) : null),
+						t.getTeacher().getFirstName(),
+						t.getTeacher().getLastName(),
+						t.getTeacher().getUmcn(), t.getTeacher().getBiography(),
+						null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
+						null, t.getTeacher().getActive()) : null),
+				(t.getSubjectRealization() != null ? new SubjectRealizationDTO(t.getSubjectRealization().getId(),
+						null, null, null,
+						(t.getSubjectRealization().getSubject() != null ? new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
+								t.getSubjectRealization().getSubject().getName(),
+								t.getSubjectRealization().getSubject().getEcts(), 
+								t.getSubjectRealization().getSubject().isCompulsory()) : null), 
+						t.getSubjectRealization().getActive()) : null),
+				(t.getTeachingType() != null ? new TeachingTypeDTO(t.getTeachingType().getId(),
+						t.getTeachingType().getName(), t.getTeachingType().getActive()) : null),
+				t.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -272,24 +272,27 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 			return new ResponseEntity<TeacherOnRealizationDTO>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(p.getId(),
-						p.getNumberOfClasses(), 
-						new TeacherDTO(p.getTeacher().getId(),
-								new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
-										null,
-										p.getTeacher().getUser().getEmail()),
-								p.getTeacher().getFirstName(),
-								p.getTeacher().getLastName(),
-								p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
-								null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-								null, p.getTeacher().getActive()),
-						new SubjectRealizationDTO(p.getSubjectRealization().getId(),
-								null, null, null,
+				p.getNumberOfClasses(), 
+				(p.getTeacher() != null ? new TeacherDTO(p.getTeacher().getId(),
+						(p.getTeacher().getUser() != null ? new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
+								null,
+								p.getTeacher().getUser().getEmail()) : null),
+						p.getTeacher().getFirstName(),
+						p.getTeacher().getLastName(),
+						p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
+						null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
+						null, p.getTeacher().getActive()) : null),
+				(p.getSubjectRealization() != null ? new SubjectRealizationDTO(p.getSubjectRealization().getId(),
+						null, null, null,
+						(p.getSubjectRealization().getSubject() != null ? 
 								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
-										p.getSubjectRealization().getSubject().getName(),
-										p.getSubjectRealization().getSubject().getEcts(), 
-										p.getSubjectRealization().getSubject().isCompulsory()), 
-								p.getSubjectRealization().getActive()), 
-								null, p.getSubjectRealization().getActive()),
+								p.getSubjectRealization().getSubject().getName(),
+								p.getSubjectRealization().getSubject().getEcts(), 
+								p.getSubjectRealization().getSubject().isCompulsory()) : null), 
+						p.getSubjectRealization().getActive()) : null),
+				(p.getTeachingType() != null ? new TeachingTypeDTO(p.getTeachingType().getId(),
+						p.getTeachingType().getName(), p.getTeachingType().getActive()) : null),
+				p.getActive()),
 						HttpStatus.CREATED);
 	}
 
@@ -344,25 +347,27 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 		
 		p = service.update(p);
 		
-				return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(p.getId(),
-						p.getNumberOfClasses(), 
-						new TeacherDTO(p.getTeacher().getId(),
-								new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
+				return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(t.getId(),
+						t.getNumberOfClasses(), 
+						(t.getTeacher() != null ? new TeacherDTO(t.getTeacher().getId(),
+								(t.getTeacher().getUser() != null ? new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
 										null,
-										p.getTeacher().getUser().getEmail()),
-								p.getTeacher().getFirstName(),
-								p.getTeacher().getLastName(),
-								p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
+										t.getTeacher().getUser().getEmail()) : null),
+								t.getTeacher().getFirstName(),
+								t.getTeacher().getLastName(),
+								t.getTeacher().getUmcn(), t.getTeacher().getBiography(),
 								null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-								null, p.getTeacher().getActive()),
-						new SubjectRealizationDTO(p.getSubjectRealization().getId(),
+								null, t.getTeacher().getActive()) : null),
+						(t.getSubjectRealization() != null ? new SubjectRealizationDTO(t.getSubjectRealization().getId(),
 								null, null, null,
-								new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
-										p.getSubjectRealization().getSubject().getName(),
-										p.getSubjectRealization().getSubject().getEcts(), 
-										p.getSubjectRealization().getSubject().isCompulsory()), 
-								p.getSubjectRealization().getActive()), 
-								null, p.getSubjectRealization().getActive()), HttpStatus.OK);
+								(t.getSubjectRealization().getSubject() != null ? new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
+										t.getSubjectRealization().getSubject().getName(),
+										t.getSubjectRealization().getSubject().getEcts(), 
+										t.getSubjectRealization().getSubject().isCompulsory()) : null), 
+								t.getSubjectRealization().getActive()) : null),
+						(t.getTeachingType() != null ? new TeachingTypeDTO(t.getTeachingType().getId(),
+								t.getTeachingType().getName(), t.getTeachingType().getActive()) : null),
+						t.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -376,33 +381,35 @@ public class TeacherOnRealizationController implements ControllerInterface<Teach
 	@Secured({"ADMIN"})
 	public ResponseEntity<TeacherOnRealizationDTO> softDelete(@PathVariable("id") Long id) {
 		// TODO Auto-generated method stub
-		TeacherOnRealization p = service.findById(id).orElse(null);
+		TeacherOnRealization t = service.findById(id).orElse(null);
 		
-		if(p == null) {
+		if(t == null) {
 			return new ResponseEntity<TeacherOnRealizationDTO>(HttpStatus.BAD_REQUEST);
 		}
 		
 		service.softDelete(id);
 		
-		return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(p.getId(),
-				p.getNumberOfClasses(), 
-				new TeacherDTO(p.getTeacher().getId(),
-						new RegisteredUserDTO(p.getTeacher().getUser().getUsername(),
+		return new ResponseEntity<TeacherOnRealizationDTO>(new TeacherOnRealizationDTO(t.getId(),
+				t.getNumberOfClasses(), 
+				(t.getTeacher() != null ? new TeacherDTO(t.getTeacher().getId(),
+						(t.getTeacher().getUser() != null ? new RegisteredUserDTO(t.getTeacher().getUser().getUsername(),
 								null,
-								p.getTeacher().getUser().getEmail()),
-						p.getTeacher().getFirstName(),
-						p.getTeacher().getLastName(),
-						p.getTeacher().getUmcn(), p.getTeacher().getBiography(),
+								t.getTeacher().getUser().getEmail()) : null),
+						t.getTeacher().getFirstName(),
+						t.getTeacher().getLastName(),
+						t.getTeacher().getUmcn(), t.getTeacher().getBiography(),
 						null, new ArrayList<TeacherOnRealizationDTO>(), null, null, 
-						null, p.getTeacher().getActive()),
-				new SubjectRealizationDTO(p.getSubjectRealization().getId(),
+						null, t.getTeacher().getActive()) : null),
+				(t.getSubjectRealization() != null ? new SubjectRealizationDTO(t.getSubjectRealization().getId(),
 						null, null, null,
-						new SubjectDTO(p.getSubjectRealization().getSubject().getId(),
-								p.getSubjectRealization().getSubject().getName(),
-								p.getSubjectRealization().getSubject().getEcts(), 
-								p.getSubjectRealization().getSubject().isCompulsory()), 
-						p.getSubjectRealization().getActive()), 
-						null, p.getSubjectRealization().getActive()), HttpStatus.OK);
+						(t.getSubjectRealization().getSubject() != null ? new SubjectDTO(t.getSubjectRealization().getSubject().getId(),
+								t.getSubjectRealization().getSubject().getName(),
+								t.getSubjectRealization().getSubject().getEcts(), 
+								t.getSubjectRealization().getSubject().isCompulsory()) : null), 
+						t.getSubjectRealization().getActive()) : null),
+				(t.getTeachingType() != null ? new TeachingTypeDTO(t.getTeachingType().getId(),
+						t.getTeachingType().getName(), t.getTeachingType().getActive()) : null),
+				t.getActive()), HttpStatus.OK);
 	}
 	
 }

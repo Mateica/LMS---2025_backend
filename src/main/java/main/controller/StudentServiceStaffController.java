@@ -66,14 +66,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 		
 		for(StudentServiceStaff s : service.findAll()) {
 			staff.add(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
+					(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
 					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+					(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+							(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
 									s.getStudentAffairsOffice().getFaculty().getName(),
 									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()));
+									s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+							s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()));
 		}
 		return new ResponseEntity<Iterable<StudentServiceStaffDTO>>(staff, HttpStatus.OK);
 	}
@@ -93,14 +93,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 
 	    List<StudentServiceStaffDTO> staffDTOs = staffPage.stream().map(s ->
 	    new StudentServiceStaffDTO(s.getId(), 
-				new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
+				(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
 				s.getFirstName(), s.getLastName(), 
-				new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-						new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+				(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+						(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
 								s.getStudentAffairsOffice().getFaculty().getName(),
 								null, null, null, null, null, null, null, null, null,
-								s.getStudentAffairsOffice().getFaculty().getActive()),
-						s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()))
+								s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+						s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()))
 	    		.collect(Collectors.toList());
 
 	    Page<StudentServiceStaffDTO> resultPage = new PageImpl<StudentServiceStaffDTO>(staffDTOs, pageable, staffPage.getTotalElements());
@@ -116,14 +116,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 		
 		for(StudentServiceStaff s : service.findAllActive()) {
 			staff.add(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
+					(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
 					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+					(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+							(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
 									s.getStudentAffairsOffice().getFaculty().getName(),
 									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()));
+									s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+							s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()));
 		}
 		return new ResponseEntity<Iterable<StudentServiceStaffDTO>>(staff, HttpStatus.OK);
 	}
@@ -139,14 +139,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 			return new ResponseEntity<StudentServiceStaffDTO>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<StudentServiceStaffDTO>(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
-					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
-									s.getStudentAffairsOffice().getFaculty().getName(),
-									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()), HttpStatus.OK);
+				(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+				s.getFirstName(), s.getLastName(), 
+				(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+						(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+								s.getStudentAffairsOffice().getFaculty().getName(),
+								null, null, null, null, null, null, null, null, null,
+								s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+						s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -211,14 +211,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 			return new ResponseEntity<StudentServiceStaffDTO>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<StudentServiceStaffDTO>(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
-					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
-									s.getStudentAffairsOffice().getFaculty().getName(),
-									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()), HttpStatus.CREATED);
+				(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+				s.getFirstName(), s.getLastName(), 
+				(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+						(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+								s.getStudentAffairsOffice().getFaculty().getName(),
+								null, null, null, null, null, null, null, null, null,
+								s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+						s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -295,14 +295,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 		
 		
 		return new ResponseEntity<StudentServiceStaffDTO>(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
+					(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
 					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+					(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+							(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
 									s.getStudentAffairsOffice().getFaculty().getName(),
 									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()), HttpStatus.OK);
+									s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+							s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()), HttpStatus.OK);
 	}
 
 	@Override
@@ -324,14 +324,14 @@ public class StudentServiceStaffController implements ControllerInterface<Studen
 		
 		service.softDelete(id);
 		return new ResponseEntity<StudentServiceStaffDTO>(new StudentServiceStaffDTO(s.getId(), 
-					new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()),
-					s.getFirstName(), s.getLastName(), 
-					new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
-							new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
-									s.getStudentAffairsOffice().getFaculty().getName(),
-									null, null, null, null, null, null, null, null, null,
-									s.getStudentAffairsOffice().getFaculty().getActive()),
-							s.getStudentAffairsOffice().getFaculty().getActive()), s.getActive()), HttpStatus.OK);
+				(s.getRegisteredUser() != null ? new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
+				s.getFirstName(), s.getLastName(), 
+				(s.getStudentAffairsOffice() != null ? new StudentAffairsOfficeDTO(s.getStudentAffairsOffice().getId(), null, 
+						(s.getStudentAffairsOffice().getFaculty() != null ? new FacultyDTO(s.getStudentAffairsOffice().getFaculty().getId(),
+								s.getStudentAffairsOffice().getFaculty().getName(),
+								null, null, null, null, null, null, null, null, null,
+								s.getStudentAffairsOffice().getFaculty().getActive()) : null),
+						s.getStudentAffairsOffice().getFaculty().getActive()) : null), s.getActive()), HttpStatus.OK);
 	}
 	
 	

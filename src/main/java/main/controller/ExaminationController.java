@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,22 +37,31 @@ import main.dto.NoteDTO;
 import main.dto.StudentDTO;
 import main.dto.StudentOnYearDTO;
 import main.dto.YearOfStudyDTO;
-import main.mappers.ExamMapper;
 import main.model.Account;
 import main.model.Address;
 import main.model.Country;
 import main.model.Department;
+import main.model.Evaluation;
+import main.model.EvaluationGrade;
+import main.model.EvaluationInstrument;
+import main.model.EvaluationType;
 import main.model.Examination;
 import main.model.Faculty;
+import main.model.File;
 import main.model.ForumUser;
+import main.model.Note;
 import main.model.Place;
 import main.model.RegisteredUser;
 import main.model.Student;
 import main.model.StudentAffairsOffice;
 import main.model.StudentOnYear;
+import main.model.StudentServiceStaff;
 import main.model.StudyProgramme;
 import main.model.SubjectAttendance;
 import main.model.Teacher;
+import main.model.TeacherOnRealization;
+import main.model.TeachingMaterial;
+import main.model.Title;
 import main.model.University;
 import main.model.YearOfStudy;
 import main.repository.RoleRepository;
@@ -235,7 +245,8 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 				                ev.getStartTime(),
 				                ev.getEndTime(),
 				                ev.getNumberOfPoints(),
-				                (ev.getEvaluationType() != null ? new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
+				                (ev.getEvaluationType() != null ? 
+				                		new EvaluationTypeDTO(ev.getEvaluationType().getId(), ev.getEvaluationType().getName(),
 				                        null, ev.getEvaluationType().getActive()) : null),
 				                (ev.getEvaluationInstrument() != null ? new EvaluationInstrumentDTO(ev.getEvaluationInstrument().getId(), ev.getEvaluationInstrument().getName(),
 				                        null, ev.getEvaluationInstrument().getActive()) : null),
@@ -267,6 +278,37 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     	HashSet<Role> rectorRoles = new HashSet<Role>();
     	ArrayList<Place> places = new ArrayList<Place>();
     	ArrayList<Faculty> faculties = new ArrayList<Faculty>();
+    	ArrayList<Note> notes = new ArrayList<Note>();
+    	ArrayList<Evaluation> evaluations = new ArrayList<Evaluation>();
+    	
+    	notes = (ArrayList<Note>) t.getNotes().stream()
+    								.map(n -> new Note(n.getId(), n.getContent(), null))
+    								.collect(Collectors.toList());
+    	
+    	evaluations = (ArrayList<Evaluation>) t.getEvaluations().stream()
+    											.map(ev -> new Evaluation(ev.getId(), 
+    																		ev.getStartTime(),
+    																		ev.getEndTime(),
+    																		ev.getNumberOfPoints(),
+    																		new EvaluationType(ev.getEvaluationType().getId(),
+    																				ev.getEvaluationType().getName(),
+    																				new ArrayList<Evaluation>(),
+    																				ev.getEvaluationType().getActive()),
+    																		new EvaluationInstrument(ev.getEvaluationInstrument().getId(),
+    																				ev.getEvaluationInstrument().getName(),
+    																				new ArrayList<Evaluation>(),
+    																				new File(ev.getEvaluationInstrument().getFile().getId(),
+    																						ev.getEvaluationInstrument().getFile().getName(),
+    																						ev.getEvaluationInstrument().getFile().getUrl(),
+    																						ev.getEvaluationInstrument().getFile().getDescription(),
+    																						null, null, null, null, ev.getEvaluationInstrument().getFile().getDocument(),
+    																						ev.getEvaluationInstrument().getFile().getActive()),
+    																				ev.getEvaluationInstrument().getActive()),
+    																		null,
+    																		null ,
+    																		new ArrayList<EvaluationGrade>(),
+    																		ev.getActive()))
+    											.collect(Collectors.toList());
     	
     	studentRoles = (HashSet<Role>) t.getStudentOnYear()
     							.getStudent()
@@ -302,9 +344,70 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 											.stream()
 											.map(f -> 
 											new Faculty(f.getId(), f.getName(), 
-													new Address(null, null, 0, null, null),
-													new Teacher(null, null, null, null, null, null, null, null, null, null, null, null),
-													new University(null, null, null, null, null, null, null, faculties, null),
+													new Address(f.getAddress().getId(),
+															f.getAddress().getStreet(),
+															f.getAddress().getHouseNumber(),
+															new Place(f.getAddress().getPlace().getId(),
+																	f.getAddress().getPlace().getName(),
+																	new Country(f.getAddress().getPlace().getCountry().getId(),
+																			f.getAddress().getPlace().getCountry().getName(),
+																			new ArrayList<Place>(),
+																			f.getAddress().getPlace().getCountry().getActive()),
+																	f.getAddress().getPlace().getActive()),
+															f.getAddress().getActive()),
+													new Teacher(f.getHeadmaster().getId(),
+															new RegisteredUser(f.getHeadmaster().getUser().getId(),
+																	f.getHeadmaster().getUser().getUsername(),
+																	f.getHeadmaster().getUser().getPassword(),
+																	f.getHeadmaster().getUser().getEmail(),
+																	null, null,
+																	new HashSet<Role>(),
+																	f.getHeadmaster().getUser().getActive()),
+															f.getHeadmaster().getFirstName(),
+															f.getHeadmaster().getLastName(),
+															f.getHeadmaster().getUmcn(), f.getHeadmaster().getBiography(),
+															new ArrayList<Title>(),
+															new ArrayList<TeacherOnRealization>(),
+															new ArrayList<EvaluationGrade>(),
+															null,
+															null,
+															f.getHeadmaster().getActive()),
+													new University(f.getUniversity().getId(),
+															f.getUniversity().getName(),
+															f.getUniversity().getDateEstablished(),
+															new Address(f.getUniversity().getAddress().getId(),
+																	f.getUniversity().getAddress().getStreet(),
+																	f.getUniversity().getAddress().getHouseNumber(),
+																	new Place(f.getUniversity().getAddress().getPlace().getId(),
+																			f.getUniversity().getAddress().getPlace().getName(),
+																			new Country(f.getUniversity().getAddress().getPlace().getCountry().getId(),
+																					f.getUniversity().getAddress().getPlace().getCountry().getName(),
+																					new ArrayList<Place>(),
+																					f.getUniversity().getAddress().getPlace().getCountry().getActive()),
+																			f.getUniversity().getAddress().getPlace().getActive()),
+																	f.getUniversity().getAddress().getActive()),
+															new Teacher(f.getUniversity().getRector().getId(),
+																	new RegisteredUser(f.getUniversity().getRector().getUser().getId(),
+																			f.getUniversity().getRector().getUser().getUsername(),
+																			f.getUniversity().getRector().getUser().getPassword(),
+																			f.getUniversity().getRector().getUser().getEmail(),
+																			null, null,
+																			new HashSet<Role>(),
+																			f.getUniversity().getRector().getUser().getActive()),
+																	f.getUniversity().getRector().getFirstName(),
+																	f.getUniversity().getRector().getLastName(),
+																	f.getUniversity().getRector().getUmcn(),
+																	f.getUniversity().getRector().getBiography(),
+																	new ArrayList<Title>(),
+																	new ArrayList<TeacherOnRealization>(),
+																	new ArrayList<EvaluationGrade>(),
+																	null,
+																	null,
+																	f.getUniversity().getRector().getActive()),
+															f.getUniversity().getContactDetails(),
+															f.getUniversity().getDescription(), 
+															new ArrayList<Faculty>(),
+															f.getUniversity().getActive()),
 													f.getContactDetails(), f.getDescription(),
 													new HashSet<Department>(),
 													new ArrayList<StudyProgramme>(),
@@ -349,9 +452,26 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     	    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getActive()), 
     	    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getActive()), 
     									t.getStudentOnYear().getStudent().getFaculty().getAddress().getActive()),
-    							new Teacher(null, null, null, null, null, null, null, null, null, null, null, null),
+    							new Teacher(t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getId(),
+    									new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getId(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getUsername(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getPassword(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getEmail(),
+    											null, null, headmasterRoles,
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getActive()),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getFirstName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getLastName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUmcn(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getBiography(),
+    									new ArrayList<Title>(),
+    									new ArrayList<TeacherOnRealization>(),
+    									new ArrayList<EvaluationGrade>(),
+    									null, null,
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getActive()),
     							new University(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getId(),
-    									null, null, new Address(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getId(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getDateEstablished(),
+    									new Address(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getId(),
     	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getStreet(),
     	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getHouseNumber(),
     	    									new Place(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getId(),
@@ -363,18 +483,21 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     	    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getActive()), 
     	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getActive()), 
     									new Teacher(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getId(),
-    											new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getId(),
-    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getUsername(),
-    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getPassword(),
-    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getEmail(),
-    													new ArrayList<ForumUser>(), new ArrayList<Account>(), rectorRoles, 
-    													t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
-    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getFirstName(),
-    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getLastName(),
-    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUmcn(),
-    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getBiography(),
-    											null, null, null, null, null, 
-    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
+    	    									new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getUsername(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getPassword(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getEmail(),
+    	    											null, null, rectorRoles,
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getActive()),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getFirstName(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getLastName(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUmcn(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getBiography(),
+    	    									new ArrayList<Title>(),
+    	    									new ArrayList<TeacherOnRealization>(),
+    	    									new ArrayList<EvaluationGrade>(),
+    	    									null, null,
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
     									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getContactDetails(),
     									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getDescription(),
     									null, 
@@ -384,7 +507,8 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     							new HashSet<Department>(),
     							new ArrayList<StudyProgramme>(),
     							new ArrayList<Student>(),
-    							new StudentAffairsOffice(null, null, null, null), 
+    							new StudentAffairsOffice(t.getStudentOnYear().getStudent().getFaculty().getStudentAffairsOffice().getId(),
+    									new ArrayList<StudentServiceStaff>(), null, t.getStudentOnYear().getStudent().getFaculty().getStudentAffairsOffice().getActive()), 
     							t.getStudentOnYear().getStudent().getFaculty().getActive()),
     					t.getStudentOnYear().getStudent().getActive()),
     			t.getStudentOnYear().getIndexNumber(), 
@@ -395,25 +519,24 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
     			null,
     			t.getStudentOnYear().getActive());
     	
-//        Examination e = service.create(new Examination(null, t.getNumberOfPoints(),
-//                service.findById(t.getId()).get().getNotes(),
-//                service.findById(t.getId()).get().getEvaluations(),
-//                student, true));
+        Examination e = service.create(new Examination(null, t.getNumberOfPoints(),
+                notes,
+                evaluations,
+                student, true));
     	
-    	Examination e = service.create(ExamMapper.toEntity(t));
 
         if (e == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        ArrayList<NoteDTO> notes;
-        ArrayList<EvaluationDTO> evaluations;
+        ArrayList<NoteDTO> noteDTOs;
+        ArrayList<EvaluationDTO> evaluationDTOs;
 
-        notes = (ArrayList<NoteDTO>) e.getNotes()
+        noteDTOs = (ArrayList<NoteDTO>) e.getNotes()
                 .stream()
                 .map(n -> new NoteDTO(n.getId(), n.getContent(), null, n.getActive()))
                 .collect(Collectors.toList());
 
-        evaluations = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
+        evaluationDTOs = (ArrayList<EvaluationDTO>) e.getEvaluations().stream().map(ev ->
 				        new EvaluationDTO(ev.getId(),
 				                ev.getStartTime(),
 				                ev.getEndTime(),
@@ -426,20 +549,21 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
 				                ev.getActive())).collect(Collectors.toList());
 
 
-//        return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
-//                notes, evaluations,
-//                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
-//                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
-//                                null, e.getStudentOnYear().getStudent().getFirstName(),
-//                                e.getStudentOnYear().getStudent().getLastName(),
-//                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
-//                        e.getStudentOnYear().getIndexNumber(),
-//                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
-//                                e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
-//                                null, null) : null),
-//                        null, null, null) : null),
-//                e.getActive()), HttpStatus.CREATED);
-        return new ResponseEntity<ExaminationDTO>(ExamMapper.toDTO(e),HttpStatus.CREATED);
+        return new ResponseEntity<ExaminationDTO>(new ExaminationDTO(e.getId(), e.getNumberOfPoints(),
+                noteDTOs, evaluationDTOs,
+                (e.getStudentOnYear() != null ? new StudentOnYearDTO(e.getStudentOnYear().getId(), e.getStudentOnYear().getDateOfApplication(),
+                        (e.getStudentOnYear().getStudent() != null ? new StudentDTO(e.getStudentOnYear().getStudent().getId(),
+                                null, e.getStudentOnYear().getStudent().getFirstName(),
+                                e.getStudentOnYear().getStudent().getLastName(),
+                                e.getStudentOnYear().getStudent().getUmcn(), null, null, null, null, null) : null),
+                        e.getStudentOnYear().getIndexNumber(),
+                        (e.getStudentOnYear().getYearOfStudy() != null ? new YearOfStudyDTO(e.getStudentOnYear().getYearOfStudy().getId(),
+                                e.getStudentOnYear().getYearOfStudy().getYearOfStudy(),
+                                null, null) : null),
+                        null, null, null) : null),
+                e.getActive()), HttpStatus.CREATED);
+
+
     }
 
     @Override
@@ -474,7 +598,108 @@ public class ExaminationController implements ControllerInterface<ExaminationDTO
         e.setNumberOfPoints(t.getNumberOfPoints());
         e.setNotes(service.findById(t.getId()).get().getNotes());
         e.setEvaluations(service.findById(t.getId()).get().getEvaluations());
-        e.setStudentOnYear(service.findById(t.getId()).get().getStudentOnYear());
+        e.setStudentOnYear(new StudentOnYear(t.getStudentOnYear().getId(), t.getStudentOnYear().getDateOfApplication(),
+    			new Student(t.getStudentOnYear().getStudent().getId(),
+    					new RegisteredUser(t.getStudentOnYear().getStudent().getUser().getId(), 
+    							t.getStudentOnYear().getStudent().getUser().getUsername(),
+    							t.getStudentOnYear().getStudent().getUser().getPassword(),
+    							t.getStudentOnYear().getStudent().getUser().getEmail(),
+    							null, null, new HashSet<Role>() ,
+    							t.getStudentOnYear().getStudent().getUser().getActive()),
+    					t.getStudentOnYear().getStudent().getFirstName(),
+    					t.getStudentOnYear().getStudent().getLastName(),
+    					t.getStudentOnYear().getStudent().getUmcn(),
+    					new Address(t.getStudentOnYear().getStudent().getAddress().getId(),
+    							t.getStudentOnYear().getStudent().getAddress().getStreet(), 
+    							t.getStudentOnYear().getStudent().getAddress().getHouseNumber(),
+    							new Place(t.getStudentOnYear().getStudent().getAddress().getPlace().getId(),
+    									t.getStudentOnYear().getStudent().getAddress().getPlace().getName(),
+    									new Country(t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getId(),
+    											t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getName(),
+    											null, 
+    											t.getStudentOnYear().getStudent().getAddress().getPlace().getCountry().getActive()), 
+    									t.getStudentOnYear().getStudent().getAddress().getPlace().getActive()), 
+    							t.getStudentOnYear().getStudent().getAddress().getActive()),
+    					new HashSet<StudentOnYear>(),
+    					new ArrayList<SubjectAttendance>(),
+    					new Faculty(t.getStudentOnYear().getStudent().getFaculty().getId(),
+    							t.getStudentOnYear().getStudent().getFaculty().getName(),
+    							new Address(t.getStudentOnYear().getStudent().getFaculty().getAddress().getId(),
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getStreet(),
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getHouseNumber(),
+    									new Place(t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getId(),
+    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getName(),
+    	    									new Country(t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getName(),
+    	    											null, 
+    	    											t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getCountry().getActive()), 
+    	    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getPlace().getActive()), 
+    									t.getStudentOnYear().getStudent().getFaculty().getAddress().getActive()),
+    							new Teacher(t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getId(),
+    									new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getId(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getUsername(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getPassword(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getEmail(),
+    											null, null, new HashSet<Role>(),
+    											t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUser().getActive()),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getFirstName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getLastName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getUmcn(),
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getBiography(),
+    									new ArrayList<Title>(),
+    									new ArrayList<TeacherOnRealization>(),
+    									new ArrayList<EvaluationGrade>(),
+    									null, null,
+    									t.getStudentOnYear().getStudent().getFaculty().getHeadmaster().getActive()),
+    							new University(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getId(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getName(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getDateEstablished(),
+    									new Address(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getId(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getStreet(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getHouseNumber(),
+    	    									new Place(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getName(),
+    	    	    									new Country(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getId(),
+    	    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getName(),
+    	    	    											null, 
+    	    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getCountry().getActive()), 
+    	    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getPlace().getActive()), 
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getAddress().getActive()), 
+    									new Teacher(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getId(),
+    	    									new RegisteredUser(t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getId(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getUsername(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getPassword(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getEmail(),
+    	    											null, null, new HashSet<Role>(),
+    	    											t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUser().getActive()),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getFirstName(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getLastName(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getUmcn(),
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getBiography(),
+    	    									new ArrayList<Title>(),
+    	    									new ArrayList<TeacherOnRealization>(),
+    	    									new ArrayList<EvaluationGrade>(),
+    	    									null, null,
+    	    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getRector().getActive()),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getContactDetails(),
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getDescription(),
+    									null, 
+    									t.getStudentOnYear().getStudent().getFaculty().getUniversity().getActive()),
+    							t.getStudentOnYear().getStudent().getFaculty().getContactDetails(),
+    							t.getStudentOnYear().getStudent().getFaculty().getDescription(),
+    							new HashSet<Department>(),
+    							new ArrayList<StudyProgramme>(),
+    							new ArrayList<Student>(),
+    							new StudentAffairsOffice(null, null, null, null), 
+    							t.getStudentOnYear().getStudent().getFaculty().getActive()),
+    					t.getStudentOnYear().getStudent().getActive()),
+    			t.getStudentOnYear().getIndexNumber(), 
+    			new YearOfStudy(t.getStudentOnYear().getYearOfStudy().getId(), 
+    							t.getStudentOnYear().getYearOfStudy().getYearOfStudy(), null,
+    							t.getStudentOnYear().getYearOfStudy().getActive()),
+    			new ArrayList<Examination>(),
+    			null,
+    			t.getStudentOnYear().getActive()));
         e.setActive(t.getActive());
 
         e = service.update(e);

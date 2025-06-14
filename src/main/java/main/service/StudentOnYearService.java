@@ -42,7 +42,6 @@ public class StudentOnYearService implements ServiceInterface<StudentOnYear> {
 	}
 	
 	public void registerStudentForExam(Examination e, StudentOnYear s) {
-		
 	    if(s != null) {
 	    	s.getExaminations().add(e);
 	    	this.repo.save(s);

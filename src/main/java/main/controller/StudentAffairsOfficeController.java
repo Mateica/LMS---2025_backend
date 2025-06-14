@@ -340,13 +340,12 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 	@Secured({"ADMIN"})
 	public ResponseEntity<StudentAffairsOfficeDTO> create(@RequestBody StudentAffairsOfficeDTO t) {
 		// TODO Auto-generated method stub
-		HashSet<Role> staffRoles = null;
 		HashSet<Role> headmasterRoles = null;
 		HashSet<Role> rectorRoles = null;
 
 		ArrayList<StudentServiceStaff> staff = (ArrayList<StudentServiceStaff>) t.getStaff().stream()
 												.map(s -> {
-													staffRoles = (HashSet<Role>) s.getRegisteredUser().getRoleNames()
+													HashSet<Role> staffRoles = (HashSet<Role>) s.getRegisteredUser().getRoleNames()
 															.stream()
 															.map(r -> new Role(roleService.findByName(r).getId(),
 																	roleService.findByName(r).getName(), 
@@ -582,7 +581,7 @@ public class StudentAffairsOfficeController implements ControllerInterface<Stude
 		new StudentServiceStaffDTO(s.getId(),
 				(s.getRegisteredUser() != null ? 
 						new RegisteredUserDTO(s.getRegisteredUser().getUsername(), null, s.getRegisteredUser().getEmail()) : null),
-				s.getFirstName(), s.getLastName(), t, s.getActive()))
+				s.getFirstName(), s.getLastName(), null, s.getActive()))
 					.collect(Collectors.toList());
 		
 		service.softDelete(id);
