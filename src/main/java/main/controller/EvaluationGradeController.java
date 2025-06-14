@@ -27,6 +27,7 @@ import main.dto.AddressDTO;
 import main.dto.CountryDTO;
 import main.dto.EvaluationDTO;
 import main.dto.EvaluationGradeDTO;
+import main.dto.EvaluationTypeDTO;
 import main.dto.ExaminationDTO;
 import main.dto.FacultyDTO;
 import main.dto.NoteDTO;
@@ -35,17 +36,30 @@ import main.dto.RegisteredUserDTO;
 import main.dto.StudentDTO;
 import main.dto.StudentOnYearDTO;
 import main.dto.SubjectDTO;
+import main.dto.SubjectRealizationDTO;
 import main.dto.TeacherDTO;
 import main.dto.YearOfStudyDTO;
+import main.model.Evaluation;
 import main.model.EvaluationGrade;
 import main.model.StudentOnYear;
+import main.model.SubjectRealization;
+import main.model.Teacher;
 import main.service.EvaluationGradeService;
+import main.service.EvaluationService;
+import main.service.EvaluationTypeService;
+import main.service.TeacherService;
 
 @RestController
 @RequestMapping("/api/evaluationGrades")
 public class EvaluationGradeController implements ControllerInterface<EvaluationGradeDTO> {
 	@Autowired
 	private EvaluationGradeService service;
+	
+	@Autowired
+	private EvaluationService evalService;
+	
+	@Autowired
+	private TeacherService teacherService;
 
 	@Override
 	@GetMapping
@@ -108,17 +122,61 @@ public class EvaluationGradeController implements ControllerInterface<Evaluation
 		ArrayList<EvaluationGradeDTO> grades = new ArrayList<EvaluationGradeDTO>();
 		
 		for(EvaluationGrade g : service.findAllActive()) {
-			grades.add(new EvaluationGradeDTO(g.getId(),
-					new EvaluationDTO(g.getEvaluation().getId(), g.getEvaluation().getStartTime(),
-										g.getEvaluation().getEndTime(), g.getEvaluation().getNumberOfPoints(),
-										null, null, null, null, null, g.getEvaluation().getActive()),
-					new TeacherDTO(g.getTeacher().getId(), new RegisteredUserDTO(g.getTeacher().getUser().getUsername(),
-							null, g.getTeacher().getUser().getEmail()),
-									g.getTeacher().getFirstName(), g.getTeacher().getLastName(),
+			EvaluationTypeDTO evalTypeDTO = new EvaluationTypeDTO(
+				null,
+				g.getEvaluation().getEvaluationType().getName(),
+				null,
+				null
+			);
+			
+			SubjectRealization subjectRealization = g.getEvaluation().getSubjectRealization();
+			SubjectRealizationDTO subjectRealizationDTO = new SubjectRealizationDTO(
+				null,
+				null,
+				null,
+				null,
+				new SubjectDTO(
+					null,
+					(subjectRealization == null) ? null : subjectRealization.getSubject().getName(),
+					null,
+					null
+				),
+				null
+			);
+					
+			grades.add(
+					new EvaluationGradeDTO(g.getId(),
+							new EvaluationDTO(
+									g.getEvaluation().getId(),
+									g.getEvaluation().getStartTime(),
+									g.getEvaluation().getEndTime(),
+									g.getEvaluation().getNumberOfPoints(),
+									evalTypeDTO,
+									null,
+									null,
+									subjectRealizationDTO,
+									null,
+									g.getEvaluation().getActive()),
+					new TeacherDTO(
+							g.getTeacher().getId(),
+							new RegisteredUserDTO(
+									g.getTeacher().getUser().getUsername(),
+									null,
+									g.getTeacher().getUser().getEmail()),
+									g.getTeacher().getFirstName(),
+									g.getTeacher().getLastName(),
 									g.getTeacher().getUmcn(),
 									g.getTeacher().getBiography(),
-									null, null, null, null, null, null),
-					g.getDateTimeEvaluated(), g.getMark(), g.getActive()));
+									null,
+									null,
+									null,
+									null,
+									null,
+									null
+								),
+					g.getDateTimeEvaluated(),
+					g.getMark(),
+					g.getActive()));
 		}
 		
 		return new ResponseEntity<Iterable<EvaluationGradeDTO>>(grades, HttpStatus.OK);
@@ -152,11 +210,18 @@ public class EvaluationGradeController implements ControllerInterface<Evaluation
 	@PostMapping
 	@Secured({"ADMIN","TEACHER"})
 	public ResponseEntity<EvaluationGradeDTO> create(@RequestBody EvaluationGradeDTO t) {
-		// TODO Auto-generated method stub
-		EvaluationGrade g = service.create(new EvaluationGrade(null, 
-											service.findById(t.getId()).get().getEvaluation(), 
-											service.findById(t.getId()).get().getTeacher(),
-											t.getDateTimeEvaluated(), t.getMark(), true));
+		Evaluation evaluation = evalService.findById(t.getEvaluation().getId()).get();
+		Teacher teacher = teacherService.findById(t.getTeacher().getId()).get();
+		EvaluationGrade g = service.create(
+			new EvaluationGrade(
+				null, 
+				evaluation, 
+				teacher,
+				t.getDateTimeEvaluated(),
+				t.getMark(),
+				true
+			)
+		);
 		
 		if(g == null) {
 			return new ResponseEntity<EvaluationGradeDTO>(HttpStatus.NOT_FOUND);

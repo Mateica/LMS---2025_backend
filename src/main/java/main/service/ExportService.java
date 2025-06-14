@@ -44,6 +44,7 @@ public class ExportService {
 	@Autowired
 	private StudentRepository studentRepository;
 	
+	@Autowired
 	private ExaminationRepository examRepository;
 	
 	public String exportTeacherToXML(Teacher t) throws Exception {

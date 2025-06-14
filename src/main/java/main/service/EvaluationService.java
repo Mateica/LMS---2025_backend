@@ -34,8 +34,7 @@ public class EvaluationService implements ServiceInterface<Evaluation> {
 
 	@Override
 	public Optional<Evaluation> findById(Long id) {
-		// TODO Auto-generated method stub
-		return this.findById(id);
+		return this.repo.findById(id);
 	}
 
 	@Override

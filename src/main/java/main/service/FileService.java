@@ -96,7 +96,6 @@ public class FileService implements ServiceInterface<File> {
 		try {
 			file.setDocument(mpf.getBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
